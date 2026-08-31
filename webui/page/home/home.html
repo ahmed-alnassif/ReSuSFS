@@ -1,0 +1,48 @@
+<div class="body-content constant-height">
+    <!-- Status box: tap to see the full enabled-features breakdown -->
+    <div class="box translucent status-box" id="status-box">
+        <md-ripple></md-ripple>
+        <div class="status-row">
+            <div class="status-dot" id="status-dot"></div>
+            <div class="status-text-group">
+                <h2 id="status-header" data-i18n="status_title"></h2>
+                <p id="status-text">Checking SuSFS…</p>
+            </div>
+            <md-icon class="status-chevron">
+                <svg xmlns="http://www.w3.org/2000/svg" height="22px" viewBox="0 -960 960 960" width="22px"><path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z"/></svg>
+            </md-icon>
+        </div>
+        <div class="status-meta">
+            <span id="status-kernel-version"></span>
+            <span id="status-feature-count"></span>
+        </div>
+    </div>
+
+    <div class="box translucent support-card" id="support-card">
+        <div class="support-card-row">
+            <md-icon class="support-card-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"><path d="m480-121-41-37q-105-96-173.5-167T160-451q-40-51-56-95.5T88-637q0-90 60.5-150.5T299-848q57 0 106 26.5t75 75.5q26-49 75-75.5T661-848q90 0 150.5 60.5T872-637q0 47-16 91.5T800-450q-40 47-108.5 118T523-158l-43 37Z"/></svg>
+            </md-icon>
+            <span class="support-card-text" data-i18n="donate_home_hint"></span>
+            <md-icon-button class="support-card-close" id="support-card-close" title="Dismiss">
+                <md-icon>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg>
+                </md-icon>
+            </md-icon-button>
+        </div>
+        <div class="support-card-address">
+            <span class="copy-link" id="support-address-text">TCyghELuquAtoUFdY65iuJSMqJXbYhWidA</span>
+        </div>
+    </div>
+
+    <div class="box translucent summary-box" id="summary-box">
+        <h2 data-i18n="summary_title"></h2>
+        <div class="summary-grid" id="summary-grid">
+            <!-- populated by home.js -->
+        </div>
+        <p class="summary-hint" data-i18n="summary_hint"></p>
+    </div>
+
+    <!-- Safe inset -->
+    <div class="placeholder"></div>
+</div>

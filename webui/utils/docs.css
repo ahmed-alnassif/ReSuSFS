@@ -1,0 +1,74 @@
+#about-document-content {
+    width: 100%;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+
+.file-name-editor {
+    display: none;
+    font-weight: normal;
+    pointer-events: auto;
+    direction: ltr !important;
+}
+
+body.editor-active .file-name-editor {
+    display: flex;
+}
+
+.file-name-editor input {
+    min-width: 2em;
+    background-color: transparent;
+    color: inherit;
+    font-size: 0.9em;
+    border: none;
+    outline: none;
+    border-bottom: 1px solid var(--md-sys-color-outline);
+}
+
+.terminal {
+    font-size: 0.8em;
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    word-wrap: break-word;
+}
+
+.tcpdump-search {
+    display: none;
+}
+
+.tcpdump-header {
+    margin-bottom: 10px;
+}
+
+.tcpdump-header-content {
+    font-family: monospace;
+    margin: 0;
+}
+
+.tcpdump-line {
+    display: flex;
+    gap: 5px;
+    padding: 5px 0;
+    align-items: center;
+    border-bottom: 1px solid var(--md-sys-color-outline);
+}
+
+.tcpdump-line-header {
+    font-weight: bold;
+    border-width: 2px;
+}
+
+.tcpdump-type {
+    flex-shrink: 0;
+    width: 5em;
+}
+
+.tcpdump-domain {
+    background-color: var(--md-sys-color-tonal-surface) !important;
+}
+
+.action-terminal-output {
+    margin: 0;
+    font-family: monospace;
+}

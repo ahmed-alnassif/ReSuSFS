@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="system_default">System Default</string>
+    <!-- Status -->
+    <string name="status_title">SuSFS Status</string>
+    <string name="status_active">Active - hiding is enforced by the kernel</string>
+    <string name="status_unsupported_version">Unsupported ksu_susfs version</string>
+    <string name="status_binary_missing">ksu_susfs binary not found</string>
+    <string name="status_unknown">Unknown</string>
+    <string name="status_kernel_version">SuSFS %s</string>
+    <string name="status_feature_count">%s features enabled</string>
+    <!-- Summary -->
+    <string name="summary_title">Configuration Summary</string>
+    <string name="summary_hint">Tap a tile to jump to the SuSFS page and edit it.</string>
+    <!-- Features dialog -->
+    <string name="features_title">Enabled Features</string>
+    <string name="features_version">Kernel Version</string>
+    <string name="features_variant">Variant</string>
+    <string name="features_none">No features reported.</string>
+    <!-- Global -->
+    <string name="global_dev_opt">Developer option enabled</string>
+    <string name="global_dev_opt_true">Developer option already enabled</string>
+    <string name="global_reboot_now">Reboot to take effect</string>
+    <string name="global_reboot">Reboot</string>
+    <string name="global_rebooting">Rebooting...</string>
+    <string name="global_saved">File saved to %s</string>
+    <string name="global_save_fail">Failed to save file</string>
+    <string name="global_file_too_large">File edit is not supported on large file</string>
+    <string name="global_file_name_empty">File name cannot be empty</string>
+    <string name="global_show_all">Show All %d More</string>
+    <string name="global_close">Close</string>
+    <string name="global_cancel">Cancel</string>
+    <string name="global_confirm">Confirm</string>
+    <string name="global_action">Action</string>
+    <string name="global_unsupported">Unsupported</string>
+    <!-- Control Panel -->
+    <string name="control_panel_title">Control Panel</string>
+    <string name="control_panel_language">Language</string>
+    <string name="control_panel_bad_translation">Bad Translation</string>
+    <string name="control_panel_add_language">Add a Language</string>
+    <!-- SuSFS config boxes -->
+    <string name="susfs_sus_paths_title">Sus Paths</string>
+    <string name="susfs_sus_paths_desc">Hides read-only/static paths via add_sus_path. Only effective for umounted processes with uid ≥ 10000.</string>
+    <string name="susfs_sus_paths_loop_title">Sus Paths (Loop)</string>
+    <string name="susfs_sus_paths_loop_desc">Hides frequently modified/recreated paths via add_sus_path_loop, re-flagged on every zygote spawn.</string>
+    <string name="susfs_sus_maps_title">Sus Maps</string>
+    <string name="susfs_sus_maps_desc">Hides mmapped library files from /proc/self/maps and related interfaces via add_sus_map.</string>
+    <string name="susfs_kstat_paths_title">Sus Kstat</string>
+    <string name="susfs_kstat_paths_desc">Spoofs file stat info for paths that get bind mounted, staged early and committed late.</string>
+    <string name="susfs_open_redirect_title">Open Redirect</string>
+    <string name="susfs_open_redirect_desc">Redirects an opened target path to a user-defined path for a chosen uid scheme.</string>
+    <string name="susfs_uname_title">Uname Spoof</string>
+    <string name="susfs_uname_desc">Spoofs the kernel release and version reported to all processes.</string>
+    <string name="susfs_cmdline_title">Cmdline / Bootconfig</string>
+    <string name="susfs_cmdline_desc">Spoofs the content of /proc/cmdline or /proc/bootconfig from a prepared file.</string>
+    <!-- Config box actions -->
+    <string name="box_edit">Edit</string>
+    <string name="box_apply">Apply</string>
+    <string name="box_stage">Stage</string>
+    <string name="box_custom_file">Load Custom File</string>
+    <string name="box_entry_count">%d entries</string>
+    <!-- Toggles -->
+    <string name="toggles_title">Toggles</string>
+    <string name="toggles_description">Simple kernel flags applied via hide_sus_mnts_for_non_su_procs, enable_log and enable_avc_log_spoofing.</string>
+    <string name="toggle_hide_mnts">Hide Mounts</string>
+    <string name="toggle_hide_mnts_desc">Applied in post-fs-data or boot-completed, once mounts have settled for user processes.</string>
+    <string name="toggle_enable_log">Enable SuSFS Log</string>
+    <string name="toggle_enable_log_desc">Turns on susfs' own kernel logging.</string>
+    <string name="toggle_avc_spoof">Spoof AVC 'su' Context</string>
+    <string name="toggle_avc_spoof_desc">Hides the su domain from AVC log enumeration.</string>
+    <string name="toggles_apply">Apply</string>
+    <!-- More -->
+    <string name="more_documents">Documents</string>
+    <string name="more_usage">Usage</string>
+    <string name="more_hiding">Hiding</string>
+    <string name="more_faq">FAQ</string>
+    <string name="more_support">Support</string>
+    <string name="more_support_issue">Report an issue</string>
+    <string name="more_support_view_webui_log">View WebUI Log</string>
+    <!-- Donate -->
+    <string name="donate_title">Donate</string>
+    <string name="donate_hint">If ReSuSFS is useful to you, consider supporting development. Tap the address to copy it.</string>
+    <string name="donate_usdt_trc20">USDT (TRC20)</string>
+    <string name="donate_home_hint">Enjoying ReSuSFS? Support with USDT (TRC20) below ❤️</string>
+    <!-- Credits -->
+    <string name="credits_title">Credits</string>
+    <string name="credits_susfs">SuSFS by simonpunk</string>
+    <string name="credits_bindhosts">WebUI built on bindhosts</string>
+    <!-- About -->
+    <string name="about_title">About</string>
+    <string name="about_open">About ReSuSFS</string>
+    <string name="about_author">Author</string>
+    <string name="about_license">License</string>
+    <string name="about_repo">Repository</string>
+    <!-- Footer -->
+    <string name="footer_home">Home</string>
+    <string name="footer_susfs">SuSFS</string>
+    <string name="footer_more">More</string>
+    <!-- Backup and Restore -->
+    <string name="backup_restore_backup_and_restore">Backup &amp; Restore</string>
+    <string name="backup_restore_export">Export config</string>
+    <string name="backup_restore_restore">Restore config</string>
+    <string name="backup_restore_exported">Config saved to %s</string>
+    <string name="backup_restore_export_fail">Fail to export config</string>
+    <string name="backup_restore_invalid_config">Invalid ReSuSFS config</string>
+    <string name="backup_restore_restored">Config restored succesfully</string>
+    <string name="backup_restore_restore_fail">Fail to restore config</string>
+</resources>

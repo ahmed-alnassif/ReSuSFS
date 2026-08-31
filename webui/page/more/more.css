@@ -1,0 +1,127 @@
+.box.control-panel {
+    padding: 5px 16px;
+    padding-bottom: 0;
+    border-radius: 0;
+    width: 100%;
+    background-color: transparent;
+}
+
+.box-content {
+    border-radius: 20px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.box h3 {
+    margin: 0 16px;
+    margin-bottom: 8px;
+    font-size: 0.75em;
+    color: var(--md-sys-color-primary);
+    user-select: none;
+}
+
+.list-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    min-height: 64px;
+    border-radius: 4px;
+    padding: 16px;
+    box-sizing: border-box;
+    background-color: var(--md-sys-color-tonal-surface);
+    position: relative;
+    transition: border-radius 0.2s ease;
+}
+
+.list-item:active {
+    border-radius: 20px;
+}
+
+.list-item-content {
+    white-space: wrap;
+    flex-grow: 1;
+    user-select: none;
+}
+
+.leading-icon {
+    flex-shrink: 0;
+}
+
+#language-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 8px 0;
+}
+
+.language-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    user-select: none;
+}
+
+.donate-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 16px 8px 16px;
+}
+
+.donate-header h3 {
+    margin: 0;
+}
+
+.donate-icon {
+    flex-shrink: 0;
+    --md-icon-size: 16px;
+    color: var(--md-sys-color-primary);
+}
+
+.donate-hint {
+    margin: 0;
+    padding: 12px 16px 0 16px;
+    font-size: 0.85em;
+    opacity: 0.75;
+}
+
+.donate-address-row {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 12px 16px 16px 16px;
+}
+
+.donate-address-label {
+    font-size: 0.8em;
+    opacity: 0.6;
+}
+
+.donate-address {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    border-radius: 12px;
+    background-color: var(--md-sys-color-surface-container-high);
+}
+
+.donate-address .copy-link {
+    flex-grow: 1;
+    min-width: 0;
+    font-family: monospace;
+    font-size: 0.85em;
+    word-break: break-all;
+    cursor: pointer;
+    user-select: all;
+}
+
+.donate-copy-btn {
+    flex-shrink: 0;
+}
+
+md-switch.soft-disabled {
+    pointer-events: none;
+}

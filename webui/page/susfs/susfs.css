@@ -1,0 +1,89 @@
+.config-box {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.box-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.box-header h2 {
+    margin: 0;
+}
+
+.entry-badge {
+    flex-shrink: 0;
+    font-size: 0.75em;
+    padding: 3px 10px;
+    border-radius: 20px;
+    background-color: var(--md-sys-color-surface-container-high);
+    color: var(--md-sys-color-on-surface-variant);
+    white-space: nowrap;
+}
+
+.box-description {
+    margin: 0;
+    font-size: 0.85em;
+    line-height: 1.4;
+    opacity: 0.75;
+}
+
+.box-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+.box-apply-btn {
+    flex-grow: 1;
+}
+
+.box-edit-btn,
+.box-custom-btn {
+    flex-shrink: 0;
+}
+
+/* Toggles box */
+#toggles-box {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--md-sys-color-outline-variant);
+}
+
+.toggle-row:last-of-type {
+    border-bottom: none;
+}
+
+.toggle-label {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.toggle-label small {
+    color: var(--md-sys-color-outline);
+    font-size: 0.78em;
+    margin-top: 2px;
+}
+
+#toggles-box .box-actions {
+    margin-top: 10px;
+}
+
+#apply-toggles {
+    flex: 1;
+}
