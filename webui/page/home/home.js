@@ -14,6 +14,8 @@ const SUMMARY_FILES = [
     { key: 'kstat_paths', label: 'susfs_kstat_paths_title' },
     { key: 'open_redirect', label: 'susfs_open_redirect_title' },
 ];
+const SCRIPTS_POSTFS = 'scripts_postfs.txt';
+const SCRIPTS_BOOTCOMPLETED = 'scripts_bootcompleted.txt';
 
 /**
  * Count non-comment, non-blank lines in a config file.
@@ -27,9 +29,21 @@ async function countEntries(fileName) {
     return Number.isFinite(n) ? n : 0;
 }
 
+async function countEnabledScripts() {
+    const command = `
+        cat "${basePath}/${SCRIPTS_POSTFS}" "${basePath}/${SCRIPTS_BOOTCOMPLETED}" 2>/dev/null \
+        | sed 's/#.*//' | grep -v '^[[:space:]]*$' | sort -u | wc -l
+    `;
+    const result = await exec(command);
+    if (result.errno !== 0) return 0;
+    const n = parseInt(result.stdout.trim(), 10);
+    return Number.isFinite(n) ? n : 0;
+}
+
 async function updateSummary() {
     const grid = document.getElementById('summary-grid');
     grid.innerHTML = '';
+
     for (const { key, label } of SUMMARY_FILES) {
         const count = await countEntries(filePaths[key]);
         const tile = document.createElement('div');
@@ -41,6 +55,16 @@ async function updateSummary() {
         tile.onclick = () => document.querySelector('.bottom-bar-item[page="susfs"]')?.click();
         grid.appendChild(tile);
     }
+
+    const scriptCount = await countEnabledScripts();
+    const scriptTile = document.createElement('div');
+    scriptTile.className = 'summary-tile';
+    scriptTile.innerHTML = `
+        <span class="summary-tile-count">${scriptCount}</span>
+        <span class="summary-tile-label">${getString('summary_enabled_scripts')}</span>
+    `;
+    scriptTile.onclick = () => document.querySelector('.bottom-bar-item[page="userhub"]')?.click();
+    grid.appendChild(scriptTile);
 }
 
 async function updateStatus() {

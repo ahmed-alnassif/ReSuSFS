@@ -14,6 +14,7 @@
     <!-- Summary -->
     <string name="summary_title">Configuration Summary</string>
     <string name="summary_hint">Tap a tile to jump to the SuSFS page and edit it.</string>
+    <string name="summary_enabled_scripts">Enabled Scripts</string>
     <!-- Features dialog -->
     <string name="features_title">Enabled Features</string>
     <string name="features_version">Kernel Version</string>
