@@ -34,7 +34,7 @@ All optional, all live under `/data/adb/ReSuSFS/`. Missing or empty files mean "
 | `sus_maps.txt` | hide mapped library files |
 | `kstat_paths.txt` | spoof file stat for bind mounted paths |
 | `open_redirect.txt` | redirect a path to another path |
-| `uname.conf` | spoof kernel release/version |
+| `uname.txt` | spoof kernel release/version |
 | `cmdline_or_bootconfig.txt` | spoof `/proc/cmdline` or `/proc/bootconfig` |
 | `config.txt` | toggle kernel flags (mount hiding, logging, avc spoofing) |
 
