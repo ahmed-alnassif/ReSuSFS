@@ -30,23 +30,43 @@ detect_key_press() {
 	fi
 }
 
-if ls "$PERSISTENT_DIR"/*.txt >/dev/null 2>&1; then
-	ui_print "[*] existing ReSuSFS configs found in $PERSISTENT_DIR"
-	ui_print "[*] press VOLUME UP within 6 seconds to reset configs to defaults"
-	ui_print "[*] press VOLUME DOWN, or wait, to keep your existing configs"
-	if detect_key_press; then
-		rm -f "$PERSISTENT_DIR"/*.txt
-		cp "$MODPATH"/*.txt "$PERSISTENT_DIR"/
-		ui_print "[+] configs reset successful"
-	else
-		ui_print "[+] existing configs kept"
-	fi
-else
-	cp "$MODPATH"/*.txt "$PERSISTENT_DIR"/
-	ui_print "[+] configs copied successfully"
-fi
+CONFIG_FILES=$(ls "$MODPATH"/*.txt 2>/dev/null | xargs -n1 basename)
 
-rm -f "$MODPATH"/*.txt
+if [ -z "$CONFIG_FILES" ]; then
+	ui_print "[!] No config files found in module"
+else
+	DIFFERENT_FILES=""
+
+	for file in $CONFIG_FILES; do
+		if [ ! -f "$PERSISTENT_DIR/$file" ]; then
+			cp "$MODPATH/$file" "$PERSISTENT_DIR/$file"
+			ui_print "[+] $file copied (was missing)"
+		elif cmp -s "$MODPATH/$file" "$PERSISTENT_DIR/$file"; then
+			ui_print "[+] $file already exists (identical, skipped)"
+		else
+			DIFFERENT_FILES="$DIFFERENT_FILES $file"
+		fi
+	done
+
+	if [ -n "$DIFFERENT_FILES" ]; then
+		ui_print "[*] Different config files found:"
+		for file in $DIFFERENT_FILES; do
+			ui_print "    - $file"
+		done
+		ui_print "[*] press VOLUME UP within 6 seconds to reset these configs to defaults"
+		ui_print "[*] press VOLUME DOWN, or wait, to keep your existing configs"
+
+		if detect_key_press; then
+			for file in $DIFFERENT_FILES; do
+				cp "$MODPATH/$file" "$PERSISTENT_DIR/$file"
+				ui_print "[+] $file reset to default"
+			done
+			ui_print "[+] configs reset successful"
+		else
+			ui_print "[+] existing configs kept"
+		fi
+	fi
+fi
 
 rm -f "$MODPATH"/*.txt
 
