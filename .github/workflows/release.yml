@@ -60,15 +60,13 @@ jobs:
         MODULE_DESC="SuSFS for KernelSU"
         CURRENT_VERSION_CODE=$(jq -r .versionCode update.json)
         PREVIOUS_VERSION_CODE=$(jq -r .versionCode <(git show HEAD~1:update.json))
+        VERSION=$(jq -r .version update.json)
+        echo "VERSION=${VERSION}" >> $GITHUB_ENV
+        echo "PREVIOUS_VERSION=${PREVIOUS_VERSION}" >> $GITHUB_ENV
+        PREVIOUS_VERSION=$(jq -r .version <(git show HEAD~1:update.json))
         COMMIT_ID=$(git rev-parse --short HEAD)
-        echo "ZIP_NAME=${{ env.MODULE_NAME }}_${CURRENT_VERSION_CODE}-${COMMIT_ID}" >> $GITHUB_ENV
-        echo "VERSION=$(jq -r .version update.json)" >> $GITHUB_ENV
-        CHANGELOG_RAW=$(git diff HEAD^ HEAD -- "CHANGELOG.md" | grep '^+[^+]' | sed 's/^+//')
-        {
-          echo "CHANGELOG<<EOF"
-          echo -e "## ${{ env.MODULE_NAME }}\n${MODULE_DESC}\n\n---\n\n# Changelog:\n${CHANGELOG_RAW}"
-          echo "EOF"
-        } >> $GITHUB_ENV
+        ZIP_NAME=${{ env.MODULE_NAME }}_${VERSION}-${COMMIT_ID}
+        echo "ZIP_NAME=${ZIP_NAME}" >> $GITHUB_ENV
 
         if [ "$CURRENT_VERSION_CODE" -gt "$PREVIOUS_VERSION_CODE" ]; then
           echo "version_changed=true" >> $GITHUB_ENV
@@ -83,38 +81,47 @@ jobs:
         path: 'module'
 
     - name: Download artifact
-      if: ${{ env.version_changed == 'true' || inputs.force_release }}
+      if: env.version_changed == 'true' || inputs.force_release
       uses: actions/download-artifact@v8
       with:
         name: ${{ env.ZIP_NAME }}
         path: ${{ env.MODULE_NAME }}
 
     - name: Zip module for release
-      if: ${{ env.version_changed == 'true' || inputs.force_release }}
+      if: env.version_changed == 'true' || inputs.force_release
       run: |
         cd ${{ env.MODULE_NAME }}
-        zip -r ../${{ env.MODULE_NAME }}.zip .
+        zip -r ../${{ env.ZIP_NAME }}.zip .
         cd ..
 
-    - name: Create new release
-      if: ${{ env.version_changed == 'true' }}
-      uses: softprops/action-gh-release@v3
+    - name: Generate changelog
+      id: changelog
+      if: env.version_changed == 'true' || inputs.force_release
       env:
         GITHUB_TOKEN: ${{ github.token }}
+      run: |
+        python .github/scripts/generate_changelog.py \
+          --from "${{ env.PREVIOUS_VERSION }}" \
+          --to HEAD \
+          --version "${{ env.VERSION }}" \
+          --output changelog_body.md
+
+    - name: Create new release
+      if: env.version_changed == 'true'
+      uses: softprops/action-gh-release@v3
       with:
-        files: "${{ env.MODULE_NAME }}.zip"
+        files: "${{ env.ZIP_NAME }}.zip"
         tag_name: "${{ env.VERSION }}"
-        name: "Release ${{ env.VERSION }}"
-        body: "${{ env.CHANGELOG }}"
+        name: "ReSuSFS ${{ env.VERSION }}"
+        body_path: changelog_body.md
         draft: false
         prerelease: false
 
     - name: Force update latest release file
       if: ${{ inputs.force_release }}
       uses: softprops/action-gh-release@v3
-      env:
-        GITHUB_TOKEN: ${{ github.token }}
       with:
-        files: "${{ env.MODULE_NAME }}.zip"
+        files: "${{ env.ZIP_NAME }}.zip"
         tag_name: "${{ env.VERSION }}"
-        name: "Release ${{ env.VERSION }}"
+        name: "ReSuSFS ${{ env.VERSION }}"
+        body_path: changelog_body.md
