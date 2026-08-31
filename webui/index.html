@@ -31,6 +31,11 @@
             <md-icon><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"><path d="M588-132 440-280l148-148 56 58-50 50h96q29 0 49.5-20.5T760-390q0-29-20.5-49.5T690-460H160v-80h530q63 0 106.5 43.5T840-390q0 63-43.5 106.5T690-240h-96l50 50-56 58ZM160-240v-80h200v80H160Zm0-440v-80h640v80H160Z"/></svg></md-icon>
             <md-icon slot="selected"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"><path d="M588-132 440-280l148-148 56 58-50 50h96q29 0 49.5-20.5T760-390q0-29-20.5-49.5T690-460H160v-80h530q63 0 106.5 43.5T840-390q0 63-43.5 106.5T690-240h-96l50 50-56 58ZM160-240v-80h200v80H160Zm0-440v-80h640v80H160Z"/></svg></md-icon>
         </md-icon-button>
+        <md-icon-button class="reboot-header-btn" id="reboot-btn" title="Reboot">
+            <md-icon>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"><path d="M440-122q-121-15-200.5-105.5T160-440q0-66 26-126.5T260-672l57 57q-38 34-57.5 79T240-440q0 88 56 155.5T440-202v80Zm80 0v-80q87-16 143.5-83T720-440q0-100-70-170t-170-70h-3l44 44-56 56-140-140 140-140 56 56-44 44h3q134 0 227 93t93 227q0 120-79.5 210.5T520-122Z"/></svg>
+            </md-icon>
+        </md-icon-button>
         <md-icon-button class="header-btn" id="save-btn">
             <md-icon><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"><path d="M840-680v480q0 33-23.5 56.5T760-120H200q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h480l160 160Zm-80 34L646-760H200v560h560v-446ZM565-275q35-35 35-85t-35-85q-35-35-85-35t-85 35q-35 35-35 85t35 85q35 35 85 35t85-35ZM240-560h360v-160H240v160Zm-40-86v446-560 114Z"/></svg></md-icon>
         </md-icon-button>
@@ -286,6 +291,17 @@
             </div>
             <div slot="actions">
                 <md-text-button class="close-btn" data-i18n="global_close"></md-text-button>
+            </div>
+        </md-dialog>
+        <!-- Reboot confirmation -->
+        <md-dialog id="reboot-dialog">
+            <div slot="headline" data-i18n="reboot_dialog_title"></div>
+            <div slot="content">
+                <p data-i18n="reboot_dialog_message"></p>
+            </div>
+            <div slot="actions">
+                <md-text-button class="close-btn" data-i18n="global_cancel"></md-text-button>
+                <md-filled-button id="reboot-confirm-btn" data-i18n="global_reboot"></md-filled-button>
             </div>
         </md-dialog>
     </div>

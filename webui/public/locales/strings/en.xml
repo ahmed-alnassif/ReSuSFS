@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="system_default">System Default</string>
+    <string name="reboot_dialog_title">Reboot Device</string>
+    <string name="reboot_dialog_message">Your device will restart now. Make sure you've saved anything important first.</string>
     <!-- Status -->
     <string name="status_title">SuSFS Status</string>
     <string name="status_active">Active - hiding is enforced by the kernel</string>

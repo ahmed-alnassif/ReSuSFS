@@ -1,5 +1,5 @@
 import { initializeLogCatcher } from './utils/log_catcher.js';
-import { checkMMRL, setupSlideMenu } from './utils/util.js';
+import { checkMMRL, setupSlideMenu, reboot } from './utils/util.js';
 import { loadTranslations } from './utils/language.js';
 import { closeTopManagedLayer, hasManagedHistoryLayer, registerManagedDialog } from './utils/history.js';
 import { router } from './route.js';
@@ -131,6 +131,20 @@ async function setupUserCustomization() {
     }
 }
 
+function setupRebootButton() {
+    const rebootBtn = document.getElementById('reboot-btn');
+    const rebootDialog = document.getElementById('reboot-dialog');
+    const confirmBtn = document.getElementById('reboot-confirm-btn');
+    const closeBtn = rebootDialog.querySelector('.close-btn');
+
+    rebootBtn.onclick = () => rebootDialog.show();
+    closeBtn.onclick = () => rebootDialog.close();
+    confirmBtn.onclick = () => {
+        rebootDialog.close();
+        reboot();
+    };
+}
+
 /**
  * Prevents invalid characters in file names
  * @param {HTMLInputElement} input Input element to process
@@ -176,6 +190,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     setupSlideMenu();
     router.navigate('home');
     setupUserCustomization();
+    setupRebootButton();
     setupRickRoll();
 });
 

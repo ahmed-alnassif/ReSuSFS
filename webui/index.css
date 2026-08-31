@@ -716,3 +716,8 @@
     color: var(--md-sys-color-primary);
     text-decoration: none;
 }
+
+.reboot-header-btn {
+    flex-shrink: 0;
+    color: var(--md-sys-color-error);
+}
