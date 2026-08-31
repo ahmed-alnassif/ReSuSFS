@@ -6,4 +6,6 @@ PERSISTENT_DIR="/data/adb/ReSuSFS"
 # apply late-stage susfs config now that mounts have settled
 sh $MODDIR/ReSuSFS.sh --stage-late
 
+sh $MODDIR/ReSuSFS.sh --run-bootcompleted-scripts
+
 # EOF

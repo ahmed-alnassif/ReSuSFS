@@ -1,7 +1,10 @@
 #!/bin/sh
-PATH=/data/adb/ap/bin:/data/adb/ksu/bin:/data/adb/magisk:/data/data/com.termux/files/usr/bin:$PATH
+PATH=/data/adb/ksu/bin:/data/data/com.termux/files/usr/bin:$PATH
 MODDIR="/data/adb/modules/ReSuSFS"
 PERSISTENT_DIR="/data/adb/ReSuSFS"
+USER_SCRIPTS_DIR="$PERSISTENT_DIR/scripts"
+POSTFS_SCRIPTS_FILE="$PERSISTENT_DIR/scripts_postfs.txt"
+BOOTCOMPLETED_SCRIPTS_FILE="$PERSISTENT_DIR/scripts_bootcompleted.txt"
 SUSFS_BIN=/data/adb/ksu/bin/ksu_susfs
 SUSFS_MIN_VERSION="v2.2.0"
 
@@ -70,6 +73,40 @@ get_conf() {
 read_list() {
 	[ -f "$1" ] || return
 	sed 's/#.*//' "$1" | grep -v '^[[:space:]]*$'
+}
+
+[ ! -d "$USER_SCRIPTS_DIR" ] && mkdir -p "$USER_SCRIPTS_DIR"
+[ ! -f "$POSTFS_SCRIPTS_FILE" ] && : > "$POSTFS_SCRIPTS_FILE"
+[ ! -f "$BOOTCOMPLETED_SCRIPTS_FILE" ] && : > "$BOOTCOMPLETED_SCRIPTS_FILE"
+
+run_stage_scripts() {
+	stage_file="$1"
+	[ -f "$stage_file" ] || return
+	list=$(read_list "$stage_file") || return
+	[ -z "$list" ] && return
+	echo "$list" | while IFS= read -r name; do
+		script="$USER_SCRIPTS_DIR/$name"
+		if [ -f "$script" ]; then
+			echo "[>] running $script"
+			sh "$script"
+		else
+			echo "[!] script not found, skipping: $name"
+		fi
+	done
+}
+
+run_script() {
+	script="$1"
+	[ -z "$script" ] && { echo "[x] no script specified"; echo "[!] syntax: --run-script <path>"; exit 1; }
+	case "$script" in
+		*.sh) : ;;
+		*) echo "[x] only .sh files allowed: $script"; exit 1 ;;
+	esac
+	[ -f "$script" ] || { echo "[x] script not found: $script"; exit 1; }
+	[ -r "$script" ] || { echo "[x] script not readable: $script"; exit 1; }
+	echo "[>] running $script"
+	sh "$script"
+	echo "[+] exit code: $?"
 }
 
 apply_list() {
@@ -241,6 +278,9 @@ show_help () {
 	printf " --apply-uname [file] \t\t\tset_uname from config\n"
 	printf " --apply-cmdline-bootconfig [file] \tset_cmdline_or_bootconfig from file\n"
 	printf " --apply-toggles <early|late> [file] \tapply hide_sus_mnts/enable_log/avc_log_spoofing from config\n"
+	printf " --run-script <file> \t\t\trun a user script from UserHub\n"
+	printf " --run-postfs-scripts \t\t\trun all UserHub scripts flagged for post-fs-data\n"
+	printf " --run-bootcompleted-scripts \t\trun all UserHub scripts flagged for boot-completed\n"
 	printf "\n"
 	printf " --help \t\t\t\tdisplays this message\n"
 }
@@ -260,6 +300,9 @@ case "$1" in
 	--apply-uname) apply_uname "$2"; exit ;;
 	--apply-cmdline-bootconfig) apply_cmdline_bootconfig "$2"; exit ;;
 	--apply-toggles) apply_toggles "$2" "$3"; exit ;;
+	--run-script) shift; run_script "$1"; exit ;;
+	--run-postfs-scripts) run_stage_scripts "$POSTFS_SCRIPTS_FILE"; exit ;;
+	--run-bootcompleted-scripts) run_stage_scripts "$BOOTCOMPLETED_SCRIPTS_FILE"; exit ;;
 	--help|*) show_help; exit ;;
 esac
 
