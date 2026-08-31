@@ -119,7 +119,7 @@
     <string name="backup_restore_restore">Restore config</string>
     <string name="backup_restore_exported">Config saved to %s</string>
     <string name="backup_restore_export_fail">Fail to export config</string>
-    <string name="backup_restore_invalid_config">Invalid ReSuSFS config</string>
+    <string name="backup_restore_nothing_to_export">Nothing to export yet</string>
     <string name="backup_restore_restored">Config restored succesfully</string>
     <string name="backup_restore_restore_fail">Fail to restore config</string>
 </resources>

@@ -1,5 +1,5 @@
 import { exec } from 'kernelsu-alt';
-import { showPrompt, basePath, moduleDirectory, linkRedirect, filePaths, fetchText, updateUIVisibility } from '../../utils/util.js';
+import { showPrompt, basePath, linkRedirect, filePaths, updateUIVisibility } from '../../utils/util.js';
 import { getString } from '../../utils/language.js';
 import { FileSelector } from '../../utils/file_selector.js';
 import { addCopyToClipboardListeners, setupDocsMenu } from '../../utils/docs.js';
@@ -54,81 +54,60 @@ function openAboutDialog() {
     if (repoLink) repoLink.onclick = (e) => { e.preventDefault(); linkRedirect('https://github.com/ahmed-alnassif/ReSuSFS'); };
 }
 
-/**
- * Backup all ReSuSFS config files to /sdcard/Download/ReSuSFS_config_<date>.json
- * @returns {Promise<void>}
- * @see controlPanelEventlistener
- */
 async function exportConfig() {
-    const config = {
-        metadata: {
-            version: "v1",
-            description: "ReSuSFS config backup"
-        }
-    };
+    const configFiles = Object.entries(filePaths)
+        .filter(([key]) => key !== 'customCSS')
+        .map(([, path]) => path);
 
-    // Fetch and process each config file
-    for (const [fileType, filePath] of Object.entries(filePaths)) {
-        if (fileType === 'customCSS') continue;
-        const text = await fetchText(`link/PERSISTENT_DIR/${filePath}`, `${basePath}/${filePath}`).catch(() => "");
-        config[fileType] = {
-            path: filePath,
-            content: text.trim()
-        };
-    }
+    const command = `
+cd "${basePath}" || { echo "ERROR_CD"; exit 1; }
 
-    const result = await exec(`
-FILENAME="/storage/emulated/0/Download/ReSuSFS_config_$(date +%Y%m%d_%H%M%S).json"
-cat <<'JSON_EOF' > "$FILENAME"
-${JSON.stringify(config)}
-JSON_EOF
-echo "$FILENAME"
-        `);
-    if (result.errno === 0) {
-        showPrompt(getString('backup_restore_exported', result.stdout.trim()));
+existing=""
+for f in ${configFiles.map(f => `"${f}"`).join(' ')}; do
+    [ -f "$f" ] && existing="$existing $f"
+done
+[ -d scripts ] && [ -n "$(ls -A scripts 2>/dev/null)" ] && existing="$existing scripts"
+
+if [ -z "$existing" ]; then
+    echo "NOTHING_TO_EXPORT"
+    exit 1
+fi
+
+OUT="/storage/emulated/0/Download/ReSuSFS_config_$(date +%Y%m%d_%H%M%S).tar.gz"
+busybox tar czf "$OUT" $existing 2>/tmp/resusfs_tar.log
+
+if [ -f "$OUT" ]; then
+    echo "$OUT"
+else
+    echo "ERROR_TAR_FAILED"
+    cat /tmp/resusfs_tar.log 2>/dev/null
+    exit 1
+fi
+    `;
+
+    const result = await exec(command);
+    const output = result.stdout.trim();
+
+    if (result.errno === 0 && output && !output.startsWith('ERROR_')) {
+        showPrompt(getString('backup_restore_exported', output));
+    } else if (output.includes('NOTHING_TO_EXPORT')) {
+        showPrompt(getString('backup_restore_nothing_to_export'), false);
     } else {
-        console.error("Backup failed:", result.stderr);
+        console.error('Backup failed:', output, result.stderr);
         showPrompt(getString('backup_restore_export_fail'), false);
     }
 }
 
-/**
- * Restore config
- * Open file selector and restore config from selected file
- * @return {Promise<void>}
- * @see controlPanelEventlistener
- */
 async function restoreConfig() {
-    const fileContent = await FileSelector.getFileContent("json");
-    if (!fileContent) return;
+    const path = await FileSelector.getFilePath('tar.gz');
+    if (!path) return;
 
-    const config = JSON.parse(fileContent);
-
-    // Validate using metadata
-    const isValid = config.metadata && config.metadata.description === "ReSuSFS config backup";
-    if (!isValid) {
-        showPrompt(getString('backup_restore_invalid_config'), false);
-        return;
-    }
-
-    // Restore each file according to backup version
-    if (config.metadata.version === "v1") {
-        for (const [fileType, fileData] of Object.entries(config)) {
-            if (fileType === 'metadata' || !filePaths[fileType] || fileData.content === undefined) continue;
-            const content = fileData.content;
-            const result = await exec(`
-cat <<'RESTORE_EOF' > ${basePath}/${fileData.path}
-${content}
-RESTORE_EOF
-chmod 644 ${basePath}/${fileData.path} || true
-            `);
-            if (result.errno === 0) {
-                showPrompt(getString('backup_restore_restored'));
-            } else {
-                console.error("Restore failed:", result.stderr);
-                showPrompt(getString('backup_restore_restore_fail'), false);
-            }
-        }
+    const result = await exec(`busybox tar xzf "${path}" -C "${basePath}" 2>&1`);
+    if (result.errno === 0) {
+        showPrompt(getString('backup_restore_restored'));
+    } else {
+        console.error('Restore failed:', result.stdout, result.stderr);
+        showPrompt(getString('backup_restore_restore_fail'), false);
     }
 }
 
