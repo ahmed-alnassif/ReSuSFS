@@ -1,0 +1,99 @@
+name: crowdin
+
+on:
+  push:
+    branches: [ master ]
+    paths: 
+      - 'crowdin_xml.yml'
+      - '.github/workflows/crowdin.yml'
+      - 'webui/public/locales/strings/*.xml'
+      - '**.md'
+  schedule:
+    - cron: '0 0 * * 0'
+  workflow_dispatch:
+
+env:
+  GITHUB_TOKEN: ${{ github.token }}
+  CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
+  CROWDIN_API_TOKEN: ${{ secrets.CROWDIN_API_TOKEN }}
+
+jobs:
+  synchronize-md:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v7
+
+  synchronize-xml:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v7
+
+    - name: Crowdin Action
+      uses: crowdin/github-action@v2
+      with:
+        download_translations: true
+        skip_untranslated_files: false
+        skip_untranslated_strings: true
+
+        create_pull_request: true
+        localization_branch_name: crowdin_xml
+        pull_request_labels: 'enhancement, webui, translation'
+        pull_request_title: 'webui/locales: sync translation from Crowdin'
+
+        config: 'crowdin_xml.yml'
+        crowdin_branch_name: master
+
+  upload-translations:
+    runs-on: ubuntu-latest
+    needs: synchronize-xml
+    steps:
+    - name: Checkout translation branch
+      uses: actions/checkout@v7
+      with:
+        ref: 'crowdin_xml'
+
+    - name: Configure git
+      run: |
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        git config --global user.name "github-actions[bot]"
+
+    - name: Create timestamp
+      run: |
+        date +%Y%m%d > webui/public/locales/version
+
+        if git status --porcelain | grep 'webui/public/locales/version'; then
+          git add webui/public/locales/version
+          git commit -m "bot: update timestamp"
+          git push
+        fi
+
+    - name: Upload locales folder
+      uses: actions/upload-artifact@v7
+      with:
+        name: locales
+        path: webui/public/locales
+
+    - name: Checkout bot
+      uses: actions/checkout@v7
+      with:
+        ref: 'bot'
+
+    - name: Download translation
+      uses: actions/download-artifact@v8
+      with:
+        name: locales
+        path: locales
+
+    - name: Push to bot branch
+      run: |
+        rm -f locales_version locales.zip
+        cd locales
+        cp version ../locales_version
+        zip -r ../locales.zip .
+        cd ..
+
+        git add locales.zip locales_version
+        git commit -m "bot: update locales"
+        git push

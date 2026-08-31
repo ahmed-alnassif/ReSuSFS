@@ -1,0 +1,120 @@
+name: Release
+permissions:
+  contents: write
+  actions: write
+
+on:
+  push:
+    branches:
+      - master
+      - dev
+    paths:
+      - '.github/workflows/release.yml'
+      - 'module/**'
+      - 'webui/**'
+      - 'update.json'
+  workflow_dispatch:
+    inputs:
+      force_release:
+        description: 'Force change release file?'
+        required: true
+        type: boolean
+        default: false
+
+env:
+  MODULE_NAME: 'ReSuSFS'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    outputs:
+      version_changed: ${{ env.version_changed }}
+      VERSION: ${{ env.VERSION }}
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v7
+      with:
+        fetch-depth: 1
+
+    - name: Setup pnpm
+      uses: pnpm/action-setup@v6
+      with:
+        version: 'latest'
+
+    - name: Setup Node
+      uses: actions/setup-node@v7
+      with:
+        node-version: 'lts/*'
+        cache: 'pnpm'
+        cache-dependency-path: webui/pnpm-lock.yaml
+
+    - name: build webroot
+      run: |
+        cd webui
+        pnpm install --frozen-lockfile
+        pnpm build
+
+    - name: Set variables
+      id: setup
+      run: |
+        MODULE_DESC="SuSFS for KernelSU"
+        CURRENT_VERSION_CODE=$(jq -r .versionCode update.json)
+        PREVIOUS_VERSION_CODE=$(jq -r .versionCode <(git show HEAD~1:update.json))
+        COMMIT_ID=$(git rev-parse --short HEAD)
+        echo "ZIP_NAME=${{ env.MODULE_NAME }}_${CURRENT_VERSION_CODE}-${COMMIT_ID}" >> $GITHUB_ENV
+        echo "VERSION=$(jq -r .version update.json)" >> $GITHUB_ENV
+        CHANGELOG_RAW=$(git diff HEAD^ HEAD -- "CHANGELOG.md" | grep '^+[^+]' | sed 's/^+//')
+        {
+          echo "CHANGELOG<<EOF"
+          echo -e "## ${{ env.MODULE_NAME }}\n${MODULE_DESC}\n\n---\n\n# Changelog:\n${CHANGELOG_RAW}"
+          echo "EOF"
+        } >> $GITHUB_ENV
+
+        if [ "$CURRENT_VERSION_CODE" -gt "$PREVIOUS_VERSION_CODE" ]; then
+          echo "version_changed=true" >> $GITHUB_ENV
+        else
+          echo "version_changed=false" >> $GITHUB_ENV
+        fi
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v7
+      with:
+        name: ${{ env.ZIP_NAME }}
+        path: 'module'
+
+    - name: Download artifact
+      if: ${{ env.version_changed == 'true' || inputs.force_release }}
+      uses: actions/download-artifact@v8
+      with:
+        name: ${{ env.ZIP_NAME }}
+        path: ${{ env.MODULE_NAME }}
+
+    - name: Zip module for release
+      if: ${{ env.version_changed == 'true' || inputs.force_release }}
+      run: |
+        cd ${{ env.MODULE_NAME }}
+        zip -r ../${{ env.MODULE_NAME }}.zip .
+        cd ..
+
+    - name: Create new release
+      if: ${{ env.version_changed == 'true' }}
+      uses: softprops/action-gh-release@v3
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      with:
+        files: "${{ env.MODULE_NAME }}.zip"
+        tag_name: "${{ env.VERSION }}"
+        name: "Release ${{ env.VERSION }}"
+        body: "${{ env.CHANGELOG }}"
+        draft: false
+        prerelease: false
+
+    - name: Force update latest release file
+      if: ${{ inputs.force_release }}
+      uses: softprops/action-gh-release@v3
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      with:
+        files: "${{ env.MODULE_NAME }}.zip"
+        tag_name: "${{ env.VERSION }}"
+        name: "Release ${{ env.VERSION }}"
