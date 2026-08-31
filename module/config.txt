@@ -1,0 +1,19 @@
+# KEY=VALUE toggles, one per line, blank = skip that toggle
+#
+# hide_sus_mnts_for_non_su_procs: 0 = don't hide, 1 = hide all sus mounts
+#   for non-su processes (default 0 in kernel). Useful to set to 1 early
+#   (post-fs-data) if using ReZygisk without TreatWheel, to stop zygote
+#   from caching the sus mounts in memory, and set back to 0 later
+#   (boot-completed) to let kernel/zygisk unmount them for user processes —
+#   or just leave it enabled if you prefer.
+#
+# enable_log: 0 = disable susfs kernel log, 1 = enable
+#
+# enable_avc_log_spoofing: 0 = disable, 1 = spoof the sus 'su' tcontext as
+#   'u:r:priv_app:s0:c512,c768' in avc log, bypassing 'su' domain detection
+#   via /proc/<pid> enumeration (default 0 in kernel). Disable this when
+#   debugging permission/selinux issues.
+#
+HIDE_SUS_MNTS_NON_SU=1
+ENABLE_LOG=0
+ENABLE_AVC_LOG_SPOOFING=1

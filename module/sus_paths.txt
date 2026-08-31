@@ -1,0 +1,13 @@
+# one path per line, hidden via add_sus_path
+# only effective for umounted process with uid >= 10000
+# please be reminded that if the target path has upper mounts then make sure
+# the proper layer is added, otherwise it may not be effective for the target process
+#
+# best for paths that are read-only / static all the time (one-time add,
+# won't survive the path being deleted and recreated — use add_sus_path_loop
+# instead for paths that get modified/recreated frequently)
+#
+# /sys/block/loop0
+# /system/addon.d
+# /vendor/bin/install-recovery.sh
+# /system/bin/install-recovery.sh

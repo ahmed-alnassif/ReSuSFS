@@ -1,0 +1,15 @@
+# one entry per line: /target/path /redirected/path uid_scheme
+#
+# uid_scheme:
+#   0 -> non-app processes (uid < 10000)
+#   1 -> non-su processes with uid 0 (root process, not su domain)
+#   2 -> non-su processes (use carefully!)
+#   3 -> umounted processes with uid >= 10000 (use carefully!)
+#   4 -> umounted processes, includes most init-spawned processes (use carefully!)
+#
+# both target_pathname and redirected_pathname must already exist before
+# they're added, and selinux permissions of both paths are the user's
+# responsibility to set up first (e.g. clone perms onto the redirect target
+# so it matches the original before adding it here)
+#
+# /system/etc/hosts /data/local/tmp/my_hosts 0

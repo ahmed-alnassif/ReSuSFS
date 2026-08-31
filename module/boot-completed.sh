@@ -1,0 +1,9 @@
+#!/bin/sh
+PATH=/data/adb/ksu/bin:$PATH
+MODDIR="/data/adb/modules/ReSuSFS"
+PERSISTENT_DIR="/data/adb/ReSuSFS"
+
+# apply late-stage susfs config now that mounts have settled
+sh $MODDIR/ReSuSFS.sh --stage-late
+
+# EOF

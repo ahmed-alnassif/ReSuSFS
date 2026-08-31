@@ -1,0 +1,21 @@
+# one library path per line, hidden via add_sus_map
+# hides the mmapped file from /proc/self/[maps|smaps|smaps_rollup|map_files|mem|pagemap]
+# does NOT hide anon memory or inline/plt hooks caused by the library itself
+# does NOT support hiding for anon memory
+# may not evade detection by apps with good injection detection
+#
+# best applied late (boot-completed), after the target may have been mounted,
+# and the target path must have the same dev number as in the global mnt ns
+# or the sus map flag won't be visible to the umounted process.
+#
+# to debug: find pid of the app, `cat /proc/<pid>/maps | grep <path>`,
+# then compare its dev number against `cat /proc/1/mountinfo | grep <path>`.
+# if they don't match, the path belongs to a different mnt ns and needs
+# `busybox nsenter -t <pid_of_that_mnt_ns> -m ksu_susfs add_sus_map <path>` instead.
+#
+# hide a zygisk module's native lib:
+# /data/adb/modules/some_module/zygisk/arm64-v8a.so
+#
+# hide font-module map traces:
+# /system/fonts/Roboto-Regular.ttf
+# /system/fonts/RobotoStatic-Regular.ttf

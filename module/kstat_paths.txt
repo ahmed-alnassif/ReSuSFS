@@ -1,0 +1,8 @@
+# one path per line, spoofed via add_sus_kstat -> update_sus_kstat
+# staged early (post-fs-data, BEFORE the path gets bind mounted/overlaid)
+# committed late (boot-completed, AFTER the mount happens) to fix up the
+# changed ino/dev while keeping size/blocks consistent with the pre-mount stat
+# use update_sus_kstat_full_clone instead if you want the full stat cloned
+#
+# typical use: a file you're bind-mounting over, e.g. a spoofed hosts file
+# /system/etc/hosts

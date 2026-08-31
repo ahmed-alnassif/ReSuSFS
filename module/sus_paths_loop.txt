@@ -1,0 +1,44 @@
+# one path per line, hidden via add_sus_path_loop
+# re-flagged as SUS_PATH again for the app process every time it's spawned
+# by zygote and marked umounted
+# does NOT check if path exists, only checks for empty string, be careful
+#
+# best for paths that are frequently modified/recreated (unlike add_sus_path,
+# which is a one-time add and won't survive the path being deleted/recreated)
+#
+# WARNING about /sdcard/Android/media/<pkg> paths specifically:
+# everything under Android/media/ shares the uid of the device's default
+# media provider app, not the uid of the app whose folder it looks like.
+# sus_path always hides the path at the kernel level regardless of who's
+# asking, so if that media provider process is NOT marked umounted (i.e.
+# umount is disabled for it in KSU Manager), sus_path has no effect there
+# and the path stays visible anyway.
+# worse: if you hide a media path that some OTHER app legitimately reads
+# from at runtime (its own external media storage), that app can fail to
+# load its resources, since it too gets the same blanket hiding.
+# only add an Android/media/<pkg> path if you have actually disabled umount
+# for the relevant uid in KSU Manager, and understand it may affect apps
+# beyond the one you intended to hide, e.g. Telegram reading
+# /sdcard/Android/media/org.telegram.messenger has broken from this before
+#
+# common tool/manager paths people hide on /sdcard:
+# /sdcard/TWRP
+# /sdcard/MT2
+# /sdcard/APKTool
+# /sdcard/Apktool_M
+# /sdcard/AppManager
+# /sdcard/Android/data/io.github.muntashirakon.AppManager
+# /sdcard/Android/media/io.github.muntashirakon.AppManager
+#
+# without HMA's vold app data enabled, sus_paths on /sdcard are still exposed
+# via the zwc exploit unless the underlying /data/media/0 path is added too:
+# /data/media/0/TWRP
+# /data/media/0/MT2
+# /data/media/0/AppManager
+# /data/media/0/Android/data/io.github.muntashirakon.AppManager
+# /data/media/0/Android/media/io.github.muntashirakon.AppManager
+# /data/media/0/Android/data/com.termux
+# /data/media/0/Android/media/com.termux
+#
+# paths outside /sdcard work too:
+# /data/local/tmp/main.jar

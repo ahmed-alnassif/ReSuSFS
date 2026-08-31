@@ -1,0 +1,6 @@
+# spoof uname for all processes, 'default' keeps the original string
+# only release and version are used, others are no longer needed
+# get real values from your stock ROM by running: uname -r / uname -v
+#
+release=default
+version=default

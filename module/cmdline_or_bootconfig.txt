@@ -1,0 +1,20 @@
+# path to a text file whose contents replace /proc/cmdline (non-gki)
+# or /proc/bootconfig (gki) output
+# leave empty/untouched to skip
+#
+# populate by dumping the real file first, then editing the fields you
+# want spoofed, e.g. for /proc/bootconfig style:
+#   cat /proc/bootconfig > cmdline_or_bootconfig.txt
+#   then edit lines like:
+#	 androidboot.bootreason = "reboot"
+#	 androidboot.vbmeta.device_state = "locked"
+#	 androidboot.verifiedbootstate = "green"
+#   and delete androidboot.verifiedbooterror / androidboot.verifyerrorpart lines
+#
+# or for /proc/cmdline style:
+#   cat /proc/cmdline > cmdline_or_bootconfig.txt
+#   then edit inline, e.g.:
+#	 androidboot.verifiedbootstate=green androidboot.vbmeta.device_state=locked
+#
+# note: this spoofing has limited real-world effect since no known root
+# detector currently checks it, but the mechanism is here if needed
