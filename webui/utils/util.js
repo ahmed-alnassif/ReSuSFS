@@ -349,6 +349,21 @@ export const PAGE_CONFIG = {
         },
         title: 'footer_susfs'
     },
+    'page-userhub': {
+        container: '.action-container',
+        main: ['#action-btn', '#force-update-btn'],
+        terminals: {
+            'action-terminal': {
+                buttons: ['#close-terminal'],
+                title: 'global_action'
+            },
+            'edit-content': {
+                buttons: ['#line-wrap-btn', '#save-btn'],
+                title: ''
+            }
+        },
+        title: 'footer_userhub'
+    },
     'page-more': {
         container: null,
         main: [],

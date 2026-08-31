@@ -1,0 +1,63 @@
+#userhub-empty {
+    display: none;
+    text-align: center;
+}
+
+.userhub-empty-text {
+    margin: 0;
+    opacity: 0.7;
+    font-size: 0.9em;
+}
+
+#userhub-list {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0 16px;
+}
+
+.script-box {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 16px;
+}
+
+.script-box .box-header h2 {
+    margin: 0;
+    font-family: monospace;
+    font-size: 1em;
+}
+
+.stage-toggle-row {
+    display: flex;
+    gap: 20px;
+    padding: 10px 0;
+    margin: 4px 0;
+    border-top: 1px solid var(--md-sys-color-outline-variant);
+    border-bottom: 1px solid var(--md-sys-color-outline-variant);
+}
+
+.stage-toggle-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.82em;
+    opacity: 0.85;
+}
+
+.script-box .box-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.script-run-btn {
+    flex-grow: 1;
+}
+
+.script-edit-btn,
+.script-delete-btn {
+    flex-shrink: 0;
+}

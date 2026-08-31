@@ -4,10 +4,12 @@ import { applyTranslations } from './utils/language.js';
 // Static imports for single bundle
 import homeHtml from './page/home/home.html?raw';
 import susfsHtml from './page/susfs/susfs.html?raw';
+import userhubHtml from './page/userhub/userhub.html?raw';
 import moreHtml from './page/more/more.html?raw';
 
 import * as homeModule from './page/home/home.js';
 import * as susfsModule from './page/susfs/susfs.js';
+import * as userhubModule from './page/userhub/userhub.js';
 import * as moreModule from './page/more/more.js';
 
 class Router {
@@ -20,6 +22,7 @@ class Router {
         this.registry = {
             home: { html: homeHtml, module: homeModule },
             susfs: { html: susfsHtml, module: susfsModule },
+            userhub: { html: userhubHtml, module: userhubModule },
             more: { html: moreHtml, module: moreModule }
         };
     }

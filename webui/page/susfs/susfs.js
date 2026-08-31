@@ -1,9 +1,7 @@
 import { exec } from 'kernelsu-alt';
 import { showPrompt, basePath, filePaths, applyFlags, runReSuSFS, fetchText, updateUIVisibility } from '../../utils/util.js';
 import { getString } from '../../utils/language.js';
-import { Compartment, EditorState } from '@codemirror/state';
-import { defaultKeymap, history, historyKeymap, indentWithTab } from '@codemirror/commands';
-import { EditorView, highlightActiveLineGutter, keymap, lineNumbers } from '@codemirror/view';
+import { openEditor } from '../../utils/editor.js';
 import { FileSelector } from '../../utils/file_selector.js';
 
 /**
@@ -194,177 +192,25 @@ function setupToggles() {
     };
 }
 
-// Full-file CodeMirror editor
-
-let setupEditor = false;
-let codeEditor;
-let lineWrappingEnabled = false;
-let currentEditKey = null;
-const lineWrapping = new Compartment();
-
-const editorTheme = EditorView.theme({
-    '&': {
-        height: '100%',
-        width: '100%',
-        boxSizing: 'border-box',
-        direction: 'ltr',
-        color: 'var(--md-sys-color-on-surface)',
-        backgroundColor: 'var(--md-sys-color-surface-container-high)',
-    },
-    '.cm-gutters': {
-        color: 'var(--md-sys-color-outline)',
-        backgroundColor: 'var(--md-sys-color-surface-container-low)',
-        borderRight: '1px solid var(--md-sys-color-outline-variant)',
-    },
-    '.cm-activeLineGutter': {
-        color: 'var(--md-sys-color-on-surface)',
-        backgroundColor: 'var(--md-sys-color-surface-container)',
-    },
-    '.cm-scroller': { width: '100%', minWidth: '0' },
-    '.cm-content': { flex: '1 1 auto', minWidth: '0', caretColor: 'var(--md-sys-color-primary)' },
-    '.cm-cursor, .cm-dropCursor': { borderLeftColor: 'var(--md-sys-color-primary)' },
-    '&.cm-focused .cm-selectionBackground, .cm-selectionBackground, ::selection': {
-        backgroundColor: 'var(--md-sys-color-secondary-container) !important',
-    },
-});
-
-function setEditorValue(content) {
-    if (codeEditor) {
-        codeEditor.dispatch({ changes: { from: 0, to: codeEditor.state.doc.length, insert: content } });
-        return;
-    }
-    document.getElementById('edit-input').textContent = content;
-}
-
-function setLineWrapping(enabled) {
-    lineWrappingEnabled = enabled;
-    codeEditor.dispatch({ effects: lineWrapping.reconfigure(enabled ? EditorView.lineWrapping : []) });
-    const lineWrapButton = document.getElementById('line-wrap-btn');
-    lineWrapButton.selected = enabled;
-    codeEditor.requestMeasure();
-}
-
 async function openConfigEditor(key) {
     const fileName = filePaths[key];
-    const fileNameInput = document.getElementById('file-name-input');
-    const fileNameEditor = document.querySelector('.file-name-editor');
-
-    fileNameEditor.querySelectorAll('span').forEach(span => span.style.display = 'none');
-    fileNameInput.readOnly = true;
-    fileNameInput.value = fileName;
-    fileNameInput.style.width = 'auto';
-
     const content = await fetchText('link/PERSISTENT_DIR/' + fileName, `${basePath}/${fileName}`).catch(() => '');
-    currentEditKey = key;
-    setEditorValue(content);
-    openEditorPanel();
-}
 
-/**
- * Force the editor's layout with inline styles, bypassing any stylesheet
- * entirely. Inline styles always win, so this can't be defeated by
- * cascade layers, specificity, or CSS load order.
- * @returns {void}
- */
-function forceEditorLayout() {
-    const editContent = document.getElementById('edit-content');
-    const editInput = document.getElementById('edit-input');
-
-    editContent.style.display = 'flex';
-    editContent.style.flexDirection = 'column';
-    editContent.style.alignItems = 'stretch';
-
-    editInput.style.display = 'flex';
-    editInput.style.flexDirection = 'column';
-    editInput.style.width = '100%';
-    editInput.style.height = '100%';
-    editInput.style.minWidth = '0';
-    editInput.style.minHeight = '0';
-    editInput.style.overflow = 'hidden';
-
-    const cmEditor = editInput.querySelector('.cm-editor');
-    if (cmEditor) {
-        cmEditor.style.width = '100%';
-        cmEditor.style.height = '100%';
-        cmEditor.style.flex = '1 1 auto';
-        cmEditor.style.minWidth = '0';
-        cmEditor.style.minHeight = '0';
-    }
-
-    const cmScroller = editInput.querySelector('.cm-scroller');
-    if (cmScroller) {
-        cmScroller.style.overflow = 'auto';
-        cmScroller.style.minWidth = '0';
-    }
-}
-
-function openEditorPanel() {
-    const backButton = document.querySelector('.back-button');
-    const saveButton = document.getElementById('save-btn');
-    const lineWrapButton = document.getElementById('line-wrap-btn');
-    const editor = document.getElementById('edit-content');
-    const bodyContent = document.getElementById('page-susfs');
-    const editorInput = document.getElementById('edit-input');
-
-    if (!setupEditor) {
-        setupEditor = true;
-        saveButton.onclick = saveConfigFile;
-        lineWrapButton.onclick = () => setLineWrapping(!lineWrappingEnabled);
-        const initialContent = editorInput.textContent;
-        editorInput.replaceChildren();
-        codeEditor = new EditorView({
-            state: EditorState.create({
-                doc: initialContent,
-                extensions: [
-                    lineNumbers(),
-                    highlightActiveLineGutter(),
-                    history(),
-                    keymap.of([...defaultKeymap, ...historyKeymap, indentWithTab]),
-                    lineWrapping.of([]),
-                    editorTheme,
-                ],
-            }),
-            parent: editorInput,
-        });
-    }
-
-    document.body.classList.add('editor-active');
-    bodyContent.style.overflowY = 'hidden';
-    editor.open();
-    requestAnimationFrame(() => {
-        codeEditor.requestMeasure();
-        forceEditorLayout();
-    });
-    backButton.onclick = () => closeEditorPanel();
-
-    function closeEditorPanel() {
-        if (!editor.classList.contains('open') && !document.body.classList.contains('editor-active')) return;
-        editor.close();
-        document.body.classList.remove('editor-active');
-        bodyContent.style.overflowY = 'auto';
-        codeEditor.scrollTo(0, 0);
-    }
-    window.__closeSusfsEditor = closeEditorPanel;
-}
-
-async function saveConfigFile() {
-    if (!currentEditKey) return;
-    const fileName = filePaths[currentEditKey];
-    const content = codeEditor.state.doc.toString().trim();
-    const command = `
-        cat << 'ReSuSFSEditorEOF' > ${basePath}/${fileName}
-${content}
+    openEditor(fileName, content, async (newContent) => {
+        const command = `
+            cat << 'ReSuSFSEditorEOF' > ${basePath}/${fileName}
+${newContent.trim()}
 ReSuSFSEditorEOF
-        chmod 644 ${basePath}/${fileName}`;
-    const result = await exec(command);
-    if (result.errno === 0) {
-        showPrompt(getString('global_saved', `${basePath}/${fileName}`));
-    } else {
-        showPrompt(getString('global_save_fail'), false);
-        console.error('Failed to save file:', result.stderr);
-    }
-    refreshBadges();
-    window.__closeSusfsEditor?.();
+            chmod 644 ${basePath}/${fileName}`;
+        const result = await exec(command);
+        if (result.errno === 0) {
+            showPrompt(getString('global_saved', `${basePath}/${fileName}`));
+        } else {
+            showPrompt(getString('global_save_fail'), false);
+            console.error('Failed to save file:', result.stderr);
+        }
+        refreshBadges();
+    });
 }
 
 export function mount() {
@@ -374,15 +220,25 @@ export function mount() {
 
     setupBoxActions();
     setupToggles();
+}
 
-    const actionBtn = document.getElementById('action-btn');
-    const forceUpdateButton = document.getElementById('force-update-btn');
-    actionBtn.onclick = () => runReSuSFS('--action');
-    forceUpdateButton.onclick = () => runReSuSFS('--force-update');
+const playIcon2 = `<svg xmlns="http://www.w3.org/2000/svg" height="34px" viewBox="0 -960 960 960" width="34px"><path d="M320-200v-560l440 280-440 280Z"/></svg>`;
+const refreshIcon2 = `<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"><path d="m296-224-56-56 240-240 240 240-56 56-184-183-184 183Zm0-240-56-56 240-240 240 240-56 56-184-183-184 183Z"/></svg>`;
+
+function restoreFabIcons() {
+    const actionIcon = document.querySelector('#action-btn md-icon');
+    const forceUpdateIcon = document.querySelector('#force-update-btn md-icon');
+    if (actionIcon) actionIcon.innerHTML = playIcon2;
+    if (forceUpdateIcon) forceUpdateIcon.innerHTML = refreshIcon2;
 }
 
 export function onShow() {
     updateUIVisibility();
+    restoreFabIcons();
+    const actionBtn = document.getElementById('action-btn');
+    const forceUpdateButton = document.getElementById('force-update-btn');
+    actionBtn.onclick = () => runReSuSFS('--action');
+    forceUpdateButton.onclick = () => runReSuSFS('--force-update');
     refreshBadges();
     loadToggles();
 }

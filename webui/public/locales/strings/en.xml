@@ -69,6 +69,20 @@
     <string name="toggle_avc_spoof">Spoof AVC 'su' Context</string>
     <string name="toggle_avc_spoof_desc">Hides the su domain from AVC log enumeration.</string>
     <string name="toggles_apply">Apply</string>
+    <!-- UserHub -->
+    <string name="userhub_empty">No scripts yet. Tap + to create one, or import a .sh file.</string>
+    <string name="userhub_stage_postfs">post-fs-data</string>
+    <string name="userhub_stage_bootcompleted">boot-completed</string>
+    <string name="userhub_run">Run</string>
+    <string name="userhub_delete">Delete</string>
+    <string name="userhub_new_script">New Script</string>
+    <string name="userhub_import_script">Import Script</string>
+    <string name="userhub_script_name">Script name</string>
+    <string name="userhub_invalid_name">Invalid script name</string>
+    <string name="userhub_already_exists">%s already exists</string>
+    <string name="userhub_confirm_delete">Delete %s? This cannot be undone.</string>
+    <string name="userhub_deleted">%s deleted</string>
+    <string name="userhub_imported">%s imported</string>
     <!-- More -->
     <string name="more_documents">Documents</string>
     <string name="more_usage">Usage</string>
@@ -95,6 +109,7 @@
     <!-- Footer -->
     <string name="footer_home">Home</string>
     <string name="footer_susfs">SuSFS</string>
+    <string name="footer_userhub">UserHub</string>
     <string name="footer_more">More</string>
     <!-- Backup and Restore -->
     <string name="backup_restore_backup_and_restore">Backup &amp; Restore</string>
