@@ -53,7 +53,7 @@ All optional, all live under `/data/adb/ReSuSFS/`. Missing or empty files mean "
 
 Every command can be run manually via `ReSuSFS <flag>`. Useful for scripting, debugging, or if you just prefer terminal over WebUI.
 
-```sh
+```
  _____       _____        _____ ______ _____ 
 |  __ \     / ____|      / ____|  ____/ ____|
 | |__) |___| (___  _   _| (___ | |__ | (___  
