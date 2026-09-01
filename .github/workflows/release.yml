@@ -81,19 +81,42 @@ jobs:
         path: 'module'
 
     - name: Download artifact
-      if: env.version_changed == 'true' || inputs.force_release
       uses: actions/download-artifact@v8
       with:
         name: ${{ env.ZIP_NAME }}
         path: ${{ env.MODULE_NAME }}
 
     - name: Zip module for release
-      if: env.version_changed == 'true' || inputs.force_release
       run: |
         cd ${{ env.MODULE_NAME }}
         zip -r ../${{ env.ZIP_NAME }}.zip .
         cd ..
         cp ${{ env.ZIP_NAME }}.zip ${{ env.MODULE_NAME }}.zip
+
+    - name: Upload to Telegram
+      env:
+        BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        TOPIC_ID: ${{ secrets.TELEGRAM_TOPIC_ID }}
+        COMMIT_MSG: ${{ github.event.head_commit.message }}
+        COMMIT_URL: ${{ github.event.head_commit.url }}
+        RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        ZIP_NAME: ${{ env.ZIP_NAME }}
+      run: |
+        MSG=$(echo "$COMMIT_MSG" | head -1)
+
+        curl -s -F "chat_id=$CHAT_ID" \
+             -F "message_thread_id=$TOPIC_ID" \
+             -F "document=@$ZIP_NAME.zip" \
+             -F "caption=*${{ github.repository }}*
+
+        \`\`\`
+        $MSG
+        \`\`\`
+
+        [Commit]($COMMIT_URL) • [CI #${{ github.run_number }}]($RUN_URL)" \
+             -F "parse_mode=MarkdownV2" \
+             "https://api.telegram.org/bot$BOT_TOKEN/sendDocument" || exit 1
 
     - name: Generate changelog
       id: changelog
