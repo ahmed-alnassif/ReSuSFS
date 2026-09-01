@@ -118,7 +118,7 @@ jobs:
           -F "chat_id=$CHAT_ID" \
           -F "message_thread_id=$TOPIC_ID" \
           -F "document=@$ZIP_NAME.zip" \
-          -F "caption=*${REPOSITORY}*
+          -F "caption=*${REPOSITORY//-/\\-}*
 
         \`\`\`
         $MSG
