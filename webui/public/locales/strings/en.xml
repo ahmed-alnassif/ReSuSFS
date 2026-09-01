@@ -115,9 +115,9 @@
     <string name="footer_userhub">UserHub</string>
     <string name="footer_more">More</string>
     <!-- Backup and Restore -->
-    <string name="backup_restore_backup_and_restore">Backup &amp; Restore</string>
-    <string name="backup_restore_export">Export config</string>
-    <string name="backup_restore_restore">Restore config</string>
+    <string name="backup_restore_backup_and_restore">Backup &amp; Restore Configuration</string>
+    <string name="backup_restore_export">Export</string>
+    <string name="backup_restore_restore">Restore</string>
     <string name="backup_restore_exported">Config saved to %s</string>
     <string name="backup_restore_export_fail">Fail to export config</string>
     <string name="backup_restore_nothing_to_export">Nothing to export yet</string>

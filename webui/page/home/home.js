@@ -2,6 +2,7 @@ import { exec } from 'kernelsu-alt';
 import { basePath, moduleDirectory, filePaths, runReSuSFS, updateUIVisibility } from '../../utils/util.js';
 import { getString } from '../../utils/language.js';
 import { addCopyToClipboardListeners } from '../../utils/docs.js';
+import { exportConfig, restoreConfig } from '../../utils/backup.js';
 
 /**
  * Config files shown as tiles in the summary box, in display order.
@@ -164,9 +165,17 @@ function setupSupportCard() {
     };
 }
 
+function setupBackupCard() {
+    const exportBtn = document.getElementById('home-export-btn');
+    const restoreBtn = document.getElementById('home-restore-btn');
+    if (exportBtn) exportBtn.onclick = () => exportConfig();
+    if (restoreBtn) restoreBtn.onclick = () => restoreConfig();
+}
+
 export function mount() {
     setupStatusBox();
     setupSupportCard();
+    setupBackupCard();
 
     const actionBtn = document.getElementById('action-btn');
     const forceUpdateButton = document.getElementById('force-update-btn');

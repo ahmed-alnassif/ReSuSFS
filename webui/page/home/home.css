@@ -153,6 +153,55 @@
     opacity: 0.6;
 }
 
+.backup-card {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.backup-card h2 {
+    margin: 0;
+}
+
+.backup-card-row {
+    display: flex;
+    gap: 10px;
+}
+
+.backup-card-row md-filled-tonal-button {
+    flex: 1;
+    --md-filled-tonal-button-container-shape: 14px;
+    --md-filled-tonal-button-container-height: 48px;
+    --md-filled-tonal-button-label-text-font: inherit;
+    --md-filled-tonal-button-label-text-size: 0.88em;
+    --md-filled-tonal-button-icon-size: 18px;
+    border: 1px solid var(--md-sys-color-outline-variant);
+    border-radius: 14px;
+    padding: 16px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.backup-card-row md-filled-tonal-button md-icon {
+    margin: 0 !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.backup-card-row md-filled-tonal-button span {
+    display: inline;
+}
+
+.backup-card-row md-filled-tonal-button md-icon svg {
+    width: 18px;
+    height: 18px;
+    display: block;
+}
+
 .features-meta {
     display: flex;
     flex-direction: column;

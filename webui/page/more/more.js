@@ -4,6 +4,7 @@ import { getString } from '../../utils/language.js';
 import { FileSelector } from '../../utils/file_selector.js';
 import { addCopyToClipboardListeners, setupDocsMenu } from '../../utils/docs.js';
 import { formatCapturedLogs, capturedLogs } from '../../utils/log_catcher.js';
+import { exportConfig, restoreConfig } from '../../utils/backup.js';
 
 let languageMenuListener = false;
 /**
@@ -52,63 +53,6 @@ function openAboutDialog() {
     if (authorLink) authorLink.onclick = (e) => { e.preventDefault(); linkRedirect('https://github.com/ahmed-alnassif'); };
     if (licenseLink) licenseLink.onclick = (e) => { e.preventDefault(); linkRedirect('https://www.gnu.org/licenses/gpl-3.0.html'); };
     if (repoLink) repoLink.onclick = (e) => { e.preventDefault(); linkRedirect('https://github.com/ahmed-alnassif/ReSuSFS'); };
-}
-
-async function exportConfig() {
-    const configFiles = Object.entries(filePaths)
-        .filter(([key]) => key !== 'customCSS')
-        .map(([, path]) => path);
-
-    const command = `
-cd "${basePath}" || { echo "ERROR_CD"; exit 1; }
-
-existing=""
-for f in ${configFiles.map(f => `"${f}"`).join(' ')}; do
-    [ -f "$f" ] && existing="$existing $f"
-done
-[ -d scripts ] && [ -n "$(ls -A scripts 2>/dev/null)" ] && existing="$existing scripts"
-
-if [ -z "$existing" ]; then
-    echo "NOTHING_TO_EXPORT"
-    exit 1
-fi
-
-OUT="/storage/emulated/0/Download/ReSuSFS_config_$(date +%Y%m%d_%H%M%S).tar.gz"
-busybox tar czf "$OUT" $existing 2>/tmp/resusfs_tar.log
-
-if [ -f "$OUT" ]; then
-    echo "$OUT"
-else
-    echo "ERROR_TAR_FAILED"
-    cat /tmp/resusfs_tar.log 2>/dev/null
-    exit 1
-fi
-    `;
-
-    const result = await exec(command);
-    const output = result.stdout.trim();
-
-    if (result.errno === 0 && output && !output.startsWith('ERROR_')) {
-        showPrompt(getString('backup_restore_exported', output));
-    } else if (output.includes('NOTHING_TO_EXPORT')) {
-        showPrompt(getString('backup_restore_nothing_to_export'), false);
-    } else {
-        console.error('Backup failed:', output, result.stderr);
-        showPrompt(getString('backup_restore_export_fail'), false);
-    }
-}
-
-async function restoreConfig() {
-    const path = await FileSelector.getFilePath('tar.gz');
-    if (!path) return;
-
-    const result = await exec(`busybox tar xzf "${path}" -C "${basePath}" 2>&1`);
-    if (result.errno === 0) {
-        showPrompt(getString('backup_restore_restored'));
-    } else {
-        console.error('Restore failed:', result.stdout, result.stderr);
-        showPrompt(getString('backup_restore_restore_fail'), false);
-    }
 }
 
 /**
