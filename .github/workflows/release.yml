@@ -113,7 +113,6 @@ jobs:
         [[ -f "$ZIP_NAME.zip" ]] || { echo "::error::$ZIP_NAME.zip not found"; exit 1; }
 
         MSG=$(printf '%s\n' "$COMMIT_MSG" | head -1)
-        MSG=$(printf '%s' "$MSG" | sed 's/[\\_*\[\]()~`>#+\-=|{}.!]/\\&/g')
 
         curl --fail-with-body -sS \
           -F "chat_id=$CHAT_ID" \
