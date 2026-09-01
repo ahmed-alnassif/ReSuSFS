@@ -65,7 +65,7 @@ jobs:
         echo "VERSION=${VERSION}" >> $GITHUB_ENV
         echo "PREVIOUS_VERSION=${PREVIOUS_VERSION}" >> $GITHUB_ENV
         COMMIT_ID=$(git rev-parse --short HEAD)
-        ZIP_NAME=${{ env.MODULE_NAME }}_${VERSION}-${COMMIT_ID}
+        ZIP_NAME=${{ env.MODULE_NAME }}_${VERSION}
         echo "ZIP_NAME=${ZIP_NAME}" >> $GITHUB_ENV
 
         if [ "$CURRENT_VERSION_CODE" -gt "$PREVIOUS_VERSION_CODE" ]; then
@@ -93,6 +93,7 @@ jobs:
         cd ${{ env.MODULE_NAME }}
         zip -r ../${{ env.ZIP_NAME }}.zip .
         cd ..
+        cp ${{ env.ZIP_NAME }}.zip ${{ env.MODULE_NAME }}.zip
 
     - name: Generate changelog
       id: changelog
@@ -123,7 +124,7 @@ jobs:
       if: env.version_changed == 'true'
       uses: softprops/action-gh-release@v3
       with:
-        files: "${{ env.ZIP_NAME }}.zip"
+        files: "*.zip"
         tag_name: "${{ env.VERSION }}"
         name: "ReSuSFS ${{ env.VERSION }}"
         body_path: changelog_body.md
@@ -134,7 +135,7 @@ jobs:
       if: ${{ inputs.force_release }}
       uses: softprops/action-gh-release@v3
       with:
-        files: "${{ env.ZIP_NAME }}.zip"
+        files: "*.zip"
         tag_name: "${{ env.VERSION }}"
         name: "ReSuSFS ${{ env.VERSION }}"
         body_path: changelog_body.md
