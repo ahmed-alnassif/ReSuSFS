@@ -3,6 +3,7 @@
 [![Build Status](https://github.com/ahmed-alnassif/ReSuSFS/actions/workflows/release.yml/badge.svg)](https://github.com/ahmed-alnassif/ReSuSFS/actions/workflows/release.yml)
 [![Latest Release](https://img.shields.io/github/v/release/ahmed-alnassif/ReSuSFS?label=Latest%20Release&color=00aa00)](https://github.com/ahmed-alnassif/ReSuSFS/releases)
 [![Downloads](https://img.shields.io/github/downloads/ahmed-alnassif/ReSuSFS/total?label=Downloads&color=00aa00)](https://github.com/ahmed-alnassif/ReSuSFS/releases)
+[![Group](https://img.shields.io/badge/Telegram-Group-blue.svg?logo=telegram)](https://t.me/ahmed_alnassif_tg)
 [![GitHub License](https://img.shields.io/github/license/ahmed-alnassif/ReSuSFS?logo=gnu)](/LICENSE)
 [![SuSFS](https://img.shields.io/badge/SuSFS-4CAF50?&logo=gitlab&logoColor=white)](https://gitlab.com/simonpunk/susfs4ksu)
 [![KernelSU](https://img.shields.io/badge/KernelSU-000000?&logo=github&logoColor=white)](https://github.com/tiann/KernelSU)
@@ -123,6 +124,12 @@ Export creates an archive in `/storage/emulated/0/Download/`. Send that file to 
 If ReSuSFS is useful to you, consider supporting development.
 
 **USDT (TRC20):** `TCyghELuquAtoUFdY65iuJSMqJXbYhWidA`
+
+## Community
+
+Join the discussion, get support, and stay up to date on ReSuSFS and other projects:
+
+- **Telegram Group:** [ahmed_alnassif_tg](https://t.me/ahmed_alnassif_tg)
 
 ## Credits
 
