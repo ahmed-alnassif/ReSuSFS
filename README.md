@@ -9,7 +9,7 @@
 [![KernelSU Next](https://img.shields.io/badge/KernelSU--Next-1976D2?&logo=github&logoColor=white)](https://github.com/KernelSU-Next/KernelSU-Next)
 [![ReSukiSU](https://img.shields.io/badge/ReSukiSU-E91E63?&logo=github&logoColor=white)](https://github.com/ReSukiSU/ReSukiSU)
 
-A simple [KernelSU](https://kernelsu.org) module that turns [SuSFS](https://gitlab.com/simonpunk/susfs4ksu) into a config-file-driven frontend. No manual shell editing, just edit a text file and apply.
+Root hiding made simple, powerful when you need it. A [KernelSU](https://kernelsu.org) module and WebUI that turns SuSFS into clean config files and toggle switches for everyday use, with a built-in script editor for power users who want more, all without leaving the WebUI.
 
 ## Requirements
 
@@ -41,13 +41,26 @@ All optional, all live under `/data/adb/ReSuSFS/`. Missing or empty files mean "
 ## WebUI Features
 
 - **Status dashboard**, see if SuSFS is active at a glance, tap for the full enabled-features breakdown straight from the kernel
-- **Built-in code editor**, full-screen editor for every config file, no terminal needed
+- **Configuration summary**, live entry counts per feature and enabled script count, right on the home page
+- **Built-in code editor**, full-screen editor for every config file and user script, no terminal needed
 - **File manager**, browse storage and load a custom file straight into any feature, without overwriting your default
 - **User-friendly SuSFS configs**, every feature exposed as its own clean box: edit, apply, or load custom
 - **Toggle switches**, flip kernel flags (mount hiding, logging, avc spoofing) without touching raw text
-- **Live entry counts**, see how many paths/rules are configured per feature before you dive in
-- **Backup and restore**, export your whole config to one file, restore it on any device
+- **UserHub**, create, edit, run, and delete your own shell scripts, with per-script toggles to run automatically at post-fs-data and/or boot-completed
+- **Backup and restore**, export your whole config (and any UserHub scripts) into one archive, restore it on any device
+- **Reboot button**, with confirmation, right in the header
 - **Multi-language support**
+
+## UserHub
+
+A tab for managing your own shell scripts without a terminal:
+
+- Create a new script from a blank template, or import an existing `.sh` file from storage
+- Edit any script in the same full-screen code editor used for config files
+- Run a script on demand, output streams live in the WebUI
+- Toggle a script to run automatically at `post-fs-data` and/or `boot-completed`
+
+Scripts live under `/data/adb/ReSuSFS/scripts/`. Which scripts run at which stage is tracked in `scripts_postfs.txt` and `scripts_bootcompleted.txt` under the same directory.
 
 ## CLI
 
@@ -101,9 +114,9 @@ ReSuSFS --status
 
 ## Backup and share your config
 
-The WebUI can export all your config files into a single JSON file, and restore from one. This makes it easy to share a working setup with the community, hand someone your config, or back it up before flashing something risky.
+The WebUI can export all your config files and UserHub scripts into a single archive, and restore from one. This makes it easy to share a working setup with the community, hand someone your config, or back it up before flashing something risky.
 
-Export creates a file in `/storage/emulated/0/Download/`. Send that file to anyone, they load it with Restore, done.
+Export creates an archive in `/storage/emulated/0/Download/`. Send that file to anyone, they load it with Restore, done.
 
 ## Donate
 
