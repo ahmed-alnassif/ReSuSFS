@@ -31,42 +31,57 @@ detect_key_press() {
 }
 
 CONFIG_DIR="$MODPATH/configs"
-CONFIG_FILES=$(ls "$CONFIG_DIR"/*.txt 2>/dev/null | xargs -n1 basename)
 
-if [ -z "$CONFIG_FILES" ]; then
-	ui_print "[!] No config files found in module"
+if [ ! -d "$CONFIG_DIR" ] || [ -z "$(ls -A "$CONFIG_DIR" 2>/dev/null)" ]; then
+    ui_print "[!] No config files found in module"
 else
-	DIFFERENT_FILES=""
+    CONFIG_FILES=$(get_all_files "$CONFIG_DIR")
 
-	for file in $CONFIG_FILES; do
-		if [ ! -f "$PERSISTENT_DIR/$file" ]; then
-			cp "$CONFIG_DIR/$file" "$PERSISTENT_DIR/$file"
-			ui_print "[+] $file copied (was missing)"
-		elif cmp -s "$CONFIG_DIR/$file" "$PERSISTENT_DIR/$file"; then
-			ui_print "[+] $file already exists (identical, skipped)"
-		else
-			DIFFERENT_FILES="$DIFFERENT_FILES $file"
-		fi
-	done
+    if [ -z "$CONFIG_FILES" ]; then
+        ui_print "[!] No config files found in module"
+    else
+        IDENTICAL_FILES=""
+        MISSING_FILES=""
+        DIFFERENT_FILES=""
 
-	if [ -n "$DIFFERENT_FILES" ]; then
-		ui_print "[*] Different config files found:"
-		for file in $DIFFERENT_FILES; do
-			ui_print "    - $file"
-		done
-		ui_print "[*] press VOLUME UP within 6 seconds to reset these configs to defaults"
-		ui_print "[*] press VOLUME DOWN, or wait, to keep your existing configs"
+        for file in $CONFIG_FILES; do
+            src_file="$CONFIG_DIR/$file"
+            dst_file="$PERSISTENT_DIR/$file"
 
-		if detect_key_press; then
-			for file in $DIFFERENT_FILES; do
-				cp "$CONFIG_DIR/$file" "$PERSISTENT_DIR/$file"
-				ui_print "[+] $file reset to default"
-			done
-			ui_print "[+] configs reset successful"
-		else
-			ui_print "[+] existing configs kept"
-		fi
-	fi
+            if [ ! -f "$dst_file" ]; then
+
+                MISSING_FILES="$MISSING_FILES $file"
+                mkdir -p "$PERSISTENT_DIR/$(dirname "$file")"
+                cp "$src_file" "$dst_file"
+                ui_print "[+] $file copied (was missing)"
+            elif cmp -s "$src_file" "$dst_file"; then
+                IDENTICAL_FILES="$IDENTICAL_FILES $file"
+                ui_print "[+] $file already exists (identical, skipped)"
+            else
+                DIFFERENT_FILES="$DIFFERENT_FILES $file"
+            fi
+        done
+
+        if [ -n "$DIFFERENT_FILES" ]; then
+            ui_print "[*] Different config files found:"
+            for file in $DIFFERENT_FILES; do
+                ui_print "    - $file"
+            done
+            ui_print "[*] press VOLUME UP within 6 seconds to reset these configs to defaults"
+            ui_print "[*] press VOLUME DOWN, or wait, to keep your existing configs"
+
+            if detect_key_press; then
+                for file in $DIFFERENT_FILES; do
+                    mkdir -p "$PERSISTENT_DIR/$(dirname "$file")"
+                    cp "$CONFIG_DIR/$file" "$PERSISTENT_DIR/$file"
+                    ui_print "[+] $file reset to default"
+                done
+                ui_print "[+] configs reset successful"
+            else
+                ui_print "[+] existing configs kept"
+            fi
+        fi
+    fi
 fi
 
 rm -rf $CONFIG_DIR

@@ -16,6 +16,11 @@ banner() {
 	echo
 }
 
+get_all_files() {
+    local dir="$1"
+    find "$dir" -type f 2>/dev/null | sed "s|^$dir/||"
+}
+
 download_file() {
 	local BB url="$1" out="$2" attempt=1
 	BB=$(command -v busybox) || { echo "[!] No BusyBox found!"; return 1; }
