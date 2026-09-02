@@ -33,7 +33,7 @@ async function countEntries(fileName) {
 async function countEnabledScripts() {
     const command = `
         cat "${basePath}/${SCRIPTS_POSTFS}" "${basePath}/${SCRIPTS_BOOTCOMPLETED}" 2>/dev/null \
-        | sed 's/#.*//' | grep -v '^[[:space:]]*$' | sort -u | wc -l
+        | sed 's/#.*//' | grep -v '^[[:space:]]*$' | grep -v '^!' | sort -u | wc -l
     `;
     const result = await exec(command);
     if (result.errno !== 0) return 0;

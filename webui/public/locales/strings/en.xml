@@ -86,6 +86,7 @@
     <string name="userhub_confirm_delete">Delete %s? This cannot be undone.</string>
     <string name="userhub_deleted">%s deleted</string>
     <string name="userhub_imported">%s imported</string>
+    <string name="userhub_by_author">by %s</string>
     <!-- More -->
     <string name="more_documents">Documents</string>
     <string name="more_usage">Usage</string>

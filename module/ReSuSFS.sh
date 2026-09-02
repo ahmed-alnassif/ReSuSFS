@@ -85,6 +85,9 @@ run_stage_scripts() {
 	list=$(read_list "$stage_file") || return
 	[ -z "$list" ] && return
 	echo "$list" | while IFS= read -r name; do
+		case "$name" in
+			"!"*) continue ;;
+		esac
 		script="$USER_SCRIPTS_DIR/$name"
 		if [ -f "$script" ]; then
 			echo "[>] running $script"

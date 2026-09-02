@@ -10,44 +10,156 @@ const pencilIcon = `<svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBo
 const playIcon = `<svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px"><path d="M320-200v-560l440 280-440 280Z"/></svg>`;
 const trashIcon = `<svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px"><path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/></svg>`;
 
+/**
+ * List every .sh file under the scripts directory, migrating any script
+ * that lacks the #title=/#author=/#desc= header block to include one
+ * (right after the shebang, or at the top if there's no shebang), and
+ * returning each script's parsed metadata.
+ * @returns {Promise<{name: string, title: string, author: string, desc: string}[]>}
+ */
 async function listScripts() {
-    const result = await exec(`ls -1 "${scriptsDir}"/*.sh 2>/dev/null | xargs -n1 basename 2>/dev/null`);
+    const command = `
+cd "${scriptsDir}" 2>/dev/null || exit 0
+for f in *.sh; do
+    [ -f "$f" ] || continue
+    if ! grep -q '^#title=' "$f" 2>/dev/null; then
+        first_line=$(head -n1 "$f")
+        case "$first_line" in
+            '#!'*)
+                { echo "$first_line"; echo "#title="; echo "#author="; echo "#desc="; tail -n +2 "$f"; } > "$f.tmp" && mv "$f.tmp" "$f"
+                ;;
+            *)
+                { echo "#!/system/bin/sh"; echo "#title="; echo "#author="; echo "#desc="; cat "$f"; } > "$f.tmp" && mv "$f.tmp" "$f"
+                ;;
+        esac
+        chmod 755 "$f"
+    fi
+    title=$(grep -m1 '^#title=' "$f" | cut -d= -f2-)
+    author=$(grep -m1 '^#author=' "$f" | cut -d= -f2-)
+    desc=$(grep -m1 '^#desc=' "$f" | cut -d= -f2-)
+    echo "RECORD_START"
+    echo "$f"
+    echo "$title"
+    echo "$author"
+    echo "$desc"
+    echo "RECORD_END"
+done
+    `;
+
+    const result = await exec(command);
     if (result.errno !== 0 || !result.stdout.trim()) return [];
-    return result.stdout.split('\n').map(s => s.trim()).filter(Boolean);
+
+    const scripts = [];
+    const records = result.stdout.split('RECORD_START').slice(1);
+    for (const record of records) {
+        const lines = record.split('RECORD_END')[0].split('\n').filter((_, i, arr) => i < arr.length);
+        const [, name, title, author, desc] = lines;
+        if (!name || !name.trim()) continue;
+        scripts.push({
+            name: name.trim(),
+            title: (title || '').trim(),
+            author: (author || '').trim(),
+            desc: (desc || '').trim(),
+        });
+    }
+    return scripts;
 }
 
 const postfsFile = `${basePath}/scripts_postfs.txt`;
 const bootcompletedFile = `${basePath}/scripts_bootcompleted.txt`;
 
-function escapeForSed(str) {
-    return str.replace(/[.*[\]^$\\]/g, '\\$&');
-}
-
-async function isScriptInStage(name, stageFile) {
-    const result = await exec(`grep -qxF "${name}" "${stageFile}" 2>/dev/null`);
-    return result.errno === 0;
-}
-
 function escapeForRegex(str) {
     return str.replace(/[.*[\]^$\\]/g, '\\$&');
 }
 
-async function setScriptStage(name, stageFile, enabled) {
-    if (enabled) {
-        await exec(`grep -qxF "${name}" "${stageFile}" 2>/dev/null || echo "${name}" >> "${stageFile}"`);
-    } else {
-        const escaped = escapeForRegex(name);
-        await exec(`sed -i "/^${escaped}$/d" "${stageFile}" 2>/dev/null`);
-    }
+/**
+ * Read a script's state for a given stage file.
+ * @param {string} name
+ * @param {string} stageFile
+ * @returns {Promise<'on'|'off'|'disabled'>} 'on' = bare "name.sh" line
+ *   present, 'disabled' = "!name.sh" line present (forced off, cannot be
+ *   re-enabled by tapping), 'off' = no line at all (default, tappable)
+ */
+async function getScriptStageState(name, stageFile) {
+    const escaped = escapeForRegex(name);
+    const result = await exec(`grep -m1 -E "^!?${escaped}$" "${stageFile}" 2>/dev/null`);
+    if (result.errno !== 0 || !result.stdout.trim()) return 'off';
+    return result.stdout.trim().startsWith('!') ? 'disabled' : 'on';
 }
 
-function buildScriptBox(name) {
+/**
+ * Toggle a script's state for a stage. Rewrites its existing line in
+ * place (bare <-> "!"-prefixed) to preserve file position; only appends
+ * a new line if the script has never appeared in this stage file before.
+ * @param {string} name
+ * @param {string} stageFile
+ * @param {boolean} enabled
+ * @returns {Promise<void>}
+ */
+async function setScriptStage(name, stageFile, enabled) {
+    const escaped = escapeForRegex(name);
+    const replacement = enabled ? name : `!${name}`;
+    const command = `
+touch "${stageFile}"
+if grep -qE "^!?${escaped}$" "${stageFile}" 2>/dev/null; then
+    sed -i "s/^!\\{0,1\\}${escaped}$/${replacement}/" "${stageFile}"
+else
+    echo "${replacement}" >> "${stageFile}"
+fi
+    `;
+    await exec(command);
+}
+
+/**
+ * Apply a script's stage state to its switch: grays out and disables the
+ * switch entirely when the stage file has it "!"-prefixed, otherwise
+ * wires the switch normally.
+ * @param {HTMLElement} switchEl
+ * @param {HTMLElement} itemEl - the .stage-toggle-item wrapper, for the grayed class
+ * @param {string} name
+ * @param {string} stageFile
+ * @returns {Promise<void>}
+ */
+async function applyStageState(switchEl, itemEl, name, stageFile) {
+    const state = await getScriptStageState(name, stageFile);
+
+    if (state === 'disabled') {
+        switchEl.selected = false;
+        switchEl.disabled = true;
+        itemEl?.classList.add('stage-disabled');
+        return;
+    }
+
+    switchEl.selected = state === 'on';
+    switchEl.disabled = false;
+    itemEl?.classList.remove('stage-disabled');
+    switchEl.addEventListener('change', () => setScriptStage(name, stageFile, switchEl.selected));
+}
+
+/**
+ * Build the DOM for a single script row.
+ * @param {{name: string, title: string, author: string, desc: string}} script
+ * @returns {HTMLElement}
+ */
+function buildScriptBox(script) {
+    const { name, title, author, desc } = script;
+    const displayTitle = title || name;
+
     const el = document.createElement('div');
     el.className = 'box translucent script-box';
     el.innerHTML = `
         <div class="box-header">
-            <h2>${name}</h2>
+            <div class="script-heading">
+                <h2>${displayTitle}</h2>
+                ${title ? `<span class="script-filename">${name}</span>` : ''}
+            </div>
         </div>
+        ${(author || desc) ? `
+        <p class="script-meta">
+            ${author ? `<span class="script-author">${getString('userhub_by_author', author)}</span>` : ''}
+            ${author && desc ? ' &middot; ' : ''}
+            ${desc ? `<span class="script-desc">${desc}</span>` : ''}
+        </p>` : ''}
         <div class="stage-toggle-row">
             <div class="stage-toggle-item">
                 <span>${getString('userhub_stage_postfs')}</span>
@@ -79,11 +191,11 @@ function buildScriptBox(name) {
     const postfsSwitch = el.querySelector('.toggle-postfs');
     const bootcompletedSwitch = el.querySelector('.toggle-bootcompleted');
 
-    isScriptInStage(name, postfsFile).then(enabled => postfsSwitch.selected = enabled);
-    isScriptInStage(name, bootcompletedFile).then(enabled => bootcompletedSwitch.selected = enabled);
+    const postfsItem = el.querySelector('.stage-toggle-item:has(.toggle-postfs)');
+    const bootcompletedItem = el.querySelector('.stage-toggle-item:has(.toggle-bootcompleted)');
 
-    postfsSwitch.addEventListener('change', () => setScriptStage(name, postfsFile, postfsSwitch.selected));
-    bootcompletedSwitch.addEventListener('change', () => setScriptStage(name, bootcompletedFile, bootcompletedSwitch.selected));
+    applyStageState(postfsSwitch, postfsItem, name, postfsFile);
+    applyStageState(bootcompletedSwitch, bootcompletedItem, name, bootcompletedFile);
 
     return el;
 }
@@ -99,7 +211,7 @@ async function refreshList() {
         return;
     }
     empty.style.display = 'none';
-    scripts.forEach(name => list.appendChild(buildScriptBox(name)));
+    scripts.forEach(script => list.appendChild(buildScriptBox(script)));
 }
 
 async function openScriptEditor(name) {
@@ -161,7 +273,7 @@ async function createScript() {
             return;
         }
 
-        await exec(`printf '#!/system/bin/sh\\nPATH=/data/adb/ksu/bin:/data/data/com.termux/files/usr/bin:\$PATH\\n\\n\\n' > "${path}" && chmod 755 "${path}"`);
+        await exec(`printf '#!/system/bin/sh\\n#title=\\n#author=\\n#desc=\\n\\nPATH=/data/adb/ksu/bin:/data/data/com.termux/files/usr/bin:\$PATH\\n\\n\\n' > "${path}" && chmod 755 "${path}"`);
         dialog.close();
         refreshList();
         openScriptEditor(name);

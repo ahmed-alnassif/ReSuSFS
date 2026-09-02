@@ -30,6 +30,33 @@
     font-size: 1em;
 }
 
+.script-heading {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.script-heading h2 {
+    margin: 0;
+}
+
+.script-filename {
+    font-family: monospace;
+    font-size: 0.72em;
+    opacity: 0.55;
+}
+
+.script-meta {
+    margin: 0;
+    font-size: 0.82em;
+    opacity: 0.75;
+    line-height: 1.4;
+}
+
+.script-author {
+    font-weight: 500;
+}
+
 .stage-toggle-row {
     display: flex;
     gap: 20px;
