@@ -30,7 +30,8 @@ detect_key_press() {
 	fi
 }
 
-CONFIG_FILES=$(ls "$MODPATH"/*.txt 2>/dev/null | xargs -n1 basename)
+CONFIG_DIR="$MODPATH/configs"
+CONFIG_FILES=$(ls "$CONFIG_DIR"/*.txt 2>/dev/null | xargs -n1 basename)
 
 if [ -z "$CONFIG_FILES" ]; then
 	ui_print "[!] No config files found in module"
@@ -39,9 +40,9 @@ else
 
 	for file in $CONFIG_FILES; do
 		if [ ! -f "$PERSISTENT_DIR/$file" ]; then
-			cp "$MODPATH/$file" "$PERSISTENT_DIR/$file"
+			cp "$CONFIG_DIR/$file" "$PERSISTENT_DIR/$file"
 			ui_print "[+] $file copied (was missing)"
-		elif cmp -s "$MODPATH/$file" "$PERSISTENT_DIR/$file"; then
+		elif cmp -s "$CONFIG_DIR/$file" "$PERSISTENT_DIR/$file"; then
 			ui_print "[+] $file already exists (identical, skipped)"
 		else
 			DIFFERENT_FILES="$DIFFERENT_FILES $file"
@@ -58,7 +59,7 @@ else
 
 		if detect_key_press; then
 			for file in $DIFFERENT_FILES; do
-				cp "$MODPATH/$file" "$PERSISTENT_DIR/$file"
+				cp "$CONFIG_DIR/$file" "$PERSISTENT_DIR/$file"
 				ui_print "[+] $file reset to default"
 			done
 			ui_print "[+] configs reset successful"
@@ -68,7 +69,7 @@ else
 	fi
 fi
 
-rm -f "$MODPATH"/*.txt
+rm -rf $CONFIG_DIR
 
 update_susfs
 
