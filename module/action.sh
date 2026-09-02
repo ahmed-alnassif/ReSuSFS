@@ -8,7 +8,7 @@ PERSISTENT_DIR="/data/adb/ReSuSFS"
 
 banner
 
-update_susfs
+update_susfs || exit 1
 
 export NO_BANNER=1
 sh $MODDIR/ReSuSFS.sh --status

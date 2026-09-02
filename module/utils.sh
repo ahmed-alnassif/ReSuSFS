@@ -45,12 +45,12 @@ update_susfs() {
 
 	if [ ! -d "$DEST_BIN_DIR" ]; then
 		echo "[!] '$DEST_BIN_DIR' not existed, installation aborted."
-		exit 1
+		return 1
 	fi
 
 	if [ "$ARCH" != "arm64-v8a" ]; then
 		echo "[!] Only arm64 is supported!"
-		exit 1
+		return 1
 	fi
 
 	BB=$(command -v busybox) || { echo "[!] No BusyBox found!"; return 1; }
@@ -66,7 +66,7 @@ update_susfs() {
 	else
 		rm -f "$tmp"
 		echo "[!] Installation failed!"
-		exit 1
+		return 1
 	fi
 }
 

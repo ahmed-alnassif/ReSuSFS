@@ -86,7 +86,7 @@ fi
 
 rm -rf $CONFIG_DIR
 
-update_susfs
+update_susfs || exit 1
 
 chmod 755 "$MODPATH/ReSuSFS.sh"
 chmod 644 "$MODPATH/post-fs-data.sh" "$MODPATH/service.sh" "$MODPATH/uninstall.sh" 2>/dev/null
