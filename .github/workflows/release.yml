@@ -102,6 +102,7 @@ jobs:
         COMMIT_URL: ${{ github.event.head_commit.url }}
         RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         REPOSITORY: ${{ github.repository }}
+        REPO_URL: ${{ github.server_url }}/${{ github.repository }}
         RUN_NUMBER: ${{ github.run_number }}
         ZIP_NAME: ${{ env.ZIP_NAME }}
       run: |
@@ -118,7 +119,7 @@ jobs:
           -F "chat_id=$CHAT_ID" \
           -F "message_thread_id=$TOPIC_ID" \
           -F "document=@$ZIP_NAME.zip" \
-          -F "caption=*${REPOSITORY//-/\\-}*
+          -F "caption=[*${REPOSITORY//-/\\-}*](${REPO_URL//-/\\-})
 
         \`\`\`
         $MSG
