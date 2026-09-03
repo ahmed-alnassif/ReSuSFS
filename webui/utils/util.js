@@ -398,6 +398,7 @@ export function updateUIVisibility(terminalId = null, isOpen = false) {
     const backBtn = document.querySelector('.back-button');
 
     // Hide ALL terminal buttons first to prevent "leaks"
+    document.getElementById('reboot-btn')?.classList.remove('show');
     const allTerminalButtons = new Set();
     Object.values(PAGE_CONFIG).forEach(c => {
         if (c.terminals) {
@@ -441,6 +442,9 @@ export function updateUIVisibility(terminalId = null, isOpen = false) {
 
         // Show main buttons
         (config.main || []).forEach(id => document.querySelector(id)?.classList.add('show'));
+
+        // Reboot button belongs here, on the normal page view
+        document.getElementById('reboot-btn')?.classList.add('show');
 
         // Restore title
         if (config.title) {
