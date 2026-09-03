@@ -1,7 +1,7 @@
 id=ReSuSFS
 name=ReSuSFS
-version=v2.3.0-4171ba3
-versionCode=3
+version=v2.3.0-9244d05
+versionCode=4
 author=ahmed-alnassif, simonpunk@gitlab.com
 updateJson=https://raw.githubusercontent.com/ahmed-alnassif/ReSuSFS/master/update.json
 description=The easiest way to use SuSFS on KernelSU. Config files and toggle switches for everyday use, a built-in script manager for power users.
