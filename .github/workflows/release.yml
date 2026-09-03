@@ -144,8 +144,7 @@ jobs:
     - name: Update CHANGELOG.md
       if: env.version_changed == 'true'
       run: |
-        echo -e "\n## [${VERSION}] - $(date +%Y-%m-%d)\n" >> CHANGELOG.md
-        tail -n +2 changelog_body.md >> CHANGELOG.md
+        { echo -e "\n## [${VERSION}] - $(date +%Y-%m-%d)\n"; tail -n +2 changelog_body.md; cat CHANGELOG.md; } > CHANGELOG.tmp && mv CHANGELOG.tmp CHANGELOG.md
 
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
