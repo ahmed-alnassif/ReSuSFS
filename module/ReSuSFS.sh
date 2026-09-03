@@ -14,22 +14,6 @@ versionCode=$(grep versionCode $MODDIR/module.prop | sed 's/versionCode=//g' )
 
 [ -n "$WEBUI_QUIET" ] && [ "${NO_BANNER:-0}" = "0" ] && banner
 
-[ -f $MODDIR/disable ] && {
-	echo "[*] not running since module has been disabled"
-	string="description=status: disabled ❌ | $(date)"
-	sed -i "s/^description=.*/$string/g" $MODDIR/module.prop
-	return
-}
-
-if [ ! -x "$SUSFS_BIN" ]; then
-	echo "[x] ksu_susfs binary not found at $SUSFS_BIN 😭"
-	echo "[x] this kernel does not expose susfs, or susfs userspace tool is missing"
-	string="description=status: susfs binary not found 😭 needs correction 💢"
-	sed -i "s/^description=.*/$string/g" $MODDIR/module.prop
-	: > "$MODDIR/disable"
-	return
-fi
-
 susfs() { "$SUSFS_BIN" "$@"; }
 
 version_ge() {
@@ -50,16 +34,6 @@ version_ge() {
 	[ "$minor1" -lt "$minor2" ] && return 1
 	[ "$patch1" -ge "$patch2" ]
 }
-
-susfs_version=$(susfs show version 2>/dev/null)
-if [ -z "$susfs_version" ] || ! version_ge "$susfs_version" "$SUSFS_MIN_VERSION"; then
-	echo "[x] unsupported susfs version: '$susfs_version' 😭"
-	echo "[x] need $SUSFS_MIN_VERSION or higher"
-	string="description=status: unsupported susfs $susfs_version ❌ | need $SUSFS_MIN_VERSION+"
-	sed -i "s/^description=.*/$string/g" $MODDIR/module.prop
-	: > "$MODDIR/disable"
-	return
-fi
 
 [ ! -d "$PERSISTENT_DIR" ] && mkdir -p "$PERSISTENT_DIR"
 
@@ -204,6 +178,30 @@ apply_cmdline_bootconfig() {
 }
 
 status_report() {
+	if [ -f $MODDIR/disable ]; then
+		echo "[*] not running since module has been disabled"
+		string="description=status: disabled ❌ | $(date)"
+		sed -i "s/^description=.*/$string/g" $MODDIR/module.prop
+		return
+	fi
+
+	if [ ! -x "$SUSFS_BIN" ]; then
+		echo "[x] ksu_susfs binary not found at $SUSFS_BIN 😭"
+		echo "[x] this kernel does not expose susfs, or susfs userspace tool is missing"
+		string="description=status: susfs binary not found 😭 needs correction 💢"
+		sed -i "s/^description=.*/$string/g" $MODDIR/module.prop
+		return
+	fi
+
+	susfs_version=$(susfs show version 2>/dev/null)
+	if [ -z "$susfs_version" ] || ! version_ge "$susfs_version" "$SUSFS_MIN_VERSION"; then
+		echo "[x] unsupported susfs version: '$susfs_version' 😭"
+		echo "[x] need $SUSFS_MIN_VERSION or higher"
+		string="description=status: unsupported susfs $susfs_version ❌ | need $SUSFS_MIN_VERSION+"
+		sed -i "s/^description=.*/$string/g" $MODDIR/module.prop
+		return
+	fi
+
 	feat=$(susfs show enabled_features 2>/dev/null | wc -l)
 	variant=$(susfs show variant 2>/dev/null)
 	string="description=status: active ✅ | susfs $susfs_version ($variant) | features: $feat 🧩"
