@@ -1,3 +1,26 @@
+
+## [v2.3.0-9244d05] - 2026-09-03
+
+
+### 🧩 Module
+
+- **fix:** don't disable the module in every reboot (@ahmed-alnassif)
+- **fix:** prevent setScriptStage from adding entries when disabling (@ahmed-alnassif)
+- update module.prop description (@ahmed-alnassif)
+
+### 📚 Documentation
+
+- fix changelog (@ahmed-alnassif)
+- my plan (@ahmed-alnassif)
+- fix formatting (@ahmed-alnassif)
+
+### ⚙️ CI/CD
+
+- **fix:** prepend changelog entries instead of appending (@ahmed-alnassif)
+
+### 🧹 Chores
+
+- bump version to v2.3.0-9244d05 (@ahmed-alnassif)
 ## [v2.3.0-4171ba3] - 2026-09-03
 
 
