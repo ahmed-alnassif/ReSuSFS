@@ -76,7 +76,7 @@ Every command can be run manually via `ReSuSFS <flag>`. Useful for scripting, de
 |_|  \_\___|_____/ \__,_|_____/|_|   |_____/ 
 
 Authors:  ahmed-alnassif, simonpunk@gitlab.com
-Version: v2.3.0-dev
+Version: v2.3.0
 
 [%] status: active ✅ | susfs v2.3.0 (GKI) | features: 9 🧩
 usage:
@@ -96,6 +96,9 @@ if [file] is given it is appended (deduped) into the default list, then applied:
  --apply-uname [file] 			set_uname from config
  --apply-cmdline-bootconfig [file] 	set_cmdline_or_bootconfig from file
  --apply-toggles <early|late> [file] 	apply hide_sus_mnts/enable_log/avc_log_spoofing from config
+ --run-script <file> 			run a user script from UserHub
+ --run-postfs-scripts 			run all UserHub scripts flagged for post-fs-data
+ --run-bootcompleted-scripts 		run all UserHub scripts flagged for boot-completed
 
  --help 				displays this message
 
