@@ -98,13 +98,16 @@ async function getScriptStageState(name, stageFile) {
  */
 async function setScriptStage(name, stageFile, enabled) {
     const escaped = escapeForRegex(name);
-    const replacement = enabled ? name : `!${name}`;
     const command = `
 touch "${stageFile}"
 if grep -qE "^!?${escaped}$" "${stageFile}" 2>/dev/null; then
-    sed -i "s/^!\\{0,1\\}${escaped}$/${replacement}/" "${stageFile}"
-else
-    echo "${replacement}" >> "${stageFile}"
+    if ${enabled}; then
+        sed -i "s/^!\\{0,1\\}${escaped}$/${name}/" "${stageFile}"
+    else
+        sed -i "/^!\\{0,1\\}${escaped}$/d" "${stageFile}"
+    fi
+elif ${enabled}; then
+    echo "${name}" >> "${stageFile}"
 fi
     `;
     await exec(command);
