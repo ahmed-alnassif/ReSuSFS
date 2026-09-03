@@ -162,6 +162,7 @@ export function runReSuSFS(...args) {
     const closeTerminal = () => {
         if (!isTerminalOpen) return;
         terminal.close();
+        rebootTerminalBtn.classList.remove('show');
         setTimeout(() => {
             isTerminalOpen = false;
         }, 100);
@@ -403,6 +404,7 @@ export function updateUIVisibility(terminalId = null, isOpen = false) {
 
     // Hide ALL terminal buttons first to prevent "leaks"
     document.getElementById('reboot-btn')?.classList.remove('show');
+    document.getElementById('reboot-terminal-btn')?.classList.remove('show');
     const allTerminalButtons = new Set();
     Object.values(PAGE_CONFIG).forEach(c => {
         if (c.terminals) {
