@@ -731,3 +731,25 @@
 .reboot-terminal-button.show {
     display: flex;
 }
+
+#reboot-terminal-btn {
+    pointer-events: auto !important;
+    z-index: 9999 !important;
+    position: relative;
+    cursor: pointer;
+}
+
+.fab-container.inTerminal {
+    z-index: 9998 !important;
+    pointer-events: auto !important;
+}
+
+#action-terminal-content {
+    pointer-events: none;
+}
+
+.reboot-terminal-button.show {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    display: flex !important;
+}
