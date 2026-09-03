@@ -4,4 +4,4 @@ version=v2.3.0-4171ba3
 versionCode=3
 author=ahmed-alnassif, simonpunk@gitlab.com
 updateJson=https://raw.githubusercontent.com/ahmed-alnassif/ReSuSFS/master/update.json
-description=SuSFS module
+description=The easiest way to use SuSFS on KernelSU. Config files and toggle switches for everyday use, a built-in script manager for power users.
