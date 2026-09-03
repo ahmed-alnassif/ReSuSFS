@@ -130,10 +130,27 @@ async function applyStageState(switchEl, itemEl, name, stageFile) {
         return;
     }
 
-    switchEl.selected = state === 'on';
     switchEl.disabled = false;
     itemEl?.classList.remove('stage-disabled');
-    switchEl.addEventListener('change', () => setScriptStage(name, stageFile, switchEl.selected));
+
+    let suppressNext = true;
+
+    switchEl.addEventListener('change', () => {
+        if (suppressNext) {
+            suppressNext = false;
+            return;
+        }
+        setScriptStage(name, stageFile, switchEl.selected);
+    });
+
+    switchEl.selected = state === 'on';
+
+    // Let any change event triggered by the assignment above (synchronous
+    // or deferred to a microtask by the component's own update cycle)
+    // resolve before treating further events as real user taps.
+    await Promise.resolve();
+    await Promise.resolve();
+    suppressNext = false;
 }
 
 /**
