@@ -128,19 +128,23 @@ export function runReSuSFS(...args) {
     const config = PAGE_CONFIG[activePage?.id] || PAGE_CONFIG['default'];
     const FabContainer = document.querySelector(config.container);
     const closeBtn = document.getElementById('close-terminal');
+    const rebootTerminalBtn = document.getElementById('reboot-terminal-btn');
 
     closeBtn.onclick = () => closeTerminal();
+    rebootTerminalBtn.onclick = () => document.getElementById('reboot-dialog')?.show();
     backButton.onclick = () => closeTerminal();
 
     if (!actionRunning) {
         actionRunning = true;
         terminalContent.innerHTML = '';
+        rebootTerminalBtn.classList.remove('show');
         const output = spawn("sh", [`${moduleDirectory}/ReSuSFS.sh`, ...args]);
         output.stdout.on('data', (data) => appendOutput(data));
         output.stderr.on('data', (data) => appendOutput(data));
         output.on('exit', () => {
             if (isTerminalOpen) {
                 closeBtn.classList.add('show');
+                rebootTerminalBtn.classList.add('show');
                 FabContainer?.classList.add('show');
             }
             actionRunning = false;

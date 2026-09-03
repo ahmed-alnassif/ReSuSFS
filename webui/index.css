@@ -721,3 +721,13 @@
     flex-shrink: 0;
     color: var(--md-sys-color-error);
 }
+
+.reboot-terminal-button {
+    display: none;
+    color: var(--md-sys-color-error);
+    margin-top: 8px;
+}
+
+.reboot-terminal-button.show {
+    display: flex;
+}
