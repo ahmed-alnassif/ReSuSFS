@@ -86,8 +86,9 @@ build_webui() {
 	if [ ! -f "pnpm-lock.yaml" ]; then
 		print_warn "pnpm-lock.yaml not found, using regular install"
 		pnpm install
-	else
-		pnpm install --frozen-lockfile --config.verify-deps-before-run=false
+	elif ! pnpm install --frozen-lockfile --config.verify-deps-before-run=false; then
+		print_warn "pnpm-lock.yaml is out of date with package.json, regenerating"
+		pnpm install --no-frozen-lockfile
 	fi
 
 	pnpm build
