@@ -15,6 +15,7 @@ CATEGORY_MAP = [
 	("refactor", "♻️ Refactoring"),
 	("style", "🎨 Style"),
 	("ci", "⚙️ CI/CD"),
+	("build", "🏗️ Build"),
 	("test", "🧪 Tests"),
 	("chore", "🧹 Chores"),
 ]
