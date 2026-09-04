@@ -10,6 +10,12 @@ const pencilIcon = `<svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBo
 const playIcon = `<svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px"><path d="M320-200v-560l440 280-440 280Z"/></svg>`;
 const trashIcon = `<svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px"><path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/></svg>`;
 
+let scriptCache = [];
+let postfsStateCache = {};
+let bootcompletedStateCache = {};
+let scriptObserver = null;
+let scriptsDirty = true;
+
 /**
  * List every .sh file under the scripts directory (migrating any script
  * missing the #title=/#author=/#desc= header), and in the same shell
@@ -226,22 +232,80 @@ function buildScriptBox(script, postfsState, bootcompletedState) {
     return el;
 }
 
+/**
+ * Mark the script list as needing a real refresh next time it's shown.
+ * Call this after anything that actually changes scripts on disk.
+ * @returns {void}
+ */
+function markScriptsDirty() {
+    scriptsDirty = true;
+}
+
+/**
+ * Refresh the list only if something has actually changed since the
+ * last fetch, so switching tabs repeatedly doesn't re-run the whole
+ * shell scan and DOM rebuild every time.
+ * @returns {Promise<void>}
+ */
+async function refreshListIfDirty() {
+    if (!scriptsDirty) return;
+    await refreshList();
+    scriptsDirty = false;
+}
+
 async function refreshList() {
     const list = document.getElementById('userhub-list');
     const empty = document.getElementById('userhub-empty');
     const { scripts, postfsStates, bootcompletedStates } = await listScripts();
 
+    scriptCache = scripts;
+    postfsStateCache = postfsStates;
+    bootcompletedStateCache = bootcompletedStates;
+
+    scriptObserver?.disconnect();
     list.innerHTML = '';
+
     if (scripts.length === 0) {
         empty.style.display = 'block';
         return;
     }
     empty.style.display = 'none';
-    scripts.forEach(script => {
-        const postfsState = postfsStates[script.name] || 'off';
-        const bootcompletedState = bootcompletedStates[script.name] || 'off';
-        list.appendChild(buildScriptBox(script, postfsState, bootcompletedState));
+
+    scriptObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                mountScriptBox(entry.target);
+                scriptObserver.unobserve(entry.target);
+            }
+        });
+    }, { root: null, rootMargin: '400px 0px', threshold: 0 });
+
+    scripts.forEach((script, index) => {
+        const placeholder = document.createElement('div');
+        placeholder.className = 'box translucent script-box script-placeholder';
+        placeholder.dataset.scriptIndex = index;
+        placeholder.innerHTML = `<h2 class="script-placeholder-title">${script.title || script.name}</h2>`;
+        list.appendChild(placeholder);
+        scriptObserver.observe(placeholder);
     });
+}
+
+/**
+ * Replace a placeholder row with the real interactive box, using data
+ * already cached from the last refreshList() batch fetch, no exec()
+ * round-trip needed.
+ * @param {HTMLElement} placeholder
+ * @returns {void}
+ */
+function mountScriptBox(placeholder) {
+    const index = Number(placeholder.dataset.scriptIndex);
+    const script = scriptCache[index];
+    if (!script) return;
+
+    const postfsState = postfsStateCache[script.name] || 'off';
+    const bootcompletedState = bootcompletedStateCache[script.name] || 'off';
+    const box = buildScriptBox(script, postfsState, bootcompletedState);
+    placeholder.replaceWith(box);
 }
 
 async function openScriptEditor(name) {
@@ -256,6 +320,7 @@ ${newContent.trim()}
 ReSuSFSScriptEOF
             chmod 755 ${path}`;
         const saveResult = await exec(command);
+        markScriptsDirty();
         if (saveResult.errno === 0) {
             showPrompt(getString('global_saved', path));
         } else {
@@ -269,6 +334,7 @@ ReSuSFSScriptEOF
 async function deleteScript(name) {
     if (!confirm(getString('userhub_confirm_delete', name))) return;
     const result = await exec(`rm -f "${scriptsDir}/${name}"`);
+    markScriptsDirty();
     if (result.errno === 0) {
         showPrompt(getString('userhub_deleted', name));
     } else {
@@ -304,6 +370,7 @@ async function createScript() {
         }
 
         await exec(`printf '#!/system/bin/sh\\n#title=\\n#author=\\n#desc=\\n\\nPATH=/data/adb/ksu/bin:/data/data/com.termux/files/usr/bin:\$PATH\\n\\n\\n' > "${path}" && chmod 755 "${path}"`);
+        markScriptsDirty();
         dialog.close();
         refreshList();
         openScriptEditor(name);
@@ -317,6 +384,7 @@ async function importScript() {
     const name = path.split('/').pop();
     const dest = `${scriptsDir}/${name}`;
     const result = await exec(`cp "${path}" "${dest}" && chmod 755 "${dest}"`);
+    markScriptsDirty();
     if (result.errno === 0) {
         showPrompt(getString('userhub_imported', name));
     } else {
@@ -338,7 +406,7 @@ function setFabIcons() {
 }
 
 export function mount() {
-
+    // nothing needed here anymore, binding moved to onShow
 }
 
 export function onShow() {
@@ -348,7 +416,7 @@ export function onShow() {
     const forceUpdateButton = document.getElementById('force-update-btn');
     actionBtn.onclick = () => createScript();
     forceUpdateButton.onclick = () => importScript();
-    refreshList();
+    refreshListIfDirty();
 }
 
 export function onHide() {

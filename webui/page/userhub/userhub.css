@@ -88,3 +88,15 @@
 .script-delete-btn {
     flex-shrink: 0;
 }
+
+.script-placeholder {
+    min-height: 148px;
+    display: flex;
+    align-items: center;
+    opacity: 0.5;
+}
+
+.script-placeholder-title {
+    margin: 0;
+    font-size: 1em;
+}
