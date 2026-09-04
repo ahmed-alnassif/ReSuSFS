@@ -753,3 +753,19 @@
     pointer-events: auto !important;
     display: flex !important;
 }
+
+.sort-header-btn {
+    flex-shrink: 0;
+}
+
+.sort-option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 0;
+}
+
+.sort-option label {
+    font-size: 0.95em;
+    cursor: pointer;
+}

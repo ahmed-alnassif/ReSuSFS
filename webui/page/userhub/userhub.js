@@ -16,17 +16,67 @@ let bootcompletedStateCache = {};
 let scriptObserver = null;
 let scriptsDirty = true;
 
+const SORT_KEY = 'resusfs_userhub_sort';
+
 /**
- * List every .sh file under the scripts directory (migrating any script
- * missing the #title=/#author=/#desc= header), and in the same shell
- * call, read both stage files once so per-script toggle state can be
- * computed in JS instead of one exec() round-trip per script per switch.
- * @returns {Promise<{name: string, title: string, author: string, desc: string}[]>}
+ * Read the persisted sort preference, defaulting to name ascending.
+ * @returns {'name_asc'|'name_desc'|'enabled_first'|'modified_desc'|'modified_asc'}
  */
-async function listScripts() {
+function getSortMode() {
+    return localStorage.getItem(SORT_KEY) || 'name_asc';
+}
+
+/**
+ * Map a sort mode to the ls flags that produce that file order natively.
+ * "enabled_first" has no ls equivalent (ls can't know toggle state), so
+ * it fetches in default alpha order and gets partitioned in JS instead.
+ * @param {string} mode
+ * @returns {string} ls flags, e.g. "-1t"
+ */
+function lsFlagsForMode(mode) {
+    switch (mode) {
+        case 'name_desc': return '-1r';
+        case 'modified_desc': return '-1t';
+        case 'modified_asc': return '-1tr';
+        case 'name_asc':
+        case 'enabled_first':
+        default: return '-1';
+    }
+}
+
+/**
+ * Apply the "enabled first" partition on top of whatever order the
+ * scripts already arrived in (ls already handled name/time ordering
+ * server-side; this only reorders by toggle state, which ls can't see).
+ * @param {object[]} scripts
+ * @param {string} mode
+ * @param {Record<string,string>} postfsStates
+ * @param {Record<string,string>} bootcompletedStates
+ * @returns {object[]}
+ */
+function sortScripts(scripts, mode, postfsStates, bootcompletedStates) {
+    if (mode !== 'enabled_first') return scripts;
+
+    const isEnabled = (s) => (postfsStates[s.name] === 'on') || (bootcompletedStates[s.name] === 'on');
+    const enabled = scripts.filter(isEnabled);
+    const disabled = scripts.filter(s => !isEnabled(s));
+    return [...enabled, ...disabled];
+}
+
+/**
+ * List every .sh file under the scripts directory, already ordered by
+ * ls itself according to the given sort mode (migrating any script
+ * missing the #title=/#author=/#desc= header along the way), and in the
+ * same shell call, read both stage files once so per-script toggle
+ * state can be computed in JS without extra exec() round-trips.
+ * @param {string} mode
+ * @returns {Promise<{scripts: object[], postfsStates: object, bootcompletedStates: object}>}
+ */
+async function listScripts(mode) {
+    const lsFlags = lsFlagsForMode(mode);
     const command = `
 cd "${scriptsDir}" 2>/dev/null || exit 0
-for f in *.sh; do
+for f in $(ls ${lsFlags} *.sh 2>/dev/null); do
     [ -f "$f" ] || continue
     if ! grep -q '^#title=' "$f" 2>/dev/null; then
         first_line=$(head -n1 "$f")
@@ -256,16 +306,17 @@ async function refreshListIfDirty() {
 async function refreshList() {
     const list = document.getElementById('userhub-list');
     const empty = document.getElementById('userhub-empty');
-    const { scripts, postfsStates, bootcompletedStates } = await listScripts();
+    const mode = getSortMode();
+    const { scripts, postfsStates, bootcompletedStates } = await listScripts(mode);
 
-    scriptCache = scripts;
+    scriptCache = sortScripts(scripts, mode, postfsStates, bootcompletedStates);
     postfsStateCache = postfsStates;
     bootcompletedStateCache = bootcompletedStates;
 
     scriptObserver?.disconnect();
     list.innerHTML = '';
 
-    if (scripts.length === 0) {
+    if (scriptCache.length === 0) {
         empty.style.display = 'block';
         return;
     }
@@ -280,7 +331,7 @@ async function refreshList() {
         });
     }, { root: null, rootMargin: '400px 0px', threshold: 0 });
 
-    scripts.forEach((script, index) => {
+    scriptCache.forEach((script, index) => {
         const placeholder = document.createElement('div');
         placeholder.className = 'box translucent script-box script-placeholder';
         placeholder.dataset.scriptIndex = index;
@@ -406,7 +457,25 @@ function setFabIcons() {
 }
 
 export function mount() {
-    // nothing needed here anymore, binding moved to onShow
+    const sortBtn = document.getElementById('sort-btn');
+    const sortDialog = document.getElementById('sort-dialog');
+    const closeBtn = sortDialog.querySelector('.close-btn');
+    const radios = sortDialog.querySelectorAll('md-radio');
+
+    sortBtn.onclick = () => {
+        radios.forEach(r => r.checked = r.value === getSortMode());
+        sortDialog.show();
+    };
+    closeBtn.onclick = () => sortDialog.close();
+
+    radios.forEach(radio => {
+        radio.addEventListener('change', () => {
+            if (!radio.checked) return;
+            localStorage.setItem(SORT_KEY, radio.value);
+            markScriptsDirty();
+            refreshList();
+        });
+    });
 }
 
 export function onShow() {

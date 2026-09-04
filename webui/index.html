@@ -31,6 +31,11 @@
             <md-icon><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"><path d="M588-132 440-280l148-148 56 58-50 50h96q29 0 49.5-20.5T760-390q0-29-20.5-49.5T690-460H160v-80h530q63 0 106.5 43.5T840-390q0 63-43.5 106.5T690-240h-96l50 50-56 58ZM160-240v-80h200v80H160Zm0-440v-80h640v80H160Z"/></svg></md-icon>
             <md-icon slot="selected"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"><path d="M588-132 440-280l148-148 56 58-50 50h96q29 0 49.5-20.5T760-390q0-29-20.5-49.5T690-460H160v-80h530q63 0 106.5 43.5T840-390q0 63-43.5 106.5T690-240h-96l50 50-56 58ZM160-240v-80h200v80H160Zm0-440v-80h640v80H160Z"/></svg></md-icon>
         </md-icon-button>
+        <md-icon-button class="header-btn sort-header-btn" id="sort-btn" title="Sort">
+            <md-icon>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"><path d="M120-240v-80h240v80H120Zm0-200v-80h480v80H120Zm0-200v-80h720v80H120Z"/></svg>
+            </md-icon>
+        </md-icon-button>
         <md-icon-button class="header-btn reboot-header-btn" id="reboot-btn" title="Reboot">
             <md-icon>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"><path d="M440-122q-121-15-200.5-105.5T160-440q0-66 26-126.5T260-672l57 57q-38 34-57.5 79T240-440q0 88 56 155.5T440-202v80Zm80 0v-80q87-16 143.5-83T720-440q0-100-70-170t-170-70h-3l44 44-56 56-140-140 140-140 56 56-44 44h3q134 0 227 93t93 227q0 120-79.5 210.5T520-122Z"/></svg>
@@ -292,6 +297,35 @@
                         <span data-i18n="about_repo"></span>
                         <span><a href="#" id="about-repo-link">GitHub</a></span>
                     </div>
+                </div>
+            </div>
+            <div slot="actions">
+                <md-text-button class="close-btn" data-i18n="global_close"></md-text-button>
+            </div>
+        </md-dialog>
+        <!-- Sort options (UserHub) -->
+        <md-dialog id="sort-dialog">
+            <div slot="headline" data-i18n="userhub_sort_title"></div>
+            <div slot="content">
+                <div class="sort-option">
+                    <md-radio name="sort-option" id="sort-name-asc" value="name_asc" touch-target="wrapper"></md-radio>
+                    <label for="sort-name-asc" data-i18n="userhub_sort_name_asc"></label>
+                </div>
+                <div class="sort-option">
+                    <md-radio name="sort-option" id="sort-name-desc" value="name_desc" touch-target="wrapper"></md-radio>
+                    <label for="sort-name-desc" data-i18n="userhub_sort_name_desc"></label>
+                </div>
+                <div class="sort-option">
+                    <md-radio name="sort-option" id="sort-enabled-first" value="enabled_first" touch-target="wrapper"></md-radio>
+                    <label for="sort-enabled-first" data-i18n="userhub_sort_enabled_first"></label>
+                </div>
+                <div class="sort-option">
+                    <md-radio name="sort-option" id="sort-modified-desc" value="modified_desc" touch-target="wrapper"></md-radio>
+                    <label for="sort-modified-desc" data-i18n="userhub_sort_modified_desc"></label>
+                </div>
+                <div class="sort-option">
+                    <md-radio name="sort-option" id="sort-modified-asc" value="modified_asc" touch-target="wrapper"></md-radio>
+                    <label for="sort-modified-asc" data-i18n="userhub_sort_modified_asc"></label>
                 </div>
             </div>
             <div slot="actions">

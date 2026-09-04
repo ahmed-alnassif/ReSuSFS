@@ -87,6 +87,12 @@
     <string name="userhub_deleted">%s deleted</string>
     <string name="userhub_imported">%s imported</string>
     <string name="userhub_by_author">by %s</string>
+    <string name="userhub_sort_title">Sort Scripts</string>
+    <string name="userhub_sort_name_asc">Name (A to Z)</string>
+    <string name="userhub_sort_name_desc">Name (Z to A)</string>
+    <string name="userhub_sort_enabled_first">Enabled first</string>
+    <string name="userhub_sort_modified_desc">Recently modified</string>
+    <string name="userhub_sort_modified_asc">Oldest modified</string>
     <!-- More -->
     <string name="more_documents">Documents</string>
     <string name="more_usage">Usage</string>

@@ -357,6 +357,7 @@ export const PAGE_CONFIG = {
     'page-userhub': {
         container: '.action-container',
         main: ['#action-btn', '#force-update-btn'],
+        headerExtra: ['#sort-btn'],
         terminals: {
             'action-terminal': {
                 buttons: ['#close-terminal'],
@@ -417,6 +418,16 @@ export function updateUIVisibility(terminalId = null, isOpen = false) {
         document.querySelector(selector)?.classList.remove('show');
     });
 
+    // Reset any page-specific header buttons (e.g. UserHub's sort button)
+    // before deciding which page's own set, if any, should be shown.
+    const allHeaderExtraButtons = new Set();
+    Object.values(PAGE_CONFIG).forEach(c => {
+        c.headerExtra?.forEach(b => allHeaderExtraButtons.add(b));
+    });
+    allHeaderExtraButtons.forEach(selector => {
+        document.querySelector(selector)?.classList.remove('show');
+    });
+
     if (isOpen && terminalId) {
         // Hiding all FAB containers
         document.querySelectorAll('.fab-container').forEach(c => c.classList.remove('show', 'inTerminal'));
@@ -451,6 +462,9 @@ export function updateUIVisibility(terminalId = null, isOpen = false) {
 
         // Reboot button belongs here, on the normal page view
         document.getElementById('reboot-btn')?.classList.add('show');
+
+        // Show this page's own header buttons, if any
+        (config.headerExtra || []).forEach(id => document.querySelector(id)?.classList.add('show'));
 
         // Restore title
         if (config.title) {
