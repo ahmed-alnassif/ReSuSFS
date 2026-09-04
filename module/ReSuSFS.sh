@@ -189,13 +189,40 @@ apply_open_redirect() {
 
 
 apply_uname() {
-	[ -n "$1" ] && { append_to_default "$PERSISTENT_DIR/uname.txt" "$1" || return 1; }
+	[ -n "$1" ] && {
+		case "$1" in
+			*.txt) : ;;
+			*) echo "[x] only .txt files allowed: $1"; return 1 ;;
+		esac
+		[ -f "$1" ] || { echo "[x] file not found: $1"; return 1; }
+		[ -r "$1" ] || { echo "[x] file not readable: $1"; return 1; }
+		[ -s "$1" ] || { echo "[x] file empty: $1"; return 1; }
+
+		release=$(grep "^release=" "$1" | tail -n1 | cut -d'=' -f2-)
+		version=$(grep "^version=" "$1" | tail -n1 | cut -d'=' -f2-)
+
+		[ -z "$release" ] && { echo "[x] release missing in $1"; return 1; }
+		[ -z "$version" ] && { echo "[x] version missing in $1"; return 1; }
+
+		[ -f "$PERSISTENT_DIR/uname.txt" ] && {
+			cp "$PERSISTENT_DIR/uname.txt" "${PERSISTENT_DIR}/uname.txt.bak.$$"
+			grep -v "^release=" "$PERSISTENT_DIR/uname.txt" > "${PERSISTENT_DIR}/uname.txt.tmp.$$"
+			grep -v "^version=" "${PERSISTENT_DIR}/uname.txt.tmp.$$" > "$PERSISTENT_DIR/uname.txt"
+			rm -f "${PERSISTENT_DIR}/uname.txt.tmp.$$" "${PERSISTENT_DIR}/uname.txt.bak.$$"
+		}
+
+		printf "release=%s\nversion=%s\n" "$release" "$version" >> "$PERSISTENT_DIR/uname.txt"
+	}
+
 	file="$PERSISTENT_DIR/uname.txt"
 	[ -f "$file" ] || return
-	release=$(grep "^release=" "$file" | cut -d'=' -f2-)
-	version=$(grep "^version=" "$file" | cut -d'=' -f2-)
-	[ -z "$release" ] && release="default"
-	[ -z "$version" ] && version="default"
+
+	release=$(grep "^release=" "$file" | tail -n1 | cut -d'=' -f2-)
+	version=$(grep "^version=" "$file" | tail -n1 | cut -d'=' -f2-)
+
+	[ -z "$release" ] && { echo "[x] release missing in $file"; return 1; }
+	[ -z "$version" ] && { echo "[x] version missing in $file"; return 1; }
+
 	echo "[>] set_uname '$release' '$version'"
 	susfs set_uname "$release" "$version"
 }
