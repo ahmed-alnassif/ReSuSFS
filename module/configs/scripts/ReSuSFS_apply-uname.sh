@@ -12,8 +12,7 @@ build_info="#1 SMP PREEMPT $(getprop ro.build.date | tr -s ' ')"
 
 if ksud boot-info current-kmi >/dev/null 2>&1; then
 	kmi_tag=$(ksud boot-info current-kmi | cut -d'-' -f1)
-	android_tag=$(ksud boot-info current-kmi | cut -d'-' -f2)
-	final_release="${base_ver}-${android_tag}-9-g$(cat /proc/sys/kernel/random/boot_id | tr -d '-' | cut -c1-8)-ab$(cat /proc/sys/kernel/random/boot_id | tr -d '-' | cut -c9-16)"
+	final_release="${base_ver}-${kmi_tag}-11-g$(cat /proc/sys/kernel/random/boot_id | tr -d '-' | cut -c1-12)"
 else
 	final_release="${base_ver}-g$(cat /proc/sys/kernel/random/boot_id | tr -d '-' | cut -c1-8)"
 fi
