@@ -10,7 +10,7 @@
 [![KernelSU Next](https://img.shields.io/badge/KernelSU--Next-1976D2?&logo=github&logoColor=white)](https://github.com/KernelSU-Next/KernelSU-Next)
 [![ReSukiSU](https://img.shields.io/badge/ReSukiSU-E91E63?&logo=github&logoColor=white)](https://github.com/ReSukiSU/ReSukiSU)
 
-Root hiding made simple, powerful when you need it. A [KernelSU](https://kernelsu.org) module and WebUI that turns SuSFS into clean config files and toggle switches for everyday use, with a built-in script editor for power users who want more, all without leaving the WebUI.
+Root hiding made simple, powerful when you need it. A [KernelSU](https://kernelsu.org) module and WebUI that turns SuSFS into clean config files and toggle switches for everyday use, with built-in spoofing and hiding scripts for one-tap protection, plus a script editor for power users who want more, all without leaving the WebUI.
 
 > [!Important]
 > **Future Direction**
@@ -43,6 +43,27 @@ All optional, all live under `/data/adb/ReSuSFS/`. Missing or empty files mean "
 | `uname.txt` | spoof kernel release/version |
 | `cmdline_or_bootconfig.txt` | spoof `/proc/cmdline` or `/proc/bootconfig` |
 | `config.txt` | toggle kernel flags (mount hiding, logging, avc spoofing) |
+| `scripts/` | built-in scripts for spoofing and hiding |
+| `scripts_postfs.txt` | scripts to run at post-fs-data stage |
+| `scripts_bootcompleted.txt` | scripts to run at boot-completed stage |
+
+## Built-in Scripts
+
+Pre-made scripts for common spoofing and hiding tasks. They live in `/data/adb/ReSuSFS/scripts/` and can be enabled by adding their filenames to `scripts_postfs.txt` or `scripts_bootcompleted.txt`.
+
+| Script | Stage | What it does |
+|---|---|---|
+| `ReSuSFS_apply-cmdline-bootconfig.sh` | post-fs-data | hides bootloader unlock state from kernel cmdline/bootconfig |
+| `ReSuSFS_apply-kstat-add.sh` | post-fs-data | hides file stats for framework-managed paths |
+| `ReSuSFS_apply-ksu-settings.sh` | post-fs-data | sets KernelSU features for hiding and compatibility |
+| `ReSuSFS_apply-uname.sh` | post-fs-data | spoofs kernel version and build info from uname |
+| `ReSuSFS_apply-mount-hiding.sh` | boot-completed | hides module mounts redirected to system paths |
+| `ReSuSFS_apply-props.sh` | boot-completed | spoofs root indicators and removes custom ROM fingerprints |
+| `ReSuSFS_apply-settings.sh` | boot-completed | spoofs developer options and debugging states in system settings |
+| `ReSuSFS_apply-sus-maps.sh` | boot-completed | hides zygisk libraries and module font files from memory maps |
+| `ReSuSFS_apply-sus-paths-loop.sh` | boot-completed | hides recovery traces, root tools, and suspicious pty nodes |
+| `ReSuSFS_apply-sus-paths.sh` | boot-completed | hides custom ROM traces and addon.d paths |
+| `ReSuSFS_cleanup-markers.sh` | boot-completed | removes susfs leftover markers from shared storage |
 
 ## WebUI Features
 
@@ -52,6 +73,7 @@ All optional, all live under `/data/adb/ReSuSFS/`. Missing or empty files mean "
 - **File manager**, browse storage and load a custom file straight into any feature, without overwriting your default
 - **User-friendly SuSFS configs**, every feature exposed as its own clean box: edit, apply, or load custom
 - **Toggle switches**, flip kernel flags (mount hiding, logging, avc spoofing) without touching raw text
+- **Built-in scripts manager**, view, enable, or disable pre-made spoofing and hiding scripts from the WebUI
 - **UserHub**, create, edit, run, and delete your own shell scripts, with per-script toggles to run automatically at post-fs-data and/or boot-completed
 - **Backup and restore**, export your whole config (and any UserHub scripts) into one archive, restore it on any device
 - **Reboot button**, with confirmation, right in the header
@@ -123,7 +145,7 @@ ReSuSFS --status
 
 ## Backup and share your config
 
-The WebUI can export all your config files and UserHub scripts into a single archive, and restore from one. This makes it easy to share a working setup with the community, hand someone your config, or back it up before flashing something risky.
+The WebUI can export all your config files, built-in scripts, and UserHub scripts into a single archive, and restore from one. This makes it easy to share a working setup with the community, hand someone your config, or back it up before flashing something risky.
 
 Export creates an archive in `/storage/emulated/0/Download/`. Send that file to anyone, they load it with Restore, done.
 
