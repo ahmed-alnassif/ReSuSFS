@@ -26,15 +26,17 @@ if [ -z "$existing" ]; then
     echo "NOTHING_TO_EXPORT"
     exit 1
 fi
-
-OUT="/storage/emulated/0/Download/ReSuSFS_config_$(date +%Y%m%d_%H%M%S).tar.gz"
-busybox tar czf "$OUT" $existing 2>/tmp/resusfs_tar.log
+DIR="/storage/emulated/0/Download"
+mkdir -p "$DIR"
+TAR_LOG="$DIR/ReSuSFS_Export_tar.log"
+OUT="${DIR}/ReSuSFS_config_$(date +%Y%m%d_%H%M%S).tar.gz"
+busybox tar czf "$OUT" $existing 2> "$TAR_LOG"
 
 if [ -f "$OUT" ]; then
     echo "$OUT"
 else
     echo "ERROR_TAR_FAILED"
-    cat /tmp/resusfs_tar.log 2>/dev/null
+    cat "$TAR_LOG" 2>/dev/null
     exit 1
 fi
     `;
