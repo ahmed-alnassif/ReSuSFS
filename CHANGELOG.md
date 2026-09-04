@@ -1,4 +1,34 @@
 
+## [v2.3.0-145b96d] - 2026-09-04
+
+
+### 🌐 WebUI
+
+- regenerate pnpm-lock.yaml after adding syntax highlighting dependencies (@ahmed-alnassif)
+- **feat:** add shell syntax highlighting to the code editor via CodeMirror language support (@ahmed-alnassif)
+
+### 🧩 Module
+
+- **fix:** correct kstat backend to support static and dynamic spoofing (@ahmed-alnassif)
+- **fix:** simplify uname apply to replace values while preserving user comments (@ahmed-alnassif)
+- **feat:** add spoofing and hiding scripts for cmdline, uname, paths, maps, mounts, props, settings, and kstat (@ahmed-alnassif)
+
+### 📚 Documentation
+
+- add built-in scripts documentation and update features, userhub, backup, and description sections (@ahmed-alnassif)
+
+### ⚙️ CI/CD
+
+- add build category (@ahmed-alnassif)
+
+### 🏗️ Build
+
+- add lockfile auto-regeneration fallback to local-build.sh when frozen install fails (@ahmed-alnassif)
+
+### 🧹 Chores
+
+- bump version to v2.3.0-145b96d (@ahmed-alnassif)
+
 ## [v2.3.0-9244d05] - 2026-09-03
 
 
