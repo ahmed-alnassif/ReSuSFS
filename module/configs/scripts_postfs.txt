@@ -1,0 +1,4 @@
+ReSuSFS_apply-cmdline-bootconfig.sh
+ReSuSFS_apply-kstat-add.sh
+ReSuSFS_apply-ksu-settings.sh
+ReSuSFS_apply-uname.sh
