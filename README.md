@@ -10,7 +10,7 @@
 [![KernelSU Next](https://img.shields.io/badge/KernelSU--Next-1976D2?&logo=github&logoColor=white)](https://github.com/KernelSU-Next/KernelSU-Next)
 [![ReSukiSU](https://img.shields.io/badge/ReSukiSU-E91E63?&logo=github&logoColor=white)](https://github.com/ReSukiSU/ReSukiSU)
 
-Root hiding made simple, powerful when you need it. A [KernelSU](https://kernelsu.org) module and WebUI that turns SuSFS into clean config files and toggle switches for everyday use, with built-in spoofing and hiding scripts for one-tap protection, plus a script editor for power users who want more, all without leaving the WebUI.
+Root hiding made simple, powerful when you need it. A [KernelSU](https://kernelsu.org) module and WebUI that turns SuSFS into clean config files and toggle switches for everyday use, with **strong hiding applied out of the box** via built-in spoofing and hiding scripts for one-tap protection, plus a script editor for power users who want more, all without leaving the WebUI.
 
 > [!Important]
 > **Future Direction**
@@ -27,7 +27,8 @@ Root hiding made simple, powerful when you need it. A [KernelSU](https://kernels
 1. Download the [latest release](https://github.com/ahmed-alnassif/ReSuSFS/releases/latest)
 2. Flash the zip in KernelSU Manager
 3. Reboot
-4. Edit config files, or use the WebUI
+4. Strong hiding is applied automatically, no setup needed
+5. Optional: edit config files, or use the WebUI to fine-tune
 
 ## Config files
 
@@ -49,7 +50,9 @@ All optional, all live under `/data/adb/ReSuSFS/`. Missing or empty files mean "
 
 ## Built-in Scripts
 
-Pre-made scripts for common spoofing and hiding tasks. They live in `/data/adb/ReSuSFS/scripts/` and can be enabled by adding their filenames to `scripts_postfs.txt` or `scripts_bootcompleted.txt`.
+Pre-made scripts for common spoofing and hiding tasks. They live in `/data/adb/ReSuSFS/scripts/` and are enabled by default for set-and-forget users. They can be disabled by removing their filenames from `scripts_postfs.txt` or `scripts_bootcompleted.txt`.
+
+Strong hiding is applied out of the box with no configuration needed. Power users can fine-tune individual scripts via the WebUI or by editing the files directly.
 
 | Script | Stage | What it does |
 |---|---|---|
@@ -67,6 +70,7 @@ Pre-made scripts for common spoofing and hiding tasks. They live in `/data/adb/R
 
 ## WebUI Features
 
+- **Strong hiding by default**, built-in scripts are pre-enabled for set-and-forget users
 - **Status dashboard**, see if SuSFS is active at a glance, tap for the full enabled-features breakdown straight from the kernel
 - **Configuration summary**, live entry counts per feature and enabled script count, right on the home page
 - **Built-in code editor**, full-screen editor for every config file and user script, no terminal needed
@@ -145,7 +149,7 @@ ReSuSFS --status
 
 ## Backup and share your config
 
-The WebUI can export all your config files, built-in scripts, and UserHub scripts into a single archive, and restore from one. This makes it easy to share a working setup with the community, hand someone your config, or back it up before flashing something risky.
+The WebUI can export all your config files, built-in scripts, and UserHub scripts into a single archive, and restore from one. This makes it easy to share a working setup with the community, hand someone your config, or back it up before flashing something risky. Your strong hiding setup travels with you.
 
 Export creates an archive in `/storage/emulated/0/Download/`. Send that file to anyone, they load it with Restore, done.
 

@@ -4,4 +4,4 @@ version=v2.3.0-5556867
 versionCode=6
 author=ahmed-alnassif, simonpunk@gitlab.com
 updateJson=https://raw.githubusercontent.com/ahmed-alnassif/ReSuSFS/master/update.json
-description=Root hiding made simple, powerful when you need it. A [KernelSU](https://kernelsu.org) module and WebUI that turns SuSFS into clean config files and toggle switches for everyday use, with built-in spoofing and hiding scripts for one-tap protection, plus a script editor for power users who want more, all without leaving the WebUI.
+description=The easiest way to use SuSFS on KernelSU. Strong hiding by default with built-in spoofing and hiding scripts, config files and toggle switches for everyday use, a built-in script manager for power users.
