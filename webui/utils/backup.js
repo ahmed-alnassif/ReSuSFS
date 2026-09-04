@@ -18,25 +18,26 @@ cd "${basePath}" || { echo "ERROR_CD"; exit 1; }
 
 existing=""
 for f in ${configFiles.map(f => `"${f}"`).join(' ')}; do
-    [ -f "$f" ] && existing="$existing $f"
+    [ -f "\$f" ] && existing="\$existing \$f"
 done
-[ -d scripts ] && [ -n "$(ls -A scripts 2>/dev/null)" ] && existing="$existing scripts"
+[ -d scripts ] && [ -n "\$(ls -A scripts 2>/dev/null)" ] && existing="\$existing scripts"
 
-if [ -z "$existing" ]; then
+if [ -z "\$existing" ]; then
     echo "NOTHING_TO_EXPORT"
     exit 1
 fi
-DIR="/storage/emulated/0/Download"
-mkdir -p "$DIR"
-TAR_LOG="$DIR/ReSuSFS_Export_tar.log"
-OUT="${DIR}/ReSuSFS_config_$(date +%Y%m%d_%H%M%S).tar.gz"
-busybox tar czf "$OUT" $existing 2> "$TAR_LOG"
 
-if [ -f "$OUT" ]; then
-    echo "$OUT"
+DIR="/storage/emulated/0/Download"
+mkdir -p "\$DIR/ReSuSFS/log"
+TAR_LOG="\$DIR/ReSuSFS/log/ReSuSFS_Export_tar.log"
+OUT="\${DIR}/ReSuSFS_config_\$(date +%Y%m%d_%H%M%S).tar.gz"
+busybox tar czf "\$OUT" \$existing 2> "\$TAR_LOG"
+
+if [ -f "\$OUT" ]; then
+    echo "\$OUT"
 else
     echo "ERROR_TAR_FAILED"
-    cat "$TAR_LOG" 2>/dev/null
+    cat "\$TAR_LOG" 2>/dev/null
     exit 1
 fi
     `;
