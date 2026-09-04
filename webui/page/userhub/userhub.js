@@ -11,10 +11,10 @@ const playIcon = `<svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox=
 const trashIcon = `<svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px"><path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/></svg>`;
 
 /**
- * List every .sh file under the scripts directory, migrating any script
- * that lacks the #title=/#author=/#desc= header block to include one
- * (right after the shebang, or at the top if there's no shebang), and
- * returning each script's parsed metadata.
+ * List every .sh file under the scripts directory (migrating any script
+ * missing the #title=/#author=/#desc= header), and in the same shell
+ * call, read both stage files once so per-script toggle state can be
+ * computed in JS instead of one exec() round-trip per script per switch.
  * @returns {Promise<{name: string, title: string, author: string, desc: string}[]>}
  */
 async function listScripts() {
@@ -44,15 +44,22 @@ for f in *.sh; do
     echo "$desc"
     echo "RECORD_END"
 done
+echo "STAGES_START"
+cat "${postfsFile}" 2>/dev/null
+echo "STAGES_SEP"
+cat "${bootcompletedFile}" 2>/dev/null
+echo "STAGES_END"
     `;
 
     const result = await exec(command);
-    if (result.errno !== 0 || !result.stdout.trim()) return [];
+    if (result.errno !== 0 || !result.stdout.trim()) return { scripts: [], postfsStates: {}, bootcompletedStates: {} };
+
+    const [scriptsPart, stagesPart] = result.stdout.split('STAGES_START');
 
     const scripts = [];
-    const records = result.stdout.split('RECORD_START').slice(1);
+    const records = scriptsPart.split('RECORD_START').slice(1);
     for (const record of records) {
-        const lines = record.split('RECORD_END')[0].split('\n').filter((_, i, arr) => i < arr.length);
+        const lines = record.split('RECORD_END')[0].split('\n');
         const [, name, title, author, desc] = lines;
         if (!name || !name.trim()) continue;
         scripts.push({
@@ -62,7 +69,24 @@ done
             desc: (desc || '').trim(),
         });
     }
-    return scripts;
+
+    const [postfsRaw, bootcompletedRaw] = (stagesPart || '').split('STAGES_SEP');
+    const parseStageLines = (raw) => {
+        const states = {};
+        (raw || '').split('STAGES_END')[0].split('\n').forEach(line => {
+            const trimmed = line.trim();
+            if (!trimmed) return;
+            if (trimmed.startsWith('!')) states[trimmed.slice(1)] = 'disabled';
+            else states[trimmed] = 'on';
+        });
+        return states;
+    };
+
+    return {
+        scripts,
+        postfsStates: parseStageLines(postfsRaw),
+        bootcompletedStates: parseStageLines(bootcompletedRaw),
+    };
 }
 
 const postfsFile = `${basePath}/scripts_postfs.txt`;
@@ -70,21 +94,6 @@ const bootcompletedFile = `${basePath}/scripts_bootcompleted.txt`;
 
 function escapeForRegex(str) {
     return str.replace(/[.*[\]^$\\]/g, '\\$&');
-}
-
-/**
- * Read a script's state for a given stage file.
- * @param {string} name
- * @param {string} stageFile
- * @returns {Promise<'on'|'off'|'disabled'>} 'on' = bare "name.sh" line
- *   present, 'disabled' = "!name.sh" line present (forced off, cannot be
- *   re-enabled by tapping), 'off' = no line at all (default, tappable)
- */
-async function getScriptStageState(name, stageFile) {
-    const escaped = escapeForRegex(name);
-    const result = await exec(`grep -m1 -E "^!?${escaped}$" "${stageFile}" 2>/dev/null`);
-    if (result.errno !== 0 || !result.stdout.trim()) return 'off';
-    return result.stdout.trim().startsWith('!') ? 'disabled' : 'on';
 }
 
 /**
@@ -114,18 +123,17 @@ fi
 }
 
 /**
- * Apply a script's stage state to its switch: grays out and disables the
- * switch entirely when the stage file has it "!"-prefixed, otherwise
- * wires the switch normally.
+ * Apply an already-known stage state to its switch: grays out and
+ * disables the switch entirely when the stage file has it "!"-prefixed,
+ * otherwise wires the switch normally.
  * @param {HTMLElement} switchEl
- * @param {HTMLElement} itemEl - the .stage-toggle-item wrapper, for the grayed class
+ * @param {HTMLElement} itemEl
  * @param {string} name
  * @param {string} stageFile
+ * @param {'on'|'off'|'disabled'} state
  * @returns {Promise<void>}
  */
-async function applyStageState(switchEl, itemEl, name, stageFile) {
-    const state = await getScriptStageState(name, stageFile);
-
+async function applyStageState(switchEl, itemEl, name, stageFile, state) {
     if (state === 'disabled') {
         switchEl.selected = false;
         switchEl.disabled = true;
@@ -148,9 +156,6 @@ async function applyStageState(switchEl, itemEl, name, stageFile) {
 
     switchEl.selected = state === 'on';
 
-    // Let any change event triggered by the assignment above (synchronous
-    // or deferred to a microtask by the component's own update cycle)
-    // resolve before treating further events as real user taps.
     await Promise.resolve();
     await Promise.resolve();
     suppressNext = false;
@@ -159,9 +164,11 @@ async function applyStageState(switchEl, itemEl, name, stageFile) {
 /**
  * Build the DOM for a single script row.
  * @param {{name: string, title: string, author: string, desc: string}} script
+ * @param {'on'|'off'|'disabled'} postfsState
+ * @param {'on'|'off'|'disabled'} bootcompletedState
  * @returns {HTMLElement}
  */
-function buildScriptBox(script) {
+function buildScriptBox(script, postfsState, bootcompletedState) {
     const { name, title, author, desc } = script;
     const displayTitle = title || name;
 
@@ -210,12 +217,11 @@ function buildScriptBox(script) {
 
     const postfsSwitch = el.querySelector('.toggle-postfs');
     const bootcompletedSwitch = el.querySelector('.toggle-bootcompleted');
+    const postfsItem = postfsSwitch.closest('.stage-toggle-item');
+    const bootcompletedItem = bootcompletedSwitch.closest('.stage-toggle-item');
 
-    const postfsItem = el.querySelector('.stage-toggle-item:has(.toggle-postfs)');
-    const bootcompletedItem = el.querySelector('.stage-toggle-item:has(.toggle-bootcompleted)');
-
-    applyStageState(postfsSwitch, postfsItem, name, postfsFile);
-    applyStageState(bootcompletedSwitch, bootcompletedItem, name, bootcompletedFile);
+    applyStageState(postfsSwitch, postfsItem, name, postfsFile, postfsState);
+    applyStageState(bootcompletedSwitch, bootcompletedItem, name, bootcompletedFile, bootcompletedState);
 
     return el;
 }
@@ -223,7 +229,7 @@ function buildScriptBox(script) {
 async function refreshList() {
     const list = document.getElementById('userhub-list');
     const empty = document.getElementById('userhub-empty');
-    const scripts = await listScripts();
+    const { scripts, postfsStates, bootcompletedStates } = await listScripts();
 
     list.innerHTML = '';
     if (scripts.length === 0) {
@@ -231,7 +237,11 @@ async function refreshList() {
         return;
     }
     empty.style.display = 'none';
-    scripts.forEach(script => list.appendChild(buildScriptBox(script)));
+    scripts.forEach(script => {
+        const postfsState = postfsStates[script.name] || 'off';
+        const bootcompletedState = bootcompletedStates[script.name] || 'off';
+        list.appendChild(buildScriptBox(script, postfsState, bootcompletedState));
+    });
 }
 
 async function openScriptEditor(name) {
