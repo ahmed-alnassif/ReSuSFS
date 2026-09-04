@@ -1,12 +1,40 @@
 import { Compartment, EditorState } from '@codemirror/state';
 import { defaultKeymap, history, historyKeymap, indentWithTab } from '@codemirror/commands';
 import { EditorView, highlightActiveLineGutter, keymap, lineNumbers } from '@codemirror/view';
+import { StreamLanguage, HighlightStyle, syntaxHighlighting } from '@codemirror/language';
+import { shell } from '@codemirror/legacy-modes/mode/shell';
+import { tags as t } from '@lezer/highlight';
 
 let setupEditor = false;
 let codeEditor;
 let lineWrappingEnabled = false;
 let onSaveCallback = null;
 const lineWrapping = new Compartment();
+const language = new Compartment();
+
+const shellLanguage = StreamLanguage.define(shell);
+
+const materialHighlightStyle = HighlightStyle.define([
+    { tag: t.comment, color: 'var(--md-sys-color-outline)', fontStyle: 'italic' },
+    { tag: t.string, color: 'var(--md-sys-color-tertiary)' },
+    { tag: t.keyword, color: 'var(--md-sys-color-primary)', fontWeight: '600' },
+    { tag: t.variableName, color: 'var(--md-sys-color-secondary)' },
+    { tag: t.number, color: 'var(--md-sys-color-tertiary)' },
+    { tag: t.operator, color: 'var(--md-sys-color-on-surface-variant)' },
+    { tag: t.punctuation, color: 'var(--md-sys-color-on-surface-variant)' },
+    { tag: t.meta, color: 'var(--md-sys-color-outline)' },
+]);
+
+/**
+ * Pick a language extension based on the file being edited. Shell mode
+ * works well for both real .sh scripts and our config files, since they
+ * both use "#" comments and quoted paths.
+ * @param {string} displayName
+ * @returns {import('@codemirror/state').Extension}
+ */
+function languageForFile(displayName) {
+    return shellLanguage;
+}
 
 const editorTheme = EditorView.theme({
     '&': {
@@ -108,6 +136,7 @@ export function openEditor(displayName, content, onSave) {
     fileNameInput.style.width = 'auto';
 
     onSaveCallback = onSave;
+    const langExtension = languageForFile(displayName);
 
     if (!setupEditor) {
         setupEditor = true;
@@ -121,12 +150,15 @@ export function openEditor(displayName, content, onSave) {
                     history(),
                     keymap.of([...defaultKeymap, ...historyKeymap, indentWithTab]),
                     lineWrapping.of([]),
+                    language.of(langExtension),
+                    syntaxHighlighting(materialHighlightStyle),
                     editorTheme,
                 ],
             }),
             parent: editorInput,
         });
     } else {
+        codeEditor.dispatch({ effects: language.reconfigure(langExtension) });
         setEditorValue(content);
     }
 
