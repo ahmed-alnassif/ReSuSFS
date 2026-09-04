@@ -138,8 +138,37 @@ append_to_default() {
 apply_sus_paths() { [ -n "$1" ] && { append_to_default "$PERSISTENT_DIR/sus_paths.txt" "$1" || return 1; }; apply_list "$PERSISTENT_DIR/sus_paths.txt" add_sus_path 1; }
 apply_sus_paths_loop() { [ -n "$1" ] && { append_to_default "$PERSISTENT_DIR/sus_paths_loop.txt" "$1" || return 1; }; apply_list "$PERSISTENT_DIR/sus_paths_loop.txt" add_sus_path_loop 0; }
 apply_sus_maps() { [ -n "$1" ] && { append_to_default "$PERSISTENT_DIR/sus_maps.txt" "$1" || return 1; }; apply_list "$PERSISTENT_DIR/sus_maps.txt" add_sus_map 1; }
-apply_kstat_add() { [ -n "$1" ] && { append_to_default "$PERSISTENT_DIR/kstat_paths.txt" "$1" || return 1; }; apply_list "$PERSISTENT_DIR/kstat_paths.txt" add_sus_kstat 1; }
-apply_kstat_update() { [ -n "$1" ] && { append_to_default "$PERSISTENT_DIR/kstat_paths.txt" "$1" || return 1; }; apply_list "$PERSISTENT_DIR/kstat_paths.txt" update_sus_kstat 2; }
+
+apply_kstat() {
+	mode="$1"
+	[ -n "$2" ] && { append_to_default "$PERSISTENT_DIR/kstat_paths.txt" "$2" || return 1; }
+	file="$PERSISTENT_DIR/kstat_paths.txt"
+	list=$(read_list "$file") || return
+	[ -z "$list" ] && return
+	echo "$list" | while IFS= read -r line; do
+		path=$(echo "$line" | awk '{print $1}')
+		[ -z "$path" ] && continue
+		args=$(echo "$line" | cut -d' ' -f2-)
+		case "$mode" in
+			add)
+				if [ -n "$args" ]; then
+					echo "[>] add_sus_kstat_statically $path $args"
+					susfs add_sus_kstat_statically "$path" $args
+				else
+					echo "[>] add_sus_kstat $path"
+					susfs add_sus_kstat "$path"
+				fi
+				;;
+			update)
+				echo "[>] update_sus_kstat $path"
+				susfs update_sus_kstat "$path"
+				;;
+		esac
+	done
+}
+
+apply_kstat_add() { apply_kstat add "$1"; }
+apply_kstat_update() { apply_kstat update "$1"; }
 
 apply_open_redirect() {
 	[ -n "$1" ] && { append_to_default "$PERSISTENT_DIR/open_redirect.txt" "$1" || return 1; }
@@ -156,6 +185,8 @@ apply_open_redirect() {
 		susfs add_open_redirect "$target" "$redirect" "$scheme"
 	done
 }
+
+
 
 apply_uname() {
 	[ -n "$1" ] && { append_to_default "$PERSISTENT_DIR/uname.txt" "$1" || return 1; }
