@@ -1,4 +1,17 @@
 
+## [v2.3.0-5556867] - 2026-09-04
+
+
+### 🧩 Module
+
+- **fix:** correct ksud command in uname spoofing script (@ahmed-alnassif)
+- **fix:** set ksu features correctly (@ahmed-alnassif)
+- **fix:** use full KMI tag and correct hash length in uname spoofing (@ahmed-alnassif)
+
+### 🧹 Chores
+
+- bump version to v2.3.0-5556867 (@ahmed-alnassif)
+
 ## [v2.3.0-145b96d] - 2026-09-04
 
 
