@@ -28,6 +28,13 @@ detect_key_press() {
 	fi
 }
 
+ui_print "[*] Have you backed up your configuration?"
+ui_print "[*] VOLUME UP for YES, DOWN for NO"
+if ! detect_key_press; then
+	ui_print "[!] Please back up your configuration first"
+	exit 1
+fi
+
 CONFIG_DIR="$MODPATH/configs"
 
 [ ! -d "$CONFIG_DIR" ] || [ -z "$(ls -A "$CONFIG_DIR" 2>/dev/null)" ] && ui_print "[!] No config files found" && exit 0
