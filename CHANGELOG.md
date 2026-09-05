@@ -1,4 +1,25 @@
 
+## [v2.3.0-5ec5ad8] - 2026-09-05
+
+
+### 🌐 WebUI
+
+- fix UserHub tab loading/refreshing lag (@ahmed-alnassif)
+- **fix:** write backup tar log to Download dir and ensure it exists before export (@ahmed-alnassif)
+- **fix:** escape shell vars in backup script and move tar log to ReSuSFS dir (@ahmed-alnassif)
+- **perf:** only refresh UserHub's script list when scripts actually change, not on every tab switch (@ahmed-alnassif)
+- **feat:** add sort options to UserHub (name A-Z/Z-A, enabled first, recently/oldest modified) via header button (@ahmed-alnassif)
+- **feat:** add search button to UserHub (@ahmed-alnassif)
+- **feat:** add Telegram support group link to More, and a shared-configs hint to Home's backup card (@ahmed-alnassif)
+
+### 📚 Documentation
+
+- highlight strong hiding by default in readme (@ahmed-alnassif)
+
+### 🧹 Chores
+
+- bump version to v2.3.0-5ec5ad8 (@ahmed-alnassif)
+
 ## [v2.3.0-5556867] - 2026-09-04
 
 
