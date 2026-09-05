@@ -127,6 +127,7 @@ function refreshLogTerminal() {
 function controlPanelEventlistener() {
     const controlPanel = {
         "language-container": openLanguageMenu,
+        "telegram-group": () => linkRedirect('https://t.me/ahmed_alnassif_tg'),
         "github-issues": () => linkRedirect('https://github.com/ahmed-alnassif/ReSuSFS/issues/new'),
         "export": exportConfig,
         "restore": restoreConfig,

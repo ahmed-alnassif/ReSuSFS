@@ -247,3 +247,11 @@
     text-align: center;
     margin: 12px 0;
 }
+
+.backup-card-hint {
+    margin: 4px 0 0 0;
+    font-size: 0.8em;
+    text-align: center;
+    color: var(--md-sys-color-primary);
+    cursor: pointer;
+}

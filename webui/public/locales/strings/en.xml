@@ -101,6 +101,8 @@
     <string name="more_hiding">Hiding</string>
     <string name="more_faq">FAQ</string>
     <string name="more_support">Support</string>
+    <string name="more_support_telegram">Telegram Support Group</string>
+    <string name="backup_restore_telegram_hint">Looking for shared configs? Join the Telegram group</string>
     <string name="more_support_issue">Report an issue</string>
     <string name="more_support_view_webui_log">View WebUI Log</string>
     <!-- Donate -->
