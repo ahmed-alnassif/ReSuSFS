@@ -74,6 +74,7 @@ handle_files() {
 	fi
 }
 
+handle_files "$CONFIG_DIR" "$PERSISTENT_DIR" "scripts_bootcompleted.txt scripts_postfs.txt" "updated"
 if [ -d "$CONFIG_DIR/scripts" ]; then
 	handle_files "$CONFIG_DIR/scripts" "$PERSISTENT_DIR/scripts" "$(get_all_files "$CONFIG_DIR/scripts")" "updated"
 fi
