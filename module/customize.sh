@@ -14,14 +14,12 @@ ui_print "[%] customize.sh "
 
 detect_key_press() {
 	timeout_seconds=6
-
+	timeout 0.5 getevent -c 0 >/dev/null 2>&1
 	read -r -t $timeout_seconds line < <(getevent -ql | awk '/KEY_VOLUME/ {print; exit}')
-
 	if [ $? -eq 142 ]; then
 		ui_print "[!] No key pressed within $timeout_seconds seconds. Skipping installation..."
 		return 1
 	fi
-
 	if echo "$line" | grep -q "KEY_VOLUMEUP"; then
 		return 0
 	else
@@ -32,59 +30,51 @@ detect_key_press() {
 
 CONFIG_DIR="$MODPATH/configs"
 
-if [ ! -d "$CONFIG_DIR" ] || [ -z "$(ls -A "$CONFIG_DIR" 2>/dev/null)" ]; then
-    ui_print "[!] No config files found in module"
-else
-    CONFIG_FILES=$(get_all_files "$CONFIG_DIR")
+[ ! -d "$CONFIG_DIR" ] || [ -z "$(ls -A "$CONFIG_DIR" 2>/dev/null)" ] && ui_print "[!] No config files found" && exit 0
 
-    if [ -z "$CONFIG_FILES" ]; then
-        ui_print "[!] No config files found in module"
-    else
-        IDENTICAL_FILES=""
-        MISSING_FILES=""
-        DIFFERENT_FILES=""
+handle_files() {
+	src_dir="$1"
+	dst_dir="$2"
+	files="$3"
+	action="$4"
+	DIFFERENT=""
+	for file in $files; do
+		src="$src_dir/$file"
+		dst="$dst_dir/$file"
+		if [ ! -f "$dst" ]; then
+			mkdir -p "$dst_dir/$(dirname "$file")"
+			cp "$src" "$dst"
+			ui_print "[+] $file copied"
+		elif ! cmp -s "$src" "$dst"; then
+			DIFFERENT="$DIFFERENT $file"
+		fi
+	done
+	if [ -n "$DIFFERENT" ]; then
+		ui_print "[*] Changed files:"
+		for file in $DIFFERENT; do
+			ui_print "    - $file"
+		done
+		ui_print "[*] VOLUME UP to $action, DOWN to keep"
+		if detect_key_press; then
+			for file in $DIFFERENT; do
+				mkdir -p "$dst_dir/$(dirname "$file")"
+				cp "$src_dir/$file" "$dst_dir/$file"
+				ui_print "[+] $file $action"
+			done
+		else
+			ui_print "[+] Kept existing files"
+		fi
+	fi
+}
 
-        for file in $CONFIG_FILES; do
-            src_file="$CONFIG_DIR/$file"
-            dst_file="$PERSISTENT_DIR/$file"
-
-            if [ ! -f "$dst_file" ]; then
-
-                MISSING_FILES="$MISSING_FILES $file"
-                mkdir -p "$PERSISTENT_DIR/$(dirname "$file")"
-                cp "$src_file" "$dst_file"
-                ui_print "[+] $file copied (was missing)"
-            elif cmp -s "$src_file" "$dst_file"; then
-                IDENTICAL_FILES="$IDENTICAL_FILES $file"
-                ui_print "[+] $file already exists (identical, skipped)"
-            else
-                DIFFERENT_FILES="$DIFFERENT_FILES $file"
-            fi
-        done
-
-        if [ -n "$DIFFERENT_FILES" ]; then
-            ui_print "[*] Different config files found:"
-            for file in $DIFFERENT_FILES; do
-                ui_print "    - $file"
-            done
-            ui_print "[*] press VOLUME UP within 6 seconds to reset these configs to defaults"
-            ui_print "[*] press VOLUME DOWN, or wait, to keep your existing configs"
-
-            if detect_key_press; then
-                for file in $DIFFERENT_FILES; do
-                    mkdir -p "$PERSISTENT_DIR/$(dirname "$file")"
-                    cp "$CONFIG_DIR/$file" "$PERSISTENT_DIR/$file"
-                    ui_print "[+] $file reset to default"
-                done
-                ui_print "[+] configs reset successful"
-            else
-                ui_print "[+] existing configs kept"
-            fi
-        fi
-    fi
+if [ -d "$CONFIG_DIR/scripts" ]; then
+	handle_files "$CONFIG_DIR/scripts" "$PERSISTENT_DIR/scripts" "$(get_all_files "$CONFIG_DIR/scripts")" "updated"
 fi
 
-rm -rf $CONFIG_DIR
+CONFIG_FILES=$(get_all_files "$CONFIG_DIR" | grep -v '^scripts/')
+[ -n "$CONFIG_FILES" ] && handle_files "$CONFIG_DIR" "$PERSISTENT_DIR" "$CONFIG_FILES" "reset"
+
+rm -rf "$CONFIG_DIR"
 
 update_susfs || exit 1
 
