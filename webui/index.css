@@ -769,3 +769,37 @@
     font-size: 0.95em;
     cursor: pointer;
 }
+
+.search-header-btn {
+    flex-shrink: 0;
+}
+
+.header .search-bar {
+    display: none;
+}
+
+.header.search-active > *:not(.search-bar) {
+    display: none !important;
+}
+
+.header.search-active .search-bar {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    width: 100%;
+}
+
+.search-input {
+    flex: 1;
+    min-width: 0;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: inherit;
+    font-size: 1em;
+    font-family: inherit;
+}
+
+.search-clear-btn {
+    flex-shrink: 0;
+}

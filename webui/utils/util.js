@@ -357,7 +357,7 @@ export const PAGE_CONFIG = {
     'page-userhub': {
         container: '.action-container',
         main: ['#action-btn', '#force-update-btn'],
-        headerExtra: ['#sort-btn'],
+        headerExtra: ['#sort-btn', '#search-btn'],
         terminals: {
             'action-terminal': {
                 buttons: ['#close-terminal'],

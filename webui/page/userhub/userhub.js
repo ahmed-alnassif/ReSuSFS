@@ -11,10 +11,12 @@ const playIcon = `<svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox=
 const trashIcon = `<svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px"><path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/></svg>`;
 
 let scriptCache = [];
+let visibleScripts = [];
 let postfsStateCache = {};
 let bootcompletedStateCache = {};
 let scriptObserver = null;
 let scriptsDirty = true;
+let searchQuery = '';
 
 const SORT_KEY = 'resusfs_userhub_sort';
 
@@ -304,8 +306,6 @@ async function refreshListIfDirty() {
 }
 
 async function refreshList() {
-    const list = document.getElementById('userhub-list');
-    const empty = document.getElementById('userhub-empty');
     const mode = getSortMode();
     const { scripts, postfsStates, bootcompletedStates } = await listScripts(mode);
 
@@ -313,10 +313,45 @@ async function refreshList() {
     postfsStateCache = postfsStates;
     bootcompletedStateCache = bootcompletedStates;
 
+    renderVisibleScripts();
+}
+
+/**
+ * Check whether a script matches the current search query, matching
+ * its filename, title, author, and description — never its on-disk
+ * content.
+ * @param {{name:string,title:string,author:string,desc:string}} script
+ * @param {string} query
+ * @returns {boolean}
+ */
+function matchesSearch(script, query) {
+    const q = (query || '').trim().toLowerCase();
+    if (!q) return true;
+    return [script.name, script.title, script.author, script.desc]
+        .some(field => (field || '').toLowerCase().includes(q));
+}
+
+/**
+ * Re-render the list from scriptCache, filtered by the current search
+ * query. Pure client-side — no exec() round-trip, safe on every keystroke.
+ * @returns {void}
+ */
+function renderVisibleScripts() {
+    const list = document.getElementById('userhub-list');
+    const empty = document.getElementById('userhub-empty');
+    const emptyText = empty.querySelector('.userhub-empty-text');
+
+    visibleScripts = scriptCache.filter(s => matchesSearch(s, searchQuery));
+
     scriptObserver?.disconnect();
     list.innerHTML = '';
 
-    if (scriptCache.length === 0) {
+    if (visibleScripts.length === 0) {
+        if (emptyText) {
+            emptyText.textContent = searchQuery.trim()
+                ? getString('userhub_search_empty')
+                : getString('userhub_empty');
+        }
         empty.style.display = 'block';
         return;
     }
@@ -331,7 +366,7 @@ async function refreshList() {
         });
     }, { root: null, rootMargin: '400px 0px', threshold: 0 });
 
-    scriptCache.forEach((script, index) => {
+    visibleScripts.forEach((script, index) => {
         const placeholder = document.createElement('div');
         placeholder.className = 'box translucent script-box script-placeholder';
         placeholder.dataset.scriptIndex = index;
@@ -350,7 +385,7 @@ async function refreshList() {
  */
 function mountScriptBox(placeholder) {
     const index = Number(placeholder.dataset.scriptIndex);
-    const script = scriptCache[index];
+    const script = visibleScripts[index];
     if (!script) return;
 
     const postfsState = postfsStateCache[script.name] || 'off';
@@ -476,6 +511,34 @@ export function mount() {
             refreshList();
         });
     });
+
+    const header = document.querySelector('.header');
+    const searchBtn = document.getElementById('search-btn');
+    const searchBackBtn = document.getElementById('search-back-btn');
+    const searchClearBtn = document.getElementById('search-clear-btn');
+    const searchInput = document.getElementById('search-input');
+    searchInput.placeholder = getString('userhub_search_placeholder');
+
+    searchBtn.onclick = () => {
+        header.classList.add('search-active');
+        searchInput.focus();
+    };
+    searchBackBtn.onclick = () => {
+        header.classList.remove('search-active');
+        searchInput.value = '';
+        searchQuery = '';
+        renderVisibleScripts();
+    };
+    searchClearBtn.onclick = () => {
+        searchInput.value = '';
+        searchQuery = '';
+        renderVisibleScripts();
+        searchInput.focus();
+    };
+    searchInput.oninput = () => {
+        searchQuery = searchInput.value;
+        renderVisibleScripts();
+    };
 }
 
 export function onShow() {
@@ -492,4 +555,9 @@ export function onHide() {
     document.querySelectorAll('.fab-container').forEach(c => c.classList.remove('show', 'inTerminal'));
     document.getElementById('save-btn')?.classList.remove('show');
     document.getElementById('line-wrap-btn')?.classList.remove('show');
+
+    document.querySelector('.header')?.classList.remove('search-active');
+    const searchInput = document.getElementById('search-input');
+    if (searchInput) searchInput.value = '';
+    searchQuery = '';
 }
