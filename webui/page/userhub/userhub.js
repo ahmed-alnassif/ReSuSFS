@@ -9,6 +9,7 @@ const scriptsDir = `${basePath}/scripts`;
 const pencilIcon = `<svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px"><path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Z"/></svg>`;
 const playIcon = `<svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px"><path d="M320-200v-560l440 280-440 280Z"/></svg>`;
 const trashIcon = `<svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px"><path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/></svg>`;
+const tagIcon = `<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="20px"><path d="M480-160v-80h120l180-240-180-240H160v200H80v-200q0-33 23.5-56.5T160-800h440q19 0 36 8.5t28 23.5l216 288-216 288q-11 15-28 23.5t-36 8.5H480Zm-10-320ZM200-120v-120H80v-80h120v-120h80v120h120v80H280v120h-80Z"/></svg>`
 
 let scriptCache = [];
 let visibleScripts = [];
@@ -17,6 +18,7 @@ let bootcompletedStateCache = {};
 let scriptObserver = null;
 let scriptsDirty = true;
 let searchQuery = '';
+let activeTag = null;
 
 const SORT_KEY = 'resusfs_userhub_sort';
 
@@ -84,22 +86,26 @@ for f in $(ls ${lsFlags} *.sh 2>/dev/null); do
         first_line=$(head -n1 "$f")
         case "$first_line" in
             '#!'*)
-                { echo "$first_line"; echo "#title="; echo "#author="; echo "#desc="; tail -n +2 "$f"; } > "$f.tmp" && mv "$f.tmp" "$f"
+                { echo "$first_line"; echo "#title="; echo "#author="; echo "#desc="; echo "#tags="; tail -n +2 "$f"; } > "$f.tmp" && mv "$f.tmp" "$f"
                 ;;
             *)
-                { echo "#!/system/bin/sh"; echo "#title="; echo "#author="; echo "#desc="; cat "$f"; } > "$f.tmp" && mv "$f.tmp" "$f"
+                { echo "#!/system/bin/sh"; echo "#title="; echo "#author="; echo "#desc="; echo "#tags="; cat "$f"; } > "$f.tmp" && mv "$f.tmp" "$f"
                 ;;
         esac
         chmod 755 "$f"
+    elif ! grep -q '^#tags=' "$f" 2>/dev/null; then
+        { head -n1 "$f"; echo "#tags="; tail -n +2 "$f"; } > "$f.tmp" && mv "$f.tmp" "$f"
     fi
     title=$(grep -m1 '^#title=' "$f" | cut -d= -f2-)
     author=$(grep -m1 '^#author=' "$f" | cut -d= -f2-)
     desc=$(grep -m1 '^#desc=' "$f" | cut -d= -f2-)
+    tags=$(grep -m1 '^#tags=' "$f" | cut -d= -f2-)
     echo "RECORD_START"
     echo "$f"
     echo "$title"
     echo "$author"
     echo "$desc"
+    echo "$tags"
     echo "RECORD_END"
 done
 echo "STAGES_START"
@@ -118,13 +124,14 @@ echo "STAGES_END"
     const records = scriptsPart.split('RECORD_START').slice(1);
     for (const record of records) {
         const lines = record.split('RECORD_END')[0].split('\n');
-        const [, name, title, author, desc] = lines;
+        const [, name, title, author, desc, tagsRaw] = lines;
         if (!name || !name.trim()) continue;
         scripts.push({
             name: name.trim(),
             title: (title || '').trim(),
             author: (author || '').trim(),
             desc: (desc || '').trim(),
+            tags: (tagsRaw || '').split(',').map(t => t.trim()).filter(Boolean),
         });
     }
 
@@ -152,6 +159,20 @@ const bootcompletedFile = `${basePath}/scripts_bootcompleted.txt`;
 
 function escapeForRegex(str) {
     return str.replace(/[.*[\]^$\\]/g, '\\$&');
+}
+
+/**
+ * Rewrite a script's #tags= header line in place with a new
+ * comma-separated tag list.
+ * @param {string} name
+ * @param {string} tagsCsv - comma-separated, already trimmed
+ * @returns {Promise<boolean>}
+ */
+async function setScriptTags(name, tagsCsv) {
+    const path = `${scriptsDir}/${name}`;
+    const escaped = tagsCsv.replace(/[\\/&]/g, '\\$&');
+    const result = await exec(`sed -i "s/^#tags=.*/#tags=${escaped}/" "${path}"`);
+    return result.errno === 0;
 }
 
 /**
@@ -227,7 +248,7 @@ async function applyStageState(switchEl, itemEl, name, stageFile, state) {
  * @returns {HTMLElement}
  */
 function buildScriptBox(script, postfsState, bootcompletedState) {
-    const { name, title, author, desc } = script;
+    const { name, title, author, desc, tags } = script;
     const displayTitle = title || name;
 
     const el = document.createElement('div');
@@ -245,6 +266,10 @@ function buildScriptBox(script, postfsState, bootcompletedState) {
             ${author && desc ? ' &middot; ' : ''}
             ${desc ? `<span class="script-desc">${desc}</span>` : ''}
         </p>` : ''}
+        ${(tags && tags.length) ? `
+        <div class="script-tags">
+            ${tags.map(t => `<span class="script-tag-chip">${t}</span>`).join('')}
+        </div>` : ''}
         <div class="stage-toggle-row">
             <div class="stage-toggle-item">
                 <span>${getString('userhub_stage_postfs')}</span>
@@ -259,6 +284,9 @@ function buildScriptBox(script, postfsState, bootcompletedState) {
             <md-outlined-icon-button class="script-edit-btn" title="${getString('box_edit')}">
                 <md-icon>${pencilIcon}</md-icon>
             </md-outlined-icon-button>
+            <md-outlined-icon-button class="script-tags-btn" title="${getString('userhub_edit_tags')}">
+                <md-icon>${tagIcon}</md-icon>
+            </md-outlined-icon-button>
             <md-outlined-icon-button class="script-delete-btn" title="${getString('userhub_delete')}">
                 <md-icon>${trashIcon}</md-icon>
             </md-outlined-icon-button>
@@ -270,6 +298,7 @@ function buildScriptBox(script, postfsState, bootcompletedState) {
     `;
 
     el.querySelector('.script-edit-btn').onclick = () => openScriptEditor(name);
+    el.querySelector('.script-tags-btn').onclick = () => openTagEditor(script);
     el.querySelector('.script-run-btn').onclick = () => runReSuSFS('--run-script', `${scriptsDir}/${name}`);
     el.querySelector('.script-delete-btn').onclick = () => deleteScript(name);
 
@@ -313,6 +342,7 @@ async function refreshList() {
     postfsStateCache = postfsStates;
     bootcompletedStateCache = bootcompletedStates;
 
+    renderTagFilterBar();
     renderVisibleScripts();
 }
 
@@ -327,8 +357,40 @@ async function refreshList() {
 function matchesSearch(script, query) {
     const q = (query || '').trim().toLowerCase();
     if (!q) return true;
-    return [script.name, script.title, script.author, script.desc]
+    return [script.name, script.title, script.author, script.desc, ...(script.tags || [])]
         .some(field => (field || '').toLowerCase().includes(q));
+}
+
+/**
+ * Rebuild the tag filter chip row from every tag currently in
+ * scriptCache (the full set, not the filtered visible subset, so
+ * the bar doesn't collapse to one chip once a filter is active).
+ * @returns {void}
+ */
+function renderTagFilterBar() {
+    const bar = document.getElementById('tag-filter-bar');
+    if (!bar) return;
+
+    const allTags = new Set();
+    scriptCache.forEach(s => (s.tags || []).forEach(t => allTags.add(t)));
+
+    if (allTags.size === 0) {
+        bar.style.display = 'none';
+        bar.innerHTML = '';
+        return;
+    }
+    bar.style.display = 'flex';
+    bar.innerHTML = [...allTags].sort().map(tag => `
+        <button class="tag-filter-chip${tag === activeTag ? ' active' : ''}" data-tag="${tag}">${tag}</button>
+    `).join('');
+
+    bar.querySelectorAll('.tag-filter-chip').forEach(chip => {
+        chip.onclick = () => {
+            activeTag = (activeTag === chip.dataset.tag) ? null : chip.dataset.tag;
+            renderTagFilterBar();
+            renderVisibleScripts();
+        };
+    });
 }
 
 /**
@@ -341,7 +403,9 @@ function renderVisibleScripts() {
     const empty = document.getElementById('userhub-empty');
     const emptyText = empty.querySelector('.userhub-empty-text');
 
-    visibleScripts = scriptCache.filter(s => matchesSearch(s, searchQuery));
+    visibleScripts = scriptCache.filter(s =>
+        matchesSearch(s, searchQuery) && (!activeTag || (s.tags || []).includes(activeTag))
+    );
 
     scriptObserver?.disconnect();
     list.innerHTML = '';
@@ -392,6 +456,35 @@ function mountScriptBox(placeholder) {
     const bootcompletedState = bootcompletedStateCache[script.name] || 'off';
     const box = buildScriptBox(script, postfsState, bootcompletedState);
     placeholder.replaceWith(box);
+}
+
+/**
+ * Open the lightweight tag editor for one script (no need to open
+ * the full code editor just to add/remove tags).
+ * @param {{name:string, tags:string[]}} script
+ * @returns {void}
+ */
+function openTagEditor(script) {
+    const dialog = document.getElementById('tag-edit-dialog');
+    const input = document.getElementById('tag-edit-input');
+    input.value = (script.tags || []).join(', ');
+    dialog.show();
+
+    const saveBtn = document.getElementById('tag-edit-save');
+    const cancelBtn = document.getElementById('tag-edit-cancel');
+
+    saveBtn.onclick = async () => {
+        const tags = input.value.split(',').map(t => t.trim()).filter(Boolean);
+        const ok = await setScriptTags(script.name, tags.join(','));
+        dialog.close();
+        if (ok) {
+            markScriptsDirty();
+            refreshList();
+        } else {
+            showPrompt(getString('global_save_fail'), false);
+        }
+    };
+    cancelBtn.onclick = () => dialog.close();
 }
 
 async function openScriptEditor(name) {
@@ -455,7 +548,7 @@ async function createScript() {
             return;
         }
 
-        await exec(`printf '#!/system/bin/sh\\n#title=\\n#author=\\n#desc=\\n\\nPATH=/data/adb/ksu/bin:/data/data/com.termux/files/usr/bin:\$PATH\\n\\n\\n' > "${path}" && chmod 755 "${path}"`);
+        await exec(`printf '#!/system/bin/sh\\n#title=\\n#author=\\n#desc=\\n#tags=\\n\\nPATH=/data/adb/ksu/bin:/data/data/com.termux/files/usr/bin:\$PATH\\n\\n\\n' > "${path}" && chmod 755 "${path}"`);
         markScriptsDirty();
         dialog.close();
         refreshList();
@@ -539,6 +632,14 @@ export function mount() {
         searchQuery = searchInput.value;
         renderVisibleScripts();
     };
+
+    const list = document.getElementById('userhub-list');
+    if (!document.getElementById('tag-filter-bar')) {
+        const bar = document.createElement('div');
+        bar.id = 'tag-filter-bar';
+        bar.className = 'tag-filter-bar';
+        list.parentNode.insertBefore(bar, list);
+    }
 }
 
 export function onShow() {
