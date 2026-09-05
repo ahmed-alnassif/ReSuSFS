@@ -1,4 +1,25 @@
 
+## [v2.3.0-4d61c95] - 2026-09-05
+
+
+### 🌐 WebUI
+
+- **feat:** add script tags, filter bar, and inline editor (@ahmed-alnassif)
+
+### 🧩 Module
+
+- **feat:** improve config persistence handling (@ahmed-alnassif)
+- **feat:** update scripts configuration handling (@ahmed-alnassif)
+- **feat:** add ksu-settings script to bootcompleted (@ahmed-alnassif)
+
+### ✨ Features
+
+- add backup confirmation prompt before config handling (@ahmed-alnassif)
+
+### 🧹 Chores
+
+- bump version to v2.3.0-4d61c95 (@ahmed-alnassif)
+
 ## [v2.3.0-5ec5ad8] - 2026-09-05
 
 
