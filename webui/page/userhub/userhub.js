@@ -1,5 +1,5 @@
 import { exec } from 'kernelsu-alt';
-import { showPrompt, basePath, runReSuSFS, updateUIVisibility } from '../../utils/util.js';
+import { showPrompt, basePath, moduleDirectory, runReSuSFS, updateUIVisibility } from '../../utils/util.js';
 import { getString } from '../../utils/language.js';
 import { openEditor } from '../../utils/editor.js';
 import { FileSelector } from '../../utils/file_selector.js';
@@ -15,6 +15,7 @@ let scriptCache = [];
 let visibleScripts = [];
 let postfsStateCache = {};
 let bootcompletedStateCache = {};
+let cronStateCache = {};
 let scriptObserver = null;
 let scriptsDirty = true;
 let searchQuery = '';
@@ -156,6 +157,82 @@ echo "STAGES_END"
 
 const postfsFile = `${basePath}/scripts_postfs.txt`;
 const bootcompletedFile = `${basePath}/scripts_bootcompleted.txt`;
+const cronFile = `${basePath}/scripts_cron.txt`;
+
+/**
+ * Read every script's current cron schedule, if any. Presence in the
+ * file means scheduled, absence means not scheduled.
+ * @returns {Promise<Record<string, string>>} name -> cron expression
+ */
+async function getCronStates() {
+    const result = await exec(`cat "${cronFile}" 2>/dev/null`);
+    const states = {};
+    if (result.errno !== 0) return states;
+    result.stdout.split('\n').forEach(rawLine => {
+        const line = rawLine.trim();
+        if (!line) return;
+        const parts = line.split(' ');
+        if (parts.length < 6) return;
+        states[parts.slice(5).join(' ')] = parts.slice(0, 5).join(' ');
+    });
+    return states;
+}
+
+/**
+ * Set or clear a script's cron schedule. Empty expr removes it.
+ * @param {string} name
+ * @param {string} expr
+ * @returns {Promise<void>}
+ */
+async function setCronEntry(name, expr) {
+    const escaped = escapeForRegex(name);
+    const command = expr
+        ? `touch "${cronFile}"; sed -i "/ ${escaped}$/d" "${cronFile}" 2>/dev/null; echo "${expr} ${name}" >> "${cronFile}"`
+        : `sed -i "/ ${escaped}$/d" "${cronFile}" 2>/dev/null`;
+    await exec(command);
+    await exec(`sh ${moduleDirectory}/ReSuSFS.sh --sync-cron-scripts`);
+}
+
+/**
+ * Turn a friendly interval choice + value into a real cron expression.
+ * @param {'off'|'minutes'|'hours'|'daily'} type
+ * @param {string} value - number for minutes/hours, "HH:MM" for daily
+ * @returns {string} cron expression, or '' if type is 'off'
+ */
+function buildCronExpr(type, value) {
+    if (type === 'minutes') {
+        const n = Math.min(59, Math.max(1, parseInt(value, 10) || 1));
+        return `*/${n} * * * *`;
+    }
+    if (type === 'hours') {
+        const n = Math.min(23, Math.max(1, parseInt(value, 10) || 1));
+        return `0 */${n} * * *`;
+    }
+    if (type === 'daily') {
+        const [h, m] = (value || '03:00').split(':');
+        return `${parseInt(m, 10) || 0} ${parseInt(h, 10) || 0} * * *`;
+    }
+    return '';
+}
+
+/**
+ * Parse a cron expression back into a friendly type + value, for
+ * populating the controls when a row is rendered. Falls back to
+ * "minutes" mode showing the raw expression if it doesn't match any
+ * known simple pattern (e.g. hand-edited complex cron).
+ * @param {string} expr
+ * @returns {{type: 'off'|'minutes'|'hours'|'daily', value: string}}
+ */
+function parseCronExpr(expr) {
+    if (!expr) return { type: 'off', value: '' };
+    const everyMin = expr.match(/^\*\/(\d+) \* \* \* \*$/);
+    if (everyMin) return { type: 'minutes', value: everyMin[1] };
+    const everyHour = expr.match(/^0 \*\/(\d+) \* \* \*$/);
+    if (everyHour) return { type: 'hours', value: everyHour[1] };
+    const daily = expr.match(/^(\d+) (\d+) \* \* \*$/);
+    if (daily) return { type: 'daily', value: `${daily[2].padStart(2, '0')}:${daily[1].padStart(2, '0')}` };
+    return { type: 'minutes', value: expr };
+}
 
 function escapeForRegex(str) {
     return str.replace(/[.*[\]^$\\]/g, '\\$&');
@@ -247,7 +324,7 @@ async function applyStageState(switchEl, itemEl, name, stageFile, state) {
  * @param {'on'|'off'|'disabled'} bootcompletedState
  * @returns {HTMLElement}
  */
-function buildScriptBox(script, postfsState, bootcompletedState) {
+function buildScriptBox(script, postfsState, bootcompletedState, cronExpr) {
     const { name, title, author, desc, tags } = script;
     const displayTitle = title || name;
 
@@ -280,6 +357,17 @@ function buildScriptBox(script, postfsState, bootcompletedState) {
                 <md-switch icons class="toggle-bootcompleted"></md-switch>
             </div>
         </div>
+        <div class="cron-row">
+            <span>${getString('userhub_cron_label')}</span>
+            <select class="cron-type-select">
+                <option value="off">${getString('userhub_cron_off')}</option>
+                <option value="minutes">${getString('userhub_cron_every_minutes')}</option>
+                <option value="hours">${getString('userhub_cron_every_hours')}</option>
+                <option value="daily">${getString('userhub_cron_daily')}</option>
+            </select>
+            <input type="number" class="cron-value-number" min="1" style="display:none;">
+            <input type="time" class="cron-value-time" style="display:none;">
+        </div>
         <div class="box-actions">
             <md-outlined-icon-button class="script-edit-btn" title="${getString('box_edit')}">
                 <md-icon>${pencilIcon}</md-icon>
@@ -301,6 +389,40 @@ function buildScriptBox(script, postfsState, bootcompletedState) {
     el.querySelector('.script-tags-btn').onclick = () => openTagEditor(script);
     el.querySelector('.script-run-btn').onclick = () => runReSuSFS('--run-script', `${scriptsDir}/${name}`);
     el.querySelector('.script-delete-btn').onclick = () => deleteScript(name);
+
+    const cronTypeSelect = el.querySelector('.cron-type-select');
+    const cronNumberInput = el.querySelector('.cron-value-number');
+    const cronTimeInput = el.querySelector('.cron-value-time');
+    const parsed = parseCronExpr(cronExpr);
+
+    cronTypeSelect.value = parsed.type;
+    if (parsed.type === 'minutes' || parsed.type === 'hours') cronNumberInput.value = parsed.value;
+    if (parsed.type === 'daily') cronTimeInput.value = parsed.value;
+
+    /**
+     * Show whichever value input matches the selected type, hide the other.
+     */
+    const updateVisibleInput = () => {
+        const type = cronTypeSelect.value;
+        cronNumberInput.style.display = (type === 'minutes' || type === 'hours') ? '' : 'none';
+        cronTimeInput.style.display = (type === 'daily') ? '' : 'none';
+        cronNumberInput.placeholder = type === 'hours' ? getString('userhub_cron_hours_placeholder') : getString('userhub_cron_minutes_placeholder');
+    };
+    updateVisibleInput();
+
+    const saveCron = () => {
+        const type = cronTypeSelect.value;
+        const value = type === 'daily' ? cronTimeInput.value : cronNumberInput.value;
+        const expr = buildCronExpr(type, value);
+        setCronEntry(name, expr);
+    };
+
+    cronTypeSelect.addEventListener('change', () => {
+        updateVisibleInput();
+        saveCron();
+    });
+    cronNumberInput.addEventListener('change', saveCron);
+    cronTimeInput.addEventListener('change', saveCron);
 
     const postfsSwitch = el.querySelector('.toggle-postfs');
     const bootcompletedSwitch = el.querySelector('.toggle-bootcompleted');
@@ -337,10 +459,12 @@ async function refreshListIfDirty() {
 async function refreshList() {
     const mode = getSortMode();
     const { scripts, postfsStates, bootcompletedStates } = await listScripts(mode);
+    const cronStates = await getCronStates();
 
     scriptCache = sortScripts(scripts, mode, postfsStates, bootcompletedStates);
     postfsStateCache = postfsStates;
     bootcompletedStateCache = bootcompletedStates;
+    cronStateCache = cronStates;
 
     renderTagFilterBar();
     renderVisibleScripts();
@@ -454,7 +578,8 @@ function mountScriptBox(placeholder) {
 
     const postfsState = postfsStateCache[script.name] || 'off';
     const bootcompletedState = bootcompletedStateCache[script.name] || 'off';
-    const box = buildScriptBox(script, postfsState, bootcompletedState);
+    const cronExpr = cronStateCache[script.name] || '';
+    const box = buildScriptBox(script, postfsState, bootcompletedState, cronExpr);
     placeholder.replaceWith(box);
 }
 

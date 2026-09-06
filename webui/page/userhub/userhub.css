@@ -89,6 +89,45 @@
     flex-shrink: 0;
 }
 
+.cron-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--md-sys-color-outline-variant);
+    flex-wrap: wrap;
+}
+
+.cron-row span {
+    flex-shrink: 0;
+    font-size: 0.85em;
+    opacity: 0.75;
+}
+
+.cron-type-select {
+    flex: 1 1 120px;
+    min-width: 100px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: 1px solid var(--md-sys-color-outline-variant);
+    background-color: var(--md-sys-color-surface-container-high);
+    color: var(--md-sys-color-on-surface);
+    font-size: 0.85em;
+}
+
+.cron-value-number,
+.cron-value-time {
+    flex: 1 1 90px;
+    min-width: 80px;
+    padding: 7px 10px;
+    border-radius: 8px;
+    border: 1px solid var(--md-sys-color-outline-variant);
+    background-color: var(--md-sys-color-surface-container-high);
+    color: var(--md-sys-color-on-surface);
+    font-size: 0.85em;
+    box-sizing: border-box;
+}
+
 .script-placeholder {
     min-height: 148px;
     display: flex;
