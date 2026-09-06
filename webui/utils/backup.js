@@ -9,20 +9,10 @@ import { FileSelector } from './file_selector.js';
  * @returns {Promise<void>}
  */
 export async function exportConfig() {
-    const configFiles = Object.entries(filePaths)
-        .filter(([key]) => key !== 'customCSS')
-        .map(([, path]) => path);
-
     const command = `
 cd "${basePath}" || { echo "ERROR_CD"; exit 1; }
 
-existing=""
-for f in ${configFiles.map(f => `"${f}"`).join(' ')}; do
-    [ -f "\$f" ] && existing="\$existing \$f"
-done
-[ -d scripts ] && [ -n "\$(ls -A scripts 2>/dev/null)" ] && existing="\$existing scripts"
-
-if [ -z "\$existing" ]; then
+if [ -z "\$(ls -A . 2>/dev/null)" ]; then
     echo "NOTHING_TO_EXPORT"
     exit 1
 fi
@@ -31,7 +21,7 @@ DIR="/storage/emulated/0/Download"
 mkdir -p "\$DIR/ReSuSFS/log"
 TAR_LOG="\$DIR/ReSuSFS/log/ReSuSFS_Export_tar.log"
 OUT="\${DIR}/ReSuSFS_config_\$(date +%Y%m%d_%H%M%S).tar.gz"
-busybox tar czf "\$OUT" \$existing 2> "\$TAR_LOG"
+busybox tar czf "\$OUT" . 2> "\$TAR_LOG"
 
 if [ -f "\$OUT" ]; then
     echo "\$OUT"
