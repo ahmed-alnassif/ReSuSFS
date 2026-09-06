@@ -53,6 +53,10 @@ read_list() {
 [ ! -f "$POSTFS_SCRIPTS_FILE" ] && : > "$POSTFS_SCRIPTS_FILE"
 [ ! -f "$BOOTCOMPLETED_SCRIPTS_FILE" ] && : > "$BOOTCOMPLETED_SCRIPTS_FILE"
 
+CRON_SCRIPTS_FILE="$PERSISTENT_DIR/scripts_cron.txt"
+[ ! -f "$CRON_SCRIPTS_FILE" ] && : > "$CRON_SCRIPTS_FILE"
+CROND_DIR="$PERSISTENT_DIR/crontabs"
+
 run_stage_scripts() {
 	stage_file="$1"
 	[ -f "$stage_file" ] || return
@@ -70,6 +74,28 @@ run_stage_scripts() {
 			echo "[!] script not found, skipping: $name"
 		fi
 	done
+}
+
+sync_cron_scripts() {
+	[ ! -d "$CROND_DIR" ] && mkdir -p "$CROND_DIR"
+	pidof busybox | while read -r pid; do
+		grep -q crond "/proc/$pid/cmdline" 2>/dev/null && kill "$pid" 2>/dev/null
+	done
+	busybox crond -bc "$CROND_DIR" -L /dev/null
+
+	tmp="${CROND_DIR}/root.tmp.$$"
+	: > "$tmp"
+	list=$(read_list "$CRON_SCRIPTS_FILE") || { rm -f "$tmp"; return; }
+	echo "$list" | while IFS= read -r line; do
+		schedule=$(echo "$line" | cut -d' ' -f1-5)
+		name=$(echo "$line" | cut -d' ' -f6-)
+		[ -z "$name" ] && continue
+		[ -f "$USER_SCRIPTS_DIR/$name" ] || { echo "[!] cron script not found, skipping: $name"; continue; }
+		echo "$schedule sh $MODDIR/ReSuSFS.sh --run-script $USER_SCRIPTS_DIR/$name >> $PERSISTENT_DIR/cron.log 2>&1" >> "$tmp"
+	done
+	busybox crontab -c "$CROND_DIR" "$tmp" 2>/dev/null
+	rm -f "$tmp"
+	echo "[+] cron schedule synced"
 }
 
 run_script() {
@@ -301,6 +327,7 @@ stage_late() {
 	apply_sus_maps
 	apply_kstat_update
 	apply_toggles late
+	sync_cron_scripts
 	status_report
 }
 
@@ -340,6 +367,7 @@ show_help () {
 	printf " --run-script <file> \t\t\trun a user script from UserHub\n"
 	printf " --run-postfs-scripts \t\t\trun all UserHub scripts flagged for post-fs-data\n"
 	printf " --run-bootcompleted-scripts \t\trun all UserHub scripts flagged for boot-completed\n"
+	printf " --sync-cron-scripts \t\t\trebuild the cron schedule from scripts_cron.txt\n"
 	printf "\n"
 	printf " --help \t\t\t\tdisplays this message\n"
 }
@@ -362,6 +390,7 @@ case "$1" in
 	--run-script) shift; run_script "$1"; exit ;;
 	--run-postfs-scripts) run_stage_scripts "$POSTFS_SCRIPTS_FILE"; exit ;;
 	--run-bootcompleted-scripts) run_stage_scripts "$BOOTCOMPLETED_SCRIPTS_FILE"; exit ;;
+	--sync-cron-scripts) sync_cron_scripts; exit ;;
 	--help|*) show_help; exit ;;
 esac
 
