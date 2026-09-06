@@ -1,4 +1,29 @@
 
+## [v2.3.0-f851a6e] - 2026-09-06
+
+
+### 🌐 WebUI
+
+- **fix:** export full config directory without filtering (@ahmed-alnassif)
+- **feat:** add user-friendly cron schedule field to UserHub script rows (@ahmed-alnassif)
+
+### 🧩 Module
+
+- **feat:** add sync_cron_scripts() via busybox crond, synced on boot-completed (@ahmed-alnassif)
+- **fix:** prevent duplicate crond processes in sync_cron_scriptsci(fix): improve disk cleanup and swap to prevent build kill (@ahmed-alnassif)
+
+### ⚙️ CI/CD
+
+- add Dependabot (@ahmed-alnassif)
+
+### 🧹 Chores
+
+- bump version to v2.3.0-f851a6e (@ahmed-alnassif)
+
+### 🤖 Automated
+
+- webui(deps): Bump the webui-deps group in /webui with 6 updates (#2)
+
 ## [v2.3.0-4d61c95] - 2026-09-05
 
 
