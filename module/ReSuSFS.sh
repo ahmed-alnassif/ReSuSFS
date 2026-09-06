@@ -78,13 +78,15 @@ run_stage_scripts() {
 
 sync_cron_scripts() {
 	[ ! -d "$CROND_DIR" ] && mkdir -p "$CROND_DIR"
-	pidof busybox | while read -r pid; do
-		grep -q crond "/proc/$pid/cmdline" 2>/dev/null && kill "$pid" 2>/dev/null
-	done
+
+	pkill -f "busybox crond -bc $CROND_DIR" 2>/dev/null
+	sleep 1
+
 	busybox crond -bc "$CROND_DIR" -L /dev/null
 
 	tmp="${CROND_DIR}/root.tmp.$$"
 	: > "$tmp"
+
 	list=$(read_list "$CRON_SCRIPTS_FILE") || { rm -f "$tmp"; return; }
 	echo "$list" | while IFS= read -r line; do
 		schedule=$(echo "$line" | cut -d' ' -f1-5)
@@ -93,8 +95,10 @@ sync_cron_scripts() {
 		[ -f "$USER_SCRIPTS_DIR/$name" ] || { echo "[!] cron script not found, skipping: $name"; continue; }
 		echo "$schedule sh $MODDIR/ReSuSFS.sh --run-script $USER_SCRIPTS_DIR/$name >> $PERSISTENT_DIR/cron.log 2>&1" >> "$tmp"
 	done
+
 	busybox crontab -c "$CROND_DIR" "$tmp" 2>/dev/null
 	rm -f "$tmp"
+
 	echo "[+] cron schedule synced"
 }
 
