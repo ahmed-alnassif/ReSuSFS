@@ -10,7 +10,7 @@
 [![KernelSU Next](https://img.shields.io/badge/KernelSU--Next-1976D2?&logo=github&logoColor=white)](https://github.com/KernelSU-Next/KernelSU-Next)
 [![ReSukiSU](https://img.shields.io/badge/ReSukiSU-E91E63?&logo=github&logoColor=white)](https://github.com/ReSukiSU/ReSukiSU)
 
-Root hiding made simple, powerful when you need it. A [KernelSU](https://kernelsu.org) module and WebUI that turns SuSFS into clean config files and toggle switches for everyday use, with **strong hiding applied out of the box** via built-in spoofing and hiding scripts for one-tap protection, plus a script editor for power users who want more, all without leaving the WebUI.
+Root hiding made simple, powerful when you need it. A [KernelSU](https://kernelsu.org) module and WebUI that turns SuSFS into clean config files and toggle switches for everyday use, with **strong hiding applied out of the box** via built-in spoofing and hiding scripts for one-tap protection, plus a script manager for power users who want more, all without leaving the WebUI.
 
 > [!Important]
 > **Future Direction**
@@ -19,8 +19,7 @@ Root hiding made simple, powerful when you need it. A [KernelSU](https://kernels
 
 ## Requirements
 
-- [KernelSU](https://kernelsu.org) with kernel-level SuSFS support
-- arm64 device
+- [KernelSU](https://kernelsu.org)
 
 ## Install
 
