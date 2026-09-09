@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name=""/>
+    <string name=""/>
+    <string name=""> </string>
+    <!-- Status -->
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <!-- Summary -->
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <!-- Features dialog -->
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <!-- Global -->
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <!-- Control Panel -->
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <!-- SuSFS config boxes -->
+    <string name=""/>
+    <string name=""> </string>
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <!-- Config box actions -->
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <!-- Toggles -->
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <!-- UserHub -->
+    <string name=""> </string>
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <string name=""> </string>
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <!-- More -->
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <string name=""> </string>
+    <string name=""/>
+    <string name=""/>
+    <!-- Donate -->
+    <string name=""/>
+    <string name=""/>
+    <string name=""> </string>
+    <!-- Credits -->
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <!-- About -->
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <!-- Footer -->
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <!-- Backup and Restore -->
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+    <string name=""/>
+</resources>
