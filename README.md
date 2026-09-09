@@ -160,7 +160,7 @@ Export creates an archive in `/storage/emulated/0/Download/`. Send that file to 
 
 If ReSuSFS is useful to you, consider supporting development.
 
-**USDT (TRC20):** `TCyghELuquAtoUFdY65iuJSMqJXbYhWidA`
+**[Donations](https://github.com/ahmed-alnassif#-support-my-work)**
 
 ## Community
 
