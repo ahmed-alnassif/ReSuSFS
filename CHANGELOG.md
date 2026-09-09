@@ -1,4 +1,30 @@
 
+## [v2.3.0-bc8e52b] - 2026-09-09
+
+
+### 🌐 WebUI
+
+- **fix:** replace hardcoded donation address with a link to the GitHub support page, remove now-unused clipboard-copy logic (@ahmed-alnassif)
+
+### ✨ Features
+
+- add custom sponsorship URL to FUNDING.yml (@ahmed-alnassif)
+
+### 📚 Documentation
+
+- I think it's working fine with/without SuSFS (@ahmed-alnassif)
+- add ReSuSFS banner (@ahmed-alnassif)
+- update donation info (@ahmed-alnassif)
+
+### 🧹 Chores
+
+- bump version to v2.3.0-bc8e52b (@ahmed-alnassif)
+
+### 🤖 Automated
+
+- webui(deps): Bump @codemirror/view in /webui in the webui-deps group (#4)
+- ci(deps): Bump crowdin/github-action from 2 to 3 (#3)
+
 ## [v2.3.0-f851a6e] - 2026-09-06
 
 
