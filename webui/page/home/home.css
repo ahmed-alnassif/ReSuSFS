@@ -92,14 +92,10 @@
 }
 
 .support-card-address {
-    padding: 8px 12px;
-    border-radius: 10px;
-    background-color: rgba(0, 0, 0, 0.12);
-    font-family: monospace;
-    font-size: 0.8em;
-    word-break: break-all;
+    font-size: 0.85em;
+    text-align: center;
+    font-weight: 600;
     cursor: pointer;
-    user-select: all;
 }
 
 /* Summary box */

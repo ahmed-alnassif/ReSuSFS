@@ -154,17 +154,12 @@
         </div>
         <div class="box-content">
             <p class="donate-hint" data-i18n="donate_hint"></p>
-            <div class="donate-address-row">
-                <div class="donate-address-label" data-i18n="donate_usdt_trc20"></div>
-                <div class="donate-address">
-                    <span class="copy-link" id="donate-address-text">TCyghELuquAtoUFdY65iuJSMqJXbYhWidA</span>
-                    <md-icon-button class="donate-copy-btn" id="donate-copy-btn" title="Copy">
-                        <md-icon>
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"><path d="M360-240q-33 0-56.5-23.5T280-320v-480q0-33 23.5-56.5T360-880h360q33 0 56.5 23.5T800-800v480q0 33-23.5 56.5T720-240H360Zm0-80h360v-480H360v480ZM200-80q-33 0-56.5-23.5T120-160v-560h80v560h440v80H200Zm160-240v-480 480Z"/></svg>
-                        </md-icon>
-                    </md-icon-button>
-                </div>
-            </div>
+            <md-filled-tonal-button id="donate-link-btn">
+                <md-icon slot="icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"><path d="m480-121-41-37q-105-96-173.5-167T160-451q-40-51-56-95.5T88-637q0-90 60.5-150.5T299-848q57 0 106 26.5t75 75.5q26-49 75-75.5T661-848q90 0 150.5 60.5T872-637q0 47-16 91.5T800-450q-40 47-108.5 118T523-158l-43 37Z"/></svg>
+                </md-icon>
+                <span data-i18n="donate_link_label"></span>
+            </md-filled-tonal-button>
         </div>
     </div>
 

@@ -148,16 +148,12 @@ function controlPanelEventlistener() {
 export function mount() {
     controlPanelEventlistener();
     setupDocsMenu();
-    setupDonateCopy();
+    setupDonateLink();
 }
 
-function setupDonateCopy() {
-    addCopyToClipboardListeners();
-    const copyBtn = document.getElementById('donate-copy-btn');
-    const addressText = document.getElementById('donate-address-text');
-    if (copyBtn && addressText) {
-        copyBtn.onclick = () => addressText.click();
-    }
+function setupDonateLink() {
+    const linkBtn = document.getElementById('donate-link-btn');
+    if (linkBtn) linkBtn.onclick = () => linkRedirect('https://github.com/ahmed-alnassif#-support-my-work');
 }
 
 export function onShow() {

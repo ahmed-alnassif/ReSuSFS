@@ -115,9 +115,8 @@
     <string name="more_support_view_webui_log">View WebUI Log</string>
     <!-- Donate -->
     <string name="donate_title">Donate</string>
-    <string name="donate_hint">If ReSuSFS is useful to you, consider supporting development. Tap the address to copy it.</string>
-    <string name="donate_usdt_trc20">USDT (TRC20)</string>
-    <string name="donate_home_hint">Enjoying ReSuSFS? Support with USDT (TRC20) below ❤️</string>
+    <string name="donate_link_label">Support ReSuSFS development by a simple donation</string>
+    <string name="donate_home_hint">Enjoying ReSuSFS? Support development below ❤️</string>
     <!-- Credits -->
     <string name="credits_title">Credits</string>
     <string name="credits_susfs">SuSFS by simonpunk</string>

@@ -158,7 +158,7 @@ function setupSupportCard() {
         return;
     }
 
-    addCopyToClipboardListeners();
+    if (card) card.onclick = () => linkRedirect('https://github.com/ahmed-alnassif#-support-my-work');
     closeBtn.onclick = () => {
         card.style.display = 'none';
         localStorage.setItem('resusfs_support_dismissed', '1');
