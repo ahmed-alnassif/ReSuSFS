@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name=""/>
-    <string name=""/>
-    <string name=""> </string>
+    <string name="">Padrão do sistema</string>
+    <string name="">Reiniciar dispositivo</string>
+    <string name="">Seu dispositivo será reiniciado agora. Certifique-se de ter salvo algo importante primeiro.</string>
     <!-- Status -->
-    <string name=""/>
-    <string name=""/>
-    <string name=""/>
+    <string name="">Estado do SuSFS</string>
+    <string name="">Ativo - Ocultação é imposta pelo kernel</string>
+    <string name="">Versão ksu_susfs não suportada</string>
     <string name=""/>
     <string name=""/>
     <string name=""/>
@@ -16,18 +16,18 @@
     <string name=""/>
     <string name=""/>
     <!-- Features dialog -->
-    <string name=""/>
-    <string name=""/>
-    <string name=""/>
-    <string name=""/>
+    <string name="">Funcionalidades habilitadas</string>
+    <string name="">Versão do Kernel</string>
+    <string name="">Variante</string>
+    <string name="">Nenhum recurso reportado.</string>
     <!-- Global -->
-    <string name=""/>
-    <string name=""/>
-    <string name=""/>
-    <string name=""/>
-    <string name=""/>
-    <string name=""/>
-    <string name=""/>
+    <string name="">Opção de desenvolvedor ativada</string>
+    <string name="">Opção de desenvolvedor já está habilitada</string>
+    <string name="">Reiniciar para ter efeito</string>
+    <string name="">Reniciar</string>
+    <string name="">Reiniciando...</string>
+    <string name="">Arquivo salvo em %s</string>
+    <string name="">Falha ao salvar arquivo</string>
     <string name=""/>
     <string name=""/>
     <string name=""/>
@@ -38,34 +38,34 @@
     <string name=""/>
     <!-- Control Panel -->
     <string name=""/>
-    <string name=""/>
-    <string name=""/>
-    <string name=""/>
+    <string name="">Idioma</string>
+    <string name="">Tradução ruim</string>
+    <string name="">Adicionar um idioma</string>
     <!-- SuSFS config boxes -->
+    <string name="">Caminhos Sus</string>
+    <string name="">Oculta caminhos somente leitura/estática via add_sus_path. Só é eficaz para processos desmontados com uid ≥ 10000.</string>
+    <string name="">Caminhos de Sus (Repetição)</string>
+    <string name="">Oculta caminhos frequentemente modificados/recriados via add_sus_path_loop, sinalizando novamente a cada geração de zygote</string>
     <string name=""/>
-    <string name=""> </string>
+    <string name="">Esconde arquivos de biblioteca mmapped de /proc/self/maps e interfaces relacionadas via add_sus_map.</string>
+    <string name="">Sus Kstat</string>
     <string name=""/>
-    <string name=""/>
-    <string name=""/>
-    <string name=""/>
-    <string name=""/>
-    <string name=""/>
-    <string name=""/>
-    <string name=""/>
-    <string name=""/>
-    <string name=""/>
-    <string name=""/>
-    <string name=""/>
+    <string name="">Abrir redirecionamento</string>
+    <string name="">Redireciona um caminho de destino aberto para um caminho definido pelo usuário para um esquema de uid escolhido.</string>
+    <string name="">Falsificar uname</string>
+    <string name="">Falsifica a versão do kernel e a versão suportada para todos os processos.</string>
+    <string name="">Cmdline / Bootconfig</string>
+    <string name="">Falsifica o conteúdo de /proc/cmdline ou /proc/bootconfig a partir de um arquivo preparado.</string>
     <!-- Config box actions -->
-    <string name=""/>
-    <string name=""/>
-    <string name=""/>
-    <string name=""/>
-    <string name=""/>
+    <string name="">Editar</string>
+    <string name="">Aplicar</string>
+    <string name="">Etapa</string>
+    <string name="">Carregar arquivo personalizado</string>
+    <string name="">Entradas %d</string>
     <!-- Toggles -->
+    <string name="">Alterna</string>
     <string name=""/>
-    <string name=""/>
-    <string name=""/>
+    <string name="">Ocultar montagens</string>
     <string name=""/>
     <string name=""/>
     <string name=""/>
