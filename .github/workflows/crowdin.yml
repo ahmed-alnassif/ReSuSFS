@@ -59,42 +59,18 @@ jobs:
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
         git config --global user.name "github-actions[bot]"
 
-    - name: Create timestamp
+    - name: Create timestamp and zip
       run: |
         date +%Y%m%d > webui/public/locales/version
 
-        if git status --porcelain | grep 'webui/public/locales/version'; then
-          git add webui/public/locales/version
-          git commit -m "bot: update timestamp"
+        (cd webui/public/locales && zip -r ../../../locales.zip .)
+        cp webui/public/locales/version locales_version
+
+        git add webui/public/locales/version locales.zip locales_version
+
+        if git diff --cached --quiet; then
+          echo "Nothing to commit"
+        else
+          git commit -m "bot: update locales"
           git push
         fi
-
-    - name: Upload locales folder
-      uses: actions/upload-artifact@v7
-      with:
-        name: locales
-        path: webui/public/locales
-
-    - name: Checkout locales-dist branch
-      run: |
-        if git ls-remote --exit-code --heads origin locales-dist; then
-          git fetch origin locales-dist
-          git checkout locales-dist
-        else
-          git checkout --orphan locales-dist
-          git rm -rf .
-        fi
-
-    - name: Download translation
-      uses: actions/download-artifact@v8
-      with:
-        name: locales
-        path: locales
-
-    - name: Push to locales-dist branch
-      run: |
-        rm -f locales_version locales.zip
-        (cd locales && cp version ../locales_version && zip -r ../locales.zip .)
-        git add locales.zip locales_version
-        git commit -m "bot: update locales"
-        git push origin locales-dist --force
