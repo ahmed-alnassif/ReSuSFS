@@ -59,18 +59,12 @@ jobs:
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
         git config --global user.name "github-actions[bot]"
 
-    - name: Create timestamp and zip
+    - name: Create timestamp
       run: |
         date +%Y%m%d > webui/public/locales/version
 
-        (cd webui/public/locales && zip -r ../../../locales.zip .)
-        cp webui/public/locales/version locales_version
-
-        git add webui/public/locales/version locales.zip locales_version
-
-        if git diff --cached --quiet; then
-          echo "Nothing to commit"
-        else
-          git commit -m "bot: update locales"
+        if git status --porcelain | grep 'webui/public/locales/version'; then
+          git add webui/public/locales/version
+          git commit -m "bot: update timestamp"
           git push
         fi
