@@ -19,7 +19,7 @@ Root hiding made simple, powerful when you need it. A [KernelSU](https://kernels
 > [!Important]
 > **KernelSU Next is not recommended.**
 >
-> KernelSU Next is currently **unmaintained** and has been observed engaging in anti-competitive behavior, including blacklisting the official ReSuSFS module without technical justification. This is not a security decision—it is a control decision.
+> KernelSU Next is currently **unmaintained** and has been observed engaging in anti-competitive behavior, including blacklisting the official ReSuSFS module without technical justification. This is not a security decision, it is a control decision.
 >
 > Using an unmaintained kernel root solution can lead to:
 >
@@ -36,6 +36,8 @@ Root hiding made simple, powerful when you need it. A [KernelSU](https://kernels
 > ReSuSFS is the only official SuSFS module for KernelSU. It is fully supported on KernelSU and ReSukiSU only.
 >
 > Do not use KernelSU Next. Choose stability. Choose freedom. Choose official support.
+
+---
 
 > [!Important]
 > **Future Direction**
