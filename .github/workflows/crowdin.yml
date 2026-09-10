@@ -2,7 +2,7 @@ name: crowdin
 
 on:
   push:
-    branches: [ master ]
+    branches: [ dev ]
     paths: 
       - 'crowdin_xml.yml'
       - '.github/workflows/crowdin.yml'
@@ -43,7 +43,7 @@ jobs:
         pull_request_title: 'webui/locales: sync translation from Crowdin'
 
         config: 'crowdin_xml.yml'
-        crowdin_branch_name: master
+        crowdin_branch_name: dev
 
   upload-translations:
     runs-on: ubuntu-latest
@@ -75,10 +75,15 @@ jobs:
         name: locales
         path: webui/public/locales
 
-    - name: Checkout bot
-      uses: actions/checkout@v7
-      with:
-        ref: 'bot'
+    - name: Checkout locales-dist branch
+      run: |
+        if git ls-remote --exit-code --heads origin locales-dist; then
+          git fetch origin locales-dist
+          git checkout locales-dist
+        else
+          git checkout --orphan locales-dist
+          git rm -rf .
+        fi
 
     - name: Download translation
       uses: actions/download-artifact@v8
@@ -86,14 +91,10 @@ jobs:
         name: locales
         path: locales
 
-    - name: Push to bot branch
+    - name: Push to locales-dist branch
       run: |
         rm -f locales_version locales.zip
-        cd locales
-        cp version ../locales_version
-        zip -r ../locales.zip .
-        cd ..
-
+        (cd locales && cp version ../locales_version && zip -r ../locales.zip .)
         git add locales.zip locales_version
         git commit -m "bot: update locales"
-        git push
+        git push origin locales-dist --force
