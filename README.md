@@ -17,6 +17,27 @@
 Root hiding made simple, powerful when you need it. A [KernelSU](https://kernelsu.org) module and WebUI that turns SuSFS into clean config files and toggle switches for everyday use, with **strong hiding applied out of the box** via built-in spoofing and hiding scripts for one-tap protection, plus a script manager for power users who want more, all without leaving the WebUI.
 
 > [!Important]
+> **KernelSU Next is not recommended.**
+>
+> KernelSU Next is currently **unmaintained** and has been observed engaging in anti-competitive behavior, including blacklisting the official ReSuSFS module without technical justification. This is not a security decision—it is a control decision.
+>
+> Using an unmaintained kernel root solution can lead to:
+>
+> - **Instability** and unexpected crashes.
+> - **Bootloops** that can leave your device unusable.
+> - **Security vulnerabilities** that will never be patched.
+> - **Broken module compatibility** as the ecosystem moves forward.
+>
+> To protect your device and ensure you receive official support:
+>
+> - Use **KernelSU**: The upstream, official root solution.
+> - Use **ReSukiSU**: A trusted, community-respected fork.
+>
+> ReSuSFS is the only official SuSFS module for KernelSU. It is fully supported on KernelSU and ReSukiSU only.
+>
+> Do not use KernelSU Next. Choose stability. Choose freedom. Choose official support.
+
+> [!Important]
 > **Future Direction**
 >
 > ReSuSFS will gradually move beyond SuSFS management. SuSFS will become optional, while development will focus more on UserHub, giving users greater freedom and control to create, manage, and automate their own scripts and configurations.
