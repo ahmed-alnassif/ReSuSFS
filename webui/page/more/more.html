@@ -145,23 +145,22 @@
     </div>
 
     <!-- Donate box -->
-    <div class="box control-panel">
-        <div class="donate-header">
-            <md-icon class="donate-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"><path d="m480-121-41-37q-105-96-173.5-167T160-451q-40-51-56-95.5T88-637q0-90 60.5-150.5T299-848q57 0 106 26.5t75 75.5q26-49 75-75.5T661-848q90 0 150.5 60.5T872-637q0 47-16 91.5T800-450q-40 47-108.5 118T523-158l-43 37Z"/></svg>
-            </md-icon>
-            <h3 data-i18n="donate_title"></h3>
+    <div class="box control-panel"  id="donate-link-btn">
+    <div class="donate-card">
+        <div class="donate-badge">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
+                <path d="m480-121-41-37q-105-96-173.5-167T160-451q-40-51-56-95.5T88-637q0-90 60.5-150.5T299-848q57 0 106 26.5t75 75.5q26-49 75-75.5T661-848q90 0 150.5 60.5T872-637q0 47-16 91.5T800-450q-40 47-108.5 118T523-158l-43 37Z"/>
+            </svg>
         </div>
-        <div class="box-content">
-            <p class="donate-hint" data-i18n="donate_hint"></p>
-            <md-filled-tonal-button id="donate-link-btn">
-                <md-icon slot="icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"><path d="m480-121-41-37q-105-96-173.5-167T160-451q-40-51-56-95.5T88-637q0-90 60.5-150.5T299-848q57 0 106 26.5t75 75.5q26-49 75-75.5T661-848q90 0 150.5 60.5T872-637q0 47-16 91.5T800-450q-40 47-108.5 118T523-158l-43 37Z"/></svg>
-                </md-icon>
-                <span data-i18n="donate_link_label"></span>
-            </md-filled-tonal-button>
-        </div>
+
+        <h3 class="donate-title" data-i18n="donate_title"></h3>
+        <p class="donate-hint" data-i18n="donate_hint"></p>
+
+        <md-filled-tonal-button class="donate-cta">
+            <span data-i18n="donate_link_label"></span>
+        </md-filled-tonal-button>
     </div>
+</div>
 
     <div class="placeholder"></div>
 </div>

@@ -125,3 +125,82 @@
 md-switch.soft-disabled {
     pointer-events: none;
 }
+
+.control-panel .donate-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 28px 20px 24px;
+    border-radius: 20px;
+    background:
+        radial-gradient(circle at 50% 0%, rgba(255, 107, 107, 0.18), transparent 60%),
+        rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 107, 107, 0.22);
+    overflow: hidden;
+}
+
+.control-panel .donate-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(255, 107, 107, 0.10), transparent 40%);
+    pointer-events: none;
+}
+
+.donate-badge {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: linear-gradient(145deg, #ff6b6b, #e53935);
+    box-shadow: 0 8px 24px rgba(229, 57, 53, 0.35);
+    margin-bottom: 16px;
+    z-index: 1;
+}
+
+.donate-badge svg {
+    width: 28px;
+    height: 28px;
+    fill: #1a0b0b;
+}
+
+.donate-title {
+    position: relative;
+    margin: 0 0 6px;
+    font-size: 1.05rem;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+    color: #ffeaea;
+    z-index: 1;
+}
+
+.donate-hint {
+    position: relative;
+    margin: 0 0 20px;
+    max-width: 34ch;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: rgba(255, 234, 234, 0.72);
+    text-wrap: balance;
+    z-index: 1;
+}
+
+.donate-cta {
+    position: relative;
+    --md-filled-tonal-button-container-color: #ff6b6b;
+    --md-filled-tonal-button-label-text-color: #1a0b0b;
+    --md-filled-tonal-button-icon-color: #1a0b0b;
+    --md-filled-tonal-button-container-shape: 999px;
+    --md-filled-tonal-button-hover-container-elevation: 2;
+    padding: 0 22px;
+    z-index: 1;
+}
+
+.donate-cta::part(label) {
+    letter-spacing: 0.3px;
+    font-weight: 600;
+}
