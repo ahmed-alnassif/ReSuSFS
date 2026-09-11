@@ -20,6 +20,17 @@ let scriptObserver = null;
 let scriptsDirty = true;
 let searchQuery = '';
 let activeTag = null;
+let searchDebounceTimer = null;
+
+/**
+ * Persistent map of script name -> its DOM element (placeholder or the
+ * fully built interactive box). Never torn down by filtering/sorting,
+ * only cleared when refreshList() genuinely re-fetches from disk. This
+ * is what makes search/tag filtering free instead of rebuilding every
+ * visible row's heavy custom elements on every keystroke.
+ * @type {Map<string, HTMLElement>}
+ */
+const boxElements = new Map();
 
 const SORT_KEY = 'resusfs_userhub_sort';
 
@@ -466,6 +477,11 @@ async function refreshList() {
     bootcompletedStateCache = bootcompletedStates;
     cronStateCache = cronStates;
 
+    scriptObserver?.disconnect();
+    scriptObserver = null;
+    boxElements.clear();
+    document.getElementById('userhub-list').innerHTML = '';
+
     renderTagFilterBar();
     renderVisibleScripts();
 }
@@ -519,7 +535,11 @@ function renderTagFilterBar() {
 
 /**
  * Re-render the list from scriptCache, filtered by the current search
- * query. Pure client-side — no exec() round-trip, safe on every keystroke.
+ * query and tag. Never destroys already-built elements: reuses them via
+ * show/hide, and reorders via appendChild (which moves an existing DOM
+ * node instead of recreating it). Only genuinely new script names get a
+ * new placeholder. This makes typing in search, or clicking a tag chip,
+ * essentially free regardless of how many scripts are already mounted.
  * @returns {void}
  */
 function renderVisibleScripts() {
@@ -531,9 +551,6 @@ function renderVisibleScripts() {
         matchesSearch(s, searchQuery) && (!activeTag || (s.tags || []).includes(activeTag))
     );
 
-    scriptObserver?.disconnect();
-    list.innerHTML = '';
-
     if (visibleScripts.length === 0) {
         if (emptyText) {
             emptyText.textContent = searchQuery.trim()
@@ -541,46 +558,64 @@ function renderVisibleScripts() {
                 : getString('userhub_empty');
         }
         empty.style.display = 'block';
+        boxElements.forEach(el => el.style.display = 'none');
         return;
     }
     empty.style.display = 'none';
 
-    scriptObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                mountScriptBox(entry.target);
-                scriptObserver.unobserve(entry.target);
-            }
-        });
-    }, { root: null, rootMargin: '400px 0px', threshold: 0 });
+    const visibleNames = new Set(visibleScripts.map(s => s.name));
 
-    visibleScripts.forEach((script, index) => {
-        const placeholder = document.createElement('div');
-        placeholder.className = 'box translucent script-box script-placeholder';
-        placeholder.dataset.scriptIndex = index;
-        placeholder.innerHTML = `<h2 class="script-placeholder-title">${script.title || script.name}</h2>`;
-        list.appendChild(placeholder);
-        scriptObserver.observe(placeholder);
+    boxElements.forEach((el, name) => {
+        if (!visibleNames.has(name)) el.style.display = 'none';
+    });
+
+    if (!scriptObserver) {
+        scriptObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    mountScriptBoxByName(entry.target.dataset.scriptName);
+                    scriptObserver.unobserve(entry.target);
+                }
+            });
+        }, { root: null, rootMargin: '150px 0px', threshold: 0 });
+    }
+
+    visibleScripts.forEach(script => {
+        let el = boxElements.get(script.name);
+        if (!el) {
+            el = document.createElement('div');
+            el.className = 'box translucent script-box script-placeholder';
+            el.dataset.scriptName = script.name;
+            el.innerHTML = `<h2 class="script-placeholder-title">${script.title || script.name}</h2>`;
+            boxElements.set(script.name, el);
+            scriptObserver.observe(el);
+        }
+        el.style.display = '';
+        list.appendChild(el);
     });
 }
 
 /**
  * Replace a placeholder row with the real interactive box, using data
  * already cached from the last refreshList() batch fetch, no exec()
- * round-trip needed.
- * @param {HTMLElement} placeholder
+ * round-trip needed. Updates the persistent map to point at the real
+ * box afterward, so future filter passes reuse it directly.
+ * @param {string} name
  * @returns {void}
  */
-function mountScriptBox(placeholder) {
-    const index = Number(placeholder.dataset.scriptIndex);
-    const script = visibleScripts[index];
+function mountScriptBoxByName(name) {
+    const el = boxElements.get(name);
+    if (!el || !el.classList.contains('script-placeholder')) return;
+    const script = scriptCache.find(s => s.name === name);
     if (!script) return;
 
-    const postfsState = postfsStateCache[script.name] || 'off';
-    const bootcompletedState = bootcompletedStateCache[script.name] || 'off';
-    const cronExpr = cronStateCache[script.name] || '';
+    const postfsState = postfsStateCache[name] || 'off';
+    const bootcompletedState = bootcompletedStateCache[name] || 'off';
+    const cronExpr = cronStateCache[name] || '';
     const box = buildScriptBox(script, postfsState, bootcompletedState, cronExpr);
-    placeholder.replaceWith(box);
+    box.dataset.scriptName = name;
+    el.replaceWith(box);
+    boxElements.set(name, box);
 }
 
 /**
@@ -755,7 +790,8 @@ export function mount() {
     };
     searchInput.oninput = () => {
         searchQuery = searchInput.value;
-        renderVisibleScripts();
+        clearTimeout(searchDebounceTimer);
+        searchDebounceTimer = setTimeout(() => renderVisibleScripts(), 120);
     };
 
     const list = document.getElementById('userhub-list');
