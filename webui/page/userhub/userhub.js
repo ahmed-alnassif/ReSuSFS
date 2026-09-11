@@ -572,14 +572,12 @@ function renderVisibleScripts() {
     if (!scriptObserver) {
         scriptObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
-                const name = entry.target.dataset.scriptName;
                 if (entry.isIntersecting) {
-                    mountScriptBoxByName(name);
-                } else {
-                    unmountScriptBoxByName(name);
+                    mountScriptBoxByName(entry.target.dataset.scriptName);
+                    scriptObserver.unobserve(entry.target);
                 }
             });
-        }, { root: null, rootMargin: '300px 0px', threshold: 0 });
+        }, { root: null, rootMargin: '150px 0px', threshold: 0 });
     }
 
     visibleScripts.forEach(script => {
@@ -590,8 +588,8 @@ function renderVisibleScripts() {
             el.dataset.scriptName = script.name;
             el.innerHTML = `<h2 class="script-placeholder-title">${script.title || script.name}</h2>`;
             boxElements.set(script.name, el);
+            scriptObserver.observe(el);
         }
-        scriptObserver.observe(el);
         el.style.display = '';
         list.appendChild(el);
     });
@@ -618,29 +616,6 @@ function mountScriptBoxByName(name) {
     box.dataset.scriptName = name;
     el.replaceWith(box);
     boxElements.set(name, box);
-    scriptObserver.observe(box);
-}
-
-/**
- * Revert a mounted box back to a lightweight placeholder once it's
- * scrolled far out of view, keeping DOM/component count bounded no
- * matter how many scripts exist.
- * @param {string} name
- * @returns {void}
- */
-function unmountScriptBoxByName(name) {
-    const el = boxElements.get(name);
-    if (!el || el.classList.contains('script-placeholder')) return;
-    const script = scriptCache.find(s => s.name === name);
-    if (!script) return;
-
-    const placeholder = document.createElement('div');
-    placeholder.className = 'box translucent script-box script-placeholder';
-    placeholder.dataset.scriptName = name;
-    placeholder.innerHTML = `<h2 class="script-placeholder-title">${script.title || script.name}</h2>`;
-    el.replaceWith(placeholder);
-    boxElements.set(name, placeholder);
-    scriptObserver.observe(placeholder);
 }
 
 /**
