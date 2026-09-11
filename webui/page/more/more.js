@@ -1,5 +1,5 @@
 import { exec } from 'kernelsu-alt';
-import { showPrompt, basePath, linkRedirect, filePaths, updateUIVisibility } from '../../utils/util.js';
+import { showPrompt, basePath, linkRedirect, filePaths, updateUIVisibility, moduleDirectory } from '../../utils/util.js';
 import { getString } from '../../utils/language.js';
 import { FileSelector } from '../../utils/file_selector.js';
 import { addCopyToClipboardListeners, setupDocsMenu } from '../../utils/docs.js';
@@ -26,11 +26,6 @@ function openLanguageMenu() {
 }
 
 let aboutDialogListener = false;
-/**
- * Open the About dialog (author, license, repo, version)
- * @returns {void}
- * @see controlPanelEventlistener
- */
 function openAboutDialog() {
     const aboutDialog = document.getElementById('about-dialog');
     aboutDialog.show();
@@ -38,21 +33,24 @@ function openAboutDialog() {
     if (!aboutDialogListener) {
         aboutDialogListener = true;
         const closeBtn = aboutDialog.querySelector('.close-btn');
-        closeBtn.onclick = () => aboutDialog.close();
+        if (closeBtn) closeBtn.onclick = () => aboutDialog.close();
     }
 
-    exec(`grep -m1 '^version=' ${moduleDirectory}/module.prop | cut -d= -f2-`)
+    const authorLink  = document.getElementById('about-author-link');
+    const licenseLink = document.getElementById('about-license-link');
+    const repoLink    = document.getElementById('about-repo-link');
+    if (authorLink)  authorLink.onclick  = (e) => { e.preventDefault(); linkRedirect('https://github.com/ahmed-alnassif'); };
+    if (licenseLink) licenseLink.onclick = (e) => { e.preventDefault(); linkRedirect('https://www.gnu.org/licenses/gpl-3.0.html'); };
+    if (repoLink)    repoLink.onclick    = (e) => { e.preventDefault(); linkRedirect('https://github.com/ahmed-alnassif/ReSuSFS'); };
+
+    exec(`cat ${moduleDirectory}/module.prop`)
         .then(({ errno, stdout }) => {
             const versionEl = document.getElementById('about-version-text');
-            if (versionEl) versionEl.textContent = errno === 0 ? stdout.trim() : '';
-        });
-
-    const authorLink = document.getElementById('about-author-link');
-    const licenseLink = document.getElementById('about-license-link');
-    const repoLink = document.getElementById('about-repo-link');
-    if (authorLink) authorLink.onclick = (e) => { e.preventDefault(); linkRedirect('https://github.com/ahmed-alnassif'); };
-    if (licenseLink) licenseLink.onclick = (e) => { e.preventDefault(); linkRedirect('https://www.gnu.org/licenses/gpl-3.0.html'); };
-    if (repoLink) repoLink.onclick = (e) => { e.preventDefault(); linkRedirect('https://github.com/ahmed-alnassif/ReSuSFS'); };
+            if (!versionEl || errno !== 0) return;
+            const m = stdout.match(/version=(.+)/);
+            versionEl.textContent = m ? m[1].trim() : '';
+        })
+        .catch(err => console.warn('version lookup failed:', err));
 }
 
 /**
