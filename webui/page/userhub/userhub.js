@@ -572,12 +572,14 @@ function renderVisibleScripts() {
     if (!scriptObserver) {
         scriptObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
+                const name = entry.target.dataset.scriptName;
                 if (entry.isIntersecting) {
-                    mountScriptBoxByName(entry.target.dataset.scriptName);
-                    scriptObserver.unobserve(entry.target);
+                    mountScriptBoxByName(name);
+                } else {
+                    unmountScriptBoxByName(name);
                 }
             });
-        }, { root: null, rootMargin: '150px 0px', threshold: 0 });
+        }, { root: null, rootMargin: '300px 0px', threshold: 0 });
     }
 
     visibleScripts.forEach(script => {
@@ -588,8 +590,8 @@ function renderVisibleScripts() {
             el.dataset.scriptName = script.name;
             el.innerHTML = `<h2 class="script-placeholder-title">${script.title || script.name}</h2>`;
             boxElements.set(script.name, el);
-            scriptObserver.observe(el);
         }
+        scriptObserver.observe(el);
         el.style.display = '';
         list.appendChild(el);
     });
@@ -616,6 +618,29 @@ function mountScriptBoxByName(name) {
     box.dataset.scriptName = name;
     el.replaceWith(box);
     boxElements.set(name, box);
+    scriptObserver.observe(box);
+}
+
+/**
+ * Revert a mounted box back to a lightweight placeholder once it's
+ * scrolled far out of view, keeping DOM/component count bounded no
+ * matter how many scripts exist.
+ * @param {string} name
+ * @returns {void}
+ */
+function unmountScriptBoxByName(name) {
+    const el = boxElements.get(name);
+    if (!el || el.classList.contains('script-placeholder')) return;
+    const script = scriptCache.find(s => s.name === name);
+    if (!script) return;
+
+    const placeholder = document.createElement('div');
+    placeholder.className = 'box translucent script-box script-placeholder';
+    placeholder.dataset.scriptName = name;
+    placeholder.innerHTML = `<h2 class="script-placeholder-title">${script.title || script.name}</h2>`;
+    el.replaceWith(placeholder);
+    boxElements.set(name, placeholder);
+    scriptObserver.observe(placeholder);
 }
 
 /**
@@ -638,8 +663,7 @@ function openTagEditor(script) {
         const ok = await setScriptTags(script.name, tags.join(','));
         dialog.close();
         if (ok) {
-            markScriptsDirty();
-            refreshList();
+            deferredRefresh();
         } else {
             showPrompt(getString('global_save_fail'), false);
         }
@@ -659,27 +683,25 @@ ${newContent.trim()}
 ReSuSFSScriptEOF
             chmod 755 ${path}`;
         const saveResult = await exec(command);
-        markScriptsDirty();
         if (saveResult.errno === 0) {
             showPrompt(getString('global_saved', path));
         } else {
             showPrompt(getString('global_save_fail'), false);
             console.error('Failed to save script:', saveResult.stderr);
         }
-        refreshList();
+        deferredRefresh();
     });
 }
 
 async function deleteScript(name) {
     if (!confirm(getString('userhub_confirm_delete', name))) return;
     const result = await exec(`rm -f "${scriptsDir}/${name}"`);
-    markScriptsDirty();
     if (result.errno === 0) {
         showPrompt(getString('userhub_deleted', name));
     } else {
         showPrompt(getString('global_save_fail'), false);
     }
-    refreshList();
+    deferredRefresh();
 }
 
 async function createScript() {
@@ -723,13 +745,12 @@ async function importScript() {
     const name = path.split('/').pop();
     const dest = `${scriptsDir}/${name}`;
     const result = await exec(`cp "${path}" "${dest}" && chmod 755 "${dest}"`);
-    markScriptsDirty();
     if (result.errno === 0) {
         showPrompt(getString('userhub_imported', name));
     } else {
         showPrompt(getString('global_save_fail'), false);
     }
-    refreshList();
+    deferredRefresh();
 }
 
 const plusIcon = `<svg xmlns="http://www.w3.org/2000/svg" height="34px" viewBox="0 -960 960 960" width="34px"><path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/></svg>`;
@@ -760,8 +781,7 @@ export function mount() {
         radio.addEventListener('change', () => {
             if (!radio.checked) return;
             localStorage.setItem(SORT_KEY, radio.value);
-            markScriptsDirty();
-            refreshList();
+            deferredRefresh();
         });
     });
 
@@ -803,6 +823,18 @@ export function mount() {
     }
 }
 
+function deferredRefresh() {
+    const loading = document.getElementById('userhub-loading');
+    if (loading) loading.style.display = 'flex';
+
+    requestAnimationFrame(() => {
+        setTimeout(async () => {
+            await refreshList();
+            if (loading) loading.style.display = 'none';
+        }, 0);
+    });
+}
+
 export function onShow() {
     updateUIVisibility();
     setFabIcons();
@@ -810,7 +842,10 @@ export function onShow() {
     const forceUpdateButton = document.getElementById('force-update-btn');
     actionBtn.onclick = () => createScript();
     forceUpdateButton.onclick = () => importScript();
-    refreshListIfDirty();
+
+    if (!scriptsDirty) return;
+    scriptsDirty = false;
+    deferredRefresh();
 }
 
 export function onHide() {
