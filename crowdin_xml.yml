@@ -1,7 +1,11 @@
 project_id_env: CROWDIN_PROJECT_ID
 api_token_env: CROWDIN_API_TOKEN
-preserve_hierarchy: 1
+preserve_hierarchy: true
+
 files:
   - source: /webui/public/locales/strings/en.xml
     translation: /webui/public/locales/strings/%locale%.xml
     type: xml
+    translate_attributes: 0
+    translate_content: 1
+    update_option: update_as_unapproved
