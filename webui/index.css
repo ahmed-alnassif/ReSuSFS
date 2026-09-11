@@ -869,3 +869,7 @@
 .script-tags-btn {
     flex-shrink: 0;
 }
+
+#edit-content {
+    z-index: 9999 !important;
+}
