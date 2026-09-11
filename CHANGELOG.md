@@ -1,4 +1,42 @@
 
+## [v2.3.0-47be13c] - 2026-09-11
+
+
+### 🌐 WebUI
+
+- **fix:** don't let other elements cover the editor (@ahmed-alnassif)
+- **fix:** fix About version lookup and link handlers (@ahmed-alnassif)
+- **refactor:** donations card in more tab (@ahmed-alnassif)
+- **perf:** stop rebuilding every visible UserHub row on each search keystroke/tag click, reuse built elements via a persistent map, tighten IntersectionObserver margin (@ahmed-alnassif)
+- **fix:** make UserHub load faster and feel smoother (@ahmed-alnassif)
+- **fix:** stop scripts from losing their tags and the list shaking while scrolling (@ahmed-alnassif)
+
+### 📚 Documentation
+
+- add Crowdin badge (@ahmed-alnassif)
+- add KernelSU Next warning to README (@ahmed-alnassif)
+- fix formatting (@ahmed-alnassif)
+- add KernelSU Next warning to changelog (@ahmed-alnassif)
+
+### ⚙️ CI/CD
+
+- move crowdin sync to dev, publish locales-dist branch (@ahmed-alnassif)
+- simplify crowdin workflow to single branch (@ahmed-alnassif)
+- drop locales.zip artifact (@ahmed-alnassif)
+
+### 🧹 Chores
+
+- bump version to v2.3.0-47be13c (@ahmed-alnassif)
+
+### 📦 Other
+
+- drop: remove KernelSU Next support (@ahmed-alnassif)
+
+### 🤖 Automated
+
+- webui/locales: sync translation from Crowdin (#5)
+- webui/locales: sync translation from Crowdin (#6)
+
 > [!Important]
 > **KernelSU Next is not recommended.**
 >
