@@ -1,4 +1,36 @@
 
+## [v2.3.0-d348051] - 2026-09-12
+
+
+### 🌐 WebUI
+
+- **refactor:** add UserHub next to home tab (@ahmed-alnassif)
+- **style:** change UserHub icon (@ahmed-alnassif)
+- **feat:** add available languages to selector (@ahmed-alnassif)
+
+### 📚 Documentation
+
+- add GKID as the recommended kernel for full SuSFS support (@ahmed-alnassif)
+
+### ⚙️ CI/CD
+
+- fix Crowdin XML config to skip name attributes (@ahmed-alnassif)
+- improve Crowdin workflow with official action pattern and proper branch handling (@ahmed-alnassif)
+- use the correct secret variable for crowdin (@ahmed-alnassif)
+- fix syntax error (@ahmed-alnassif)
+- **crowdin:** don't start the workflow in every doc push (@ahmed-alnassif)
+- **crowdin:** upload local translations (@ahmed-alnassif)
+
+### 🧹 Chores
+
+- bump version to v2.3.0-d348051 (@ahmed-alnassif)
+
+### 🤖 Automated
+
+- webui/locales: sync translation from Crowdin (#11)
+- New Crowdin translations by GitHub Action (#12)
+- webui: new Crowdin translations by GitHub Action (#14)
+
 ## [v2.3.0-47be13c] - 2026-09-11
 
 
