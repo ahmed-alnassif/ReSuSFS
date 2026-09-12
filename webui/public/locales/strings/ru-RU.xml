@@ -4,12 +4,12 @@
     <string name="reboot_dialog_title">Перезагрузить устройство</string>
     <string name="reboot_dialog_message">Сейчас ваше устройство будет перезапущено. Убедитесь, что вы сначала сохранили все важные данные.</string>
     <!-- Status -->
-    <string name="status_title">SuSFS Status</string>
+    <string name="status_title"/>
     <string name="status_active">Активно - скрытие выполняется ядром</string>
     <string name="status_unsupported_version">Неподдерживаемая версия ksu_susfs</string>
     <string name="status_binary_missing">двоичный файл ksu_susfs не найден</string>
     <string name="status_unknown">Неизвестен</string>
-    <string name="status_kernel_version">SuSFS %s</string>
+    <string name="status_kernel_version"/>
     <string name="status_feature_count">Функции %s включены</string>
     <!-- Summary -->
     <string name="summary_title">Сводка конфигурации</string>
@@ -19,12 +19,12 @@
     <string name="features_title">Включенные функции</string>
     <string name="features_version">Версия ядра</string>
     <string name="features_variant">Вариант</string>
-    <string name="features_none">Нет зарегистрированных объектов.</string>
+    <string name="features_none"/>
     <!-- Global -->
     <string name="global_dev_opt">Опция разработчика включена</string>
     <string name="global_dev_opt_true">Опция разработчика уже включена</string>
     <string name="global_reboot_now">Перезагрузитесь, чтобы вступить в силу</string>
-    <string name="global_reboot">Reboot</string>
+    <string name="global_reboot"/>
     <string name="global_rebooting">Перезагрузка...</string>
     <string name="global_saved">Файл сохранен в %s</string>
     <string name="global_save_fail">Не удалось сохранить файл</string>
@@ -46,15 +46,15 @@
     <string name="susfs_sus_paths_desc">Скрывает только чтение/статические пути через add_sus_path. Эффективно только для пунктирных процессов с uid ≥ 10000.</string>
     <string name="susfs_sus_paths_loop_title">Пути Sus (цикл)</string>
     <string name="susfs_sus_paths_loop_desc">Скрывает часто модифицированные/воссоздаваемые пути через add_sus_path_loop, повторно помеченные на каждом спавне зигота.</string>
-    <string name="susfs_sus_maps_title">Sus Maps</string>
+    <string name="susfs_sus_maps_title"/>
     <string name="susfs_sus_maps_desc">Скрывает mmapped файлы библиотеки из /proc/self/maps и связанных интерфейсов через add_sus_map.</string>
-    <string name="susfs_kstat_paths_title">Sus Kstat</string>
+    <string name="susfs_kstat_paths_title"/>
     <string name="susfs_kstat_paths_desc">Сбрасывает статистику файла для пути, которые монтируются, поставляются рано и поздно.</string>
     <string name="susfs_open_redirect_title">Открыть перенаправление</string>
     <string name="susfs_open_redirect_desc">Перенаправляет открытый путь к указанному пользователем пути для выбранной схемы uid.</string>
-    <string name="susfs_uname_title">Uname Spoof</string>
+    <string name="susfs_uname_title"/>
     <string name="susfs_uname_desc">Подменяет выпуск и версию ядра для всех процессов.</string>
-    <string name="susfs_cmdline_title">Cmdline / Bootconfig</string>
+    <string name="susfs_cmdline_title"/>
     <string name="susfs_cmdline_desc">Заменяет содержимое /proc/cmdline или /proc/bootconfig из подготовленного файла.</string>
     <!-- Config box actions -->
     <string name="box_edit">Редактирование</string>
@@ -63,12 +63,12 @@
     <string name="box_custom_file">Загрузить пользовательский файл</string>
     <string name="box_entry_count">%d записей</string>
     <!-- Toggles -->
-    <string name="toggles_title">Toggles</string>
+    <string name="toggles_title"/>
     <string name="toggles_description">Простые флаги ядра, применяемые через hide_sus_mnts_for_non_su_procs, enable_log и enable_avc_log_spoofing.</string>
-    <string name="toggle_hide_mnts">Спрятать Транспорты</string>
+    <string name="toggle_hide_mnts"/>
     <string name="toggle_hide_mnts_desc">Применяется в пост-ф-данных или загрузочных выполненных после монтирования для пользовательских процессов.</string>
     <string name="toggle_enable_log">Включить журнал SuSFS</string>
-    <string name="toggle_enable_log_desc">Включает ведение журнала ядра на основе подвесных систем.</string>
+    <string name="toggle_enable_log_desc"/>
     <string name="toggle_avc_spoof">Spoof AVC 'su' контекст</string>
     <string name="toggle_avc_spoof_desc">Скрывает домен su из перечисления AVC log.</string>
     <string name="toggles_apply">Применить</string>
@@ -86,9 +86,9 @@
     <string name="userhub_run">Запустить</string>
     <string name="userhub_delete">Удалить</string>
     <string name="userhub_new_script">Новый скрипт</string>
-    <string name="userhub_import_script">Import Script</string>
+    <string name="userhub_import_script"/>
     <string name="userhub_script_name">Имя скрипта</string>
-    <string name="userhub_invalid_name">Invalid script name</string>
+    <string name="userhub_invalid_name"/>
     <string name="userhub_already_exists">%s уже существует</string>
     <string name="userhub_confirm_delete">Удалить %s? Это действие нельзя отменить.</string>
     <string name="userhub_deleted">%s удалено</string>
@@ -107,7 +107,7 @@
     <string name="more_documents">Документы</string>
     <string name="more_usage">Использование</string>
     <string name="more_hiding">Скрытие</string>
-    <string name="more_faq">ЧАВО</string>
+    <string name="more_faq"/>
     <string name="more_support">Поддержка</string>
     <string name="more_support_telegram">Группа поддержки Telegram</string>
     <string name="backup_restore_telegram_hint">Ищете общие конфигурации? Присоединиться к группе Telegram</string>
@@ -129,8 +129,8 @@
     <string name="about_repo">Репозиторий</string>
     <!-- Footer -->
     <string name="footer_home">Домашний</string>
-    <string name="footer_susfs">SuSFS</string>
-    <string name="footer_userhub">UserHub</string>
+    <string name="footer_susfs"/>
+    <string name="footer_userhub"/>
     <string name="footer_more">Ещё</string>
     <!-- Backup and Restore -->
     <string name="backup_restore_backup_and_restore">Резервное копирование &amp; Восстановление конфигурации</string>

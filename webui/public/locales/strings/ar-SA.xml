@@ -4,12 +4,12 @@
     <string name="reboot_dialog_title">إعادة تشغيل الجهاز</string>
     <string name="reboot_dialog_message">سيتم إعادة تشغيل جهازك الآن. تأكد من أنك قمت بحفظ أي شيء مهم أولاً.</string>
     <!-- Status -->
-    <string name="status_title">SuSFS Status</string>
+    <string name="status_title"/>
     <string name="status_active">نشط - الإخفاء يتم إنفاذه بواسطة kernel</string>
     <string name="status_unsupported_version">إصدار ksu_susfs غير مدعوم</string>
     <string name="status_binary_missing">لم يتم العثور على ksu_susfs</string>
     <string name="status_unknown">غير معروف</string>
-    <string name="status_kernel_version">SuSFS %s</string>
+    <string name="status_kernel_version"/>
     <string name="status_feature_count">ميزات %s مفعلة</string>
     <!-- Summary -->
     <string name="summary_title">ملخص التكوين</string>
@@ -17,7 +17,7 @@
     <string name="summary_enabled_scripts">تمكين البرامج النصية</string>
     <!-- Features dialog -->
     <string name="features_title">الميزات المفعلة</string>
-    <string name="features_version">نسخة النواة</string>
+    <string name="features_version"/>
     <string name="features_variant">المتغير</string>
     <string name="features_none">لا توجد ميزات تم الإبلاغ عنها.</string>
     <!-- Global -->
@@ -46,15 +46,15 @@
     <string name="susfs_sus_paths_desc">إخفاء المسارات الثابتة للقراءة فقط عبر add_sus_path . فقط فعال في العمليات المجمعة مع الأشعة ± 10000.</string>
     <string name="susfs_sus_paths_loop_title">مسارات Sus (حلقة)</string>
     <string name="susfs_sus_paths_loop_desc">يخفي بشكل متكرر المسارات المعدلة/المعاد إنشاؤها عن طريق add_sus_path_loop، المعاد رفع العلم على كل zygote spawn.</string>
-    <string name="susfs_sus_maps_title">Sus Maps</string>
+    <string name="susfs_sus_maps_title"/>
     <string name="susfs_sus_maps_desc">إخفاء ملفات المكتبة المعبأة من /proc/self/maps والواجهات ذات الصلة عبر add_sus_map.</string>
-    <string name="susfs_kstat_paths_title">Sus Kstat</string>
+    <string name="susfs_kstat_paths_title"/>
     <string name="susfs_kstat_paths_desc">معلومات التقاط ملف الحبل للمسارات التي تحصل على ربط مثبت، مهيأة مبكرا وملتزمة في وقت متأخر.</string>
     <string name="susfs_open_redirect_title">فتح إعادة التوجيه</string>
     <string name="susfs_open_redirect_desc">إعادة توجيه مسار الهدف المفتوح إلى مسار محدد للمستخدم لمخطط uid المختار.</string>
-    <string name="susfs_uname_title">Uname Spoof</string>
-    <string name="susfs_uname_desc">Spoofs the kernel release and version reported to all processes.</string>
-    <string name="susfs_cmdline_title">Cmdline / Bootconfig</string>
+    <string name="susfs_uname_title"/>
+    <string name="susfs_uname_desc"/>
+    <string name="susfs_cmdline_title"/>
     <string name="susfs_cmdline_desc">تفقد محتوى /proc/cmdline أو /proc/bootconfig من ملف معد.</string>
     <!-- Config box actions -->
     <string name="box_edit">تحرير</string>
@@ -63,19 +63,19 @@
     <string name="box_custom_file">تحميل ملف مخصص</string>
     <string name="box_entry_count">إدخالات %d</string>
     <!-- Toggles -->
-    <string name="toggles_title">Toggles</string>
+    <string name="toggles_title"/>
     <string name="toggles_description">أعلام النواة البسيطة مطبقة عبر hide_sus_mnts_for_non_su_procs, enable_log and enable_avc_log_spoofing.</string>
     <string name="toggle_hide_mnts">إخفاء mounts</string>
     <string name="toggle_hide_mnts_desc">تطبق في بيانات ما بعد المراسلات أو التشغيل المكتمل، بمجرد أن يتم تسوية التركيبات لعمليات المستخدم.</string>
     <string name="toggle_enable_log">تمكين سجل SuSFS</string>
-    <string name="toggle_enable_log_desc">قم بتشغيل تسجيل نواة المعلق الخاص بك.</string>
+    <string name="toggle_enable_log_desc"/>
     <string name="toggle_avc_spoof">سياق "سو" AVC</string>
     <string name="toggle_avc_spoof_desc">إخفاء نطاق su من تعداد سجل AVC.</string>
     <string name="toggles_apply">تطبيق</string>
     <!-- UserHub -->
     <string name="userhub_empty">لا توجد برامج نصية بعد. انقر فوق + لإنشاء واحد أو استيراد ملف .sh</string>
     <string name="userhub_stage_postfs">بيانات ما بعد fs-</string>
-    <string name="userhub_stage_bootcompleted">تم التشغيل</string>
+    <string name="userhub_stage_bootcompleted"/>
     <string name="userhub_cron_label">الجدول</string>
     <string name="userhub_cron_off">لا يوجد جدول</string>
     <string name="userhub_cron_every_minutes">كل X دقيقة</string>
@@ -85,10 +85,10 @@
     <string name="userhub_cron_hours_placeholder">مثال, 6</string>
     <string name="userhub_run">تشغيل</string>
     <string name="userhub_delete">حذف</string>
-    <string name="userhub_new_script">سكريبت جديد</string>
-    <string name="userhub_import_script">Import Script</string>
+    <string name="userhub_new_script"/>
+    <string name="userhub_import_script"/>
     <string name="userhub_script_name">اسم البرنامج النصي</string>
-    <string name="userhub_invalid_name">Invalid script name</string>
+    <string name="userhub_invalid_name"/>
     <string name="userhub_already_exists">%s موجود بالفعل</string>
     <string name="userhub_confirm_delete">حذف %s؟ لا يمكن التراجع عن ذلك.</string>
     <string name="userhub_deleted">تم حذف %s</string>
@@ -129,7 +129,7 @@
     <string name="about_repo">المستودع</string>
     <!-- Footer -->
     <string name="footer_home">المنزل</string>
-    <string name="footer_susfs">SuSFS</string>
+    <string name="footer_susfs"/>
     <string name="footer_userhub">المستخدم هوب</string>
     <string name="footer_more">المزيد</string>
     <!-- Backup and Restore -->
