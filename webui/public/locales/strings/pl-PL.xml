@@ -4,12 +4,12 @@
     <string name="reboot_dialog_title">Uruchom ponownie urządzenie</string>
     <string name="reboot_dialog_message">Twoje urządzenie zostanie teraz zrestartowane. Upewnij się, że najpierw zapisałeś coś ważnego.</string>
     <!-- Status -->
-    <string name="status_title">SuSFS Status</string>
+    <string name="status_title"/>
     <string name="status_active">Aktywne - ukrywanie jest wymuszane przez jądro</string>
     <string name="status_unsupported_version">Nieobsługiwana wersja ksu_susfs</string>
     <string name="status_binary_missing">nie znaleziono binarnego ksu_susfs</string>
     <string name="status_unknown">Nieznane</string>
-    <string name="status_kernel_version">SuSFS %s</string>
+    <string name="status_kernel_version"/>
     <string name="status_feature_count">Funkcje %s włączone</string>
     <!-- Summary -->
     <string name="summary_title">Podsumowanie konfiguracji</string>
@@ -17,14 +17,14 @@
     <string name="summary_enabled_scripts">Włączone skrypty</string>
     <!-- Features dialog -->
     <string name="features_title">Aktywne funkcje</string>
-    <string name="features_version">Wersja jądra</string>
-    <string name="features_variant">Wariant</string>
+    <string name="features_version"/>
+    <string name="features_variant"/>
     <string name="features_none">Nie zgłoszono żadnych cech.</string>
     <!-- Global -->
     <string name="global_dev_opt">Opcja dewelopera włączona</string>
     <string name="global_dev_opt_true">Opcja programisty jest już włączona</string>
     <string name="global_reboot_now">Uruchom ponownie aby zacząć działać</string>
-    <string name="global_reboot">Reboot</string>
+    <string name="global_reboot"/>
     <string name="global_rebooting">Ponowne uruchamianie...</string>
     <string name="global_saved">Plik zapisany do %s</string>
     <string name="global_save_fail">Nie udało się zapisać pliku</string>
@@ -38,7 +38,7 @@
     <string name="global_unsupported">Nieobsługiwane</string>
     <!-- Control Panel -->
     <string name="control_panel_title">Panel sterowania</string>
-    <string name="control_panel_language">Język</string>
+    <string name="control_panel_language"/>
     <string name="control_panel_bad_translation">Złe tłumaczenie</string>
     <string name="control_panel_add_language">Dodaj język</string>
     <!-- SuSFS config boxes -->
@@ -46,24 +46,24 @@
     <string name="susfs_sus_paths_desc">Ukrywa ścieżki tylko do odczytu/statyczne, poprzez add_sus_path. Skuteczne tylko dla procesów, w których uid ≥ 10000.</string>
     <string name="susfs_sus_paths_loop_title">Ścieżki Sus (pętla)</string>
     <string name="susfs_sus_paths_loop_desc">Ukrywa często modyfikowane/zretworzone ścieżki za pomocą add_sus_path_loop, ponownie oznaczane na każdym spawnie zygotu.</string>
-    <string name="susfs_sus_maps_title">Sus Maps</string>
+    <string name="susfs_sus_maps_title"/>
     <string name="susfs_sus_maps_desc">Ukrywa pliki biblioteki w mmapped z /proc/self/maps i powiązanych interfejsów za pomocą add_sus_map.</string>
-    <string name="susfs_kstat_paths_title">Sus Kstat</string>
+    <string name="susfs_kstat_paths_title"/>
     <string name="susfs_kstat_paths_desc">Informacje o statystyce plików Spoofs dla ścieżek, które są przymocowane, rozłożone wcześnie i z opóźnieniem.</string>
     <string name="susfs_open_redirect_title">Otwórz przekierowanie</string>
     <string name="susfs_open_redirect_desc">Przekieruje otwartą ścieżkę docelową na ścieżkę zdefiniowaną przez użytkownika dla wybranego schematu uid</string>
-    <string name="susfs_uname_title">Szlifowanie nazwy użytkownika</string>
+    <string name="susfs_uname_title"/>
     <string name="susfs_uname_desc">Zajmuje wydanie i wersję jądra zgłoszone do wszystkich procesów.</string>
-    <string name="susfs_cmdline_title">Cmdline / Bootconfig</string>
+    <string name="susfs_cmdline_title"/>
     <string name="susfs_cmdline_desc">Wyświetla zawartość /proc/cmdline lub /proc/bootconfig z przygotowanego pliku.</string>
     <!-- Config box actions -->
     <string name="box_edit">Edytuj</string>
     <string name="box_apply">Zastosuj</string>
-    <string name="box_stage">Etap</string>
+    <string name="box_stage"/>
     <string name="box_custom_file">Załaduj niestandardowy plik</string>
     <string name="box_entry_count">%d wpisów</string>
     <!-- Toggles -->
-    <string name="toggles_title">Toggles</string>
+    <string name="toggles_title"/>
     <string name="toggles_description">Proste flagi jądra stosowane przez hide_sus_mnts_for_non_su_procs, enable_log i enable_avc_log_spoofing.</string>
     <string name="toggle_hide_mnts">Ukryj wierzchowce</string>
     <string name="toggle_hide_mnts_desc">Zastosowane w wersjach po-fs-data lub starcie, gdy montaż zakończy się dla procesów użytkownika.</string>
@@ -86,9 +86,9 @@
     <string name="userhub_run">Uruchom</string>
     <string name="userhub_delete">Usuń</string>
     <string name="userhub_new_script">Nowy skrypt</string>
-    <string name="userhub_import_script">Import Script</string>
+    <string name="userhub_import_script"/>
     <string name="userhub_script_name">Nazwa skryptu</string>
-    <string name="userhub_invalid_name">Invalid script name</string>
+    <string name="userhub_invalid_name"/>
     <string name="userhub_already_exists"/>
     <string name="userhub_confirm_delete">Usunąć %s? Tej operacji nie można cofnąć.</string>
     <string name="userhub_deleted"/>
@@ -106,7 +106,7 @@
     <!-- More -->
     <string name="more_documents">Dokumenty</string>
     <string name="more_usage">Użycie</string>
-    <string name="more_hiding">Ukrywanie</string>
+    <string name="more_hiding"/>
     <string name="more_faq">Często zadawane pytania</string>
     <string name="more_support">Wsparcie</string>
     <string name="more_support_telegram">Grupa wsparcia Telegram</string>
@@ -114,7 +114,7 @@
     <string name="more_support_issue">Zgłoś problem</string>
     <string name="more_support_view_webui_log">Zobacz dziennik WebUI</string>
     <!-- Donate -->
-    <string name="donate_title">Wesprzyj</string>
+    <string name="donate_title"/>
     <string name="donate_link_label">Wesprzyj rozwój ReSuSFS prostym darowizną</string>
     <string name="donate_home_hint">Podoba Ci się ReSuSFS? Wesprzyj rozwój poniżej ❤️</string>
     <!-- Credits -->
@@ -122,14 +122,14 @@
     <string name="credits_susfs">SuSFS przez simonpunk</string>
     <string name="credits_bindhosts">WebUI zbudowane na hostach bindhostów</string>
     <!-- About -->
-    <string name="about_title">O programie</string>
+    <string name="about_title"/>
     <string name="about_open">O ReSuSFS</string>
     <string name="about_author">Autor</string>
     <string name="about_license">Licencja</string>
     <string name="about_repo">Repozytorium</string>
     <!-- Footer -->
     <string name="footer_home">Strona główna</string>
-    <string name="footer_susfs">SuSFS</string>
+    <string name="footer_susfs"/>
     <string name="footer_userhub">Użytkownik Hub</string>
     <string name="footer_more">Więcej</string>
     <!-- Backup and Restore -->

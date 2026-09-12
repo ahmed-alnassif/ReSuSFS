@@ -4,12 +4,12 @@
     <string name="reboot_dialog_title">Gerät neustarten</string>
     <string name="reboot_dialog_message">Ihr Gerät wird jetzt neu gestartet. Stellen Sie sicher, dass Sie zuerst etwas Wichtiges gespeichert haben.</string>
     <!-- Status -->
-    <string name="status_title">SuSFS Status</string>
+    <string name="status_title"/>
     <string name="status_active">Aktiv - Verstecken wird durch den Kernel erzwungen</string>
     <string name="status_unsupported_version">Nicht unterstützte ksu_susfs Version</string>
     <string name="status_binary_missing">ksu_susfs Binärdatei nicht gefunden</string>
     <string name="status_unknown">Unbekannt</string>
-    <string name="status_kernel_version">SuSFS %s</string>
+    <string name="status_kernel_version"/>
     <string name="status_feature_count">%s Funktionen aktiviert</string>
     <!-- Summary -->
     <string name="summary_title">Konfigurationsübersicht</string>
@@ -24,7 +24,7 @@
     <string name="global_dev_opt">Entwickleroption aktiviert</string>
     <string name="global_dev_opt_true">Entwickleroption bereits aktiviert</string>
     <string name="global_reboot_now">Neustarten, um wirksam zu werden</string>
-    <string name="global_reboot">Reboot</string>
+    <string name="global_reboot"/>
     <string name="global_rebooting">Neustarten...</string>
     <string name="global_saved">Datei in %s gespeichert</string>
     <string name="global_save_fail">Fehler beim Speichern der Datei</string>
@@ -42,30 +42,30 @@
     <string name="control_panel_bad_translation">Falsche Übersetzung</string>
     <string name="control_panel_add_language">Sprache hinzufügen</string>
     <!-- SuSFS config boxes -->
-    <string name="susfs_sus_paths_title">Sus Pfade</string>
+    <string name="susfs_sus_paths_title"/>
     <string name="susfs_sus_paths_desc">Versteckt lesende/statische Pfade über add_sus_path. Nur gültig für umworbene Prozesse mit uid &lt;unk> 10000.</string>
-    <string name="susfs_sus_paths_loop_title">Sus Pfade (Schleife)</string>
+    <string name="susfs_sus_paths_loop_title"/>
     <string name="susfs_sus_paths_loop_desc">Versteckt häufig geänderte bzw. neu erstellte Pfade über add_sus_path_loop, die bei jedem Zygote-Spawn erneut markiert werden.</string>
-    <string name="susfs_sus_maps_title">Sus Maps</string>
+    <string name="susfs_sus_maps_title"/>
     <string name="susfs_sus_maps_desc">Versteckt über add_sus_map Bibliotheksdateien von /proc/self/maps und verwandten Schnittstellen.</string>
-    <string name="susfs_kstat_paths_title">Sus Kstat</string>
+    <string name="susfs_kstat_paths_title"/>
     <string name="susfs_kstat_paths_desc">Spoofs file stat info für Pfade, die bind montiert, früh inszeniert und zu spät committet werden.</string>
     <string name="susfs_open_redirect_title">Weiterleitung öffnen</string>
     <string name="susfs_open_redirect_desc">Führt einen geöffneten Zielpfad zu einem benutzerdefinierten Pfad für ein gewähltes UID-Schema.</string>
     <string name="susfs_uname_title">Unbekannter Spoof</string>
     <string name="susfs_uname_desc">Spoofs der Kernel-Release und -Version an alle Prozesse.</string>
-    <string name="susfs_cmdline_title">Cmdline / Bootconfig</string>
+    <string name="susfs_cmdline_title"/>
     <string name="susfs_cmdline_desc">Spockt den Inhalt von /proc/cmdline oder /proc/bootconfig aus einer vorbereiteten Datei.</string>
     <!-- Config box actions -->
     <string name="box_edit">Bearbeiten</string>
     <string name="box_apply">Anwenden</string>
-    <string name="box_stage">Teil</string>
+    <string name="box_stage"/>
     <string name="box_custom_file">Eigene Datei laden</string>
     <string name="box_entry_count">%d Einträge</string>
     <!-- Toggles -->
-    <string name="toggles_title">Toggles</string>
+    <string name="toggles_title"/>
     <string name="toggles_description">Einfache Kernel-Flags werden mittels hide_sus_mnts_for_non_su_procs, enable_log und enable_avc_log_spoofing angewendet.</string>
-    <string name="toggle_hide_mnts">Reittiere ausblenden</string>
+    <string name="toggle_hide_mnts"/>
     <string name="toggle_hide_mnts_desc">Wird in Post-fs-data oder boot-fertig angewendet, sobald sich Mounts auf Benutzerprozesse einlassen.</string>
     <string name="toggle_enable_log">SuSFS Log aktivieren</string>
     <string name="toggle_enable_log_desc">Schaltet Sushs' eigenes Kernel-Logging ein.</string>
@@ -86,9 +86,9 @@
     <string name="userhub_run">Ausführen</string>
     <string name="userhub_delete">Löschen</string>
     <string name="userhub_new_script">Neues Skript</string>
-    <string name="userhub_import_script">Import Script</string>
+    <string name="userhub_import_script"/>
     <string name="userhub_script_name">Skriptname</string>
-    <string name="userhub_invalid_name">Invalid script name</string>
+    <string name="userhub_invalid_name"/>
     <string name="userhub_already_exists">%s existiert bereits</string>
     <string name="userhub_confirm_delete">%s löschen? Dies kann nicht rückgängig gemacht werden.</string>
     <string name="userhub_deleted">%s gelöscht</string>
@@ -105,9 +105,9 @@
     <string name="userhub_edit_tags">Tags bearbeiten</string>
     <!-- More -->
     <string name="more_documents">Dokumente</string>
-    <string name="more_usage">Auslastung</string>
+    <string name="more_usage"/>
     <string name="more_hiding">Versteckt</string>
-    <string name="more_faq">FAQ</string>
+    <string name="more_faq"/>
     <string name="more_support">Unterstützung</string>
     <string name="more_support_telegram">Telegram-Unterstützungsgruppe</string>
     <string name="backup_restore_telegram_hint">Suche nach freigegebenen Konfigurationen? Der Telegram-Gruppe beitreten</string>
@@ -118,7 +118,7 @@
     <string name="donate_link_label">Unterstütze ReSuSFS Entwicklung durch eine einfache Spende</string>
     <string name="donate_home_hint">Gefällt dir ReSuSFS? Unterstütze die Entwicklung unterhalb ❤️</string>
     <!-- Credits -->
-    <string name="credits_title">Credits</string>
+    <string name="credits_title"/>
     <string name="credits_susfs">SuSFS von simonpunk</string>
     <string name="credits_bindhosts">WebUI auf Bindhosts erstellt</string>
     <!-- About -->
@@ -126,10 +126,10 @@
     <string name="about_open">Über ReSuSFS</string>
     <string name="about_author">Autor</string>
     <string name="about_license">Lizenz</string>
-    <string name="about_repo">Repository</string>
+    <string name="about_repo"/>
     <!-- Footer -->
     <string name="footer_home">Zuhause</string>
-    <string name="footer_susfs">SuSFS</string>
+    <string name="footer_susfs"/>
     <string name="footer_userhub">BenutzerHub</string>
     <string name="footer_more">Mehr</string>
     <!-- Backup and Restore -->

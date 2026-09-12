@@ -4,12 +4,12 @@
     <string name="reboot_dialog_title">デバイスを再起動</string>
     <string name="reboot_dialog_message">お使いのデバイスは今すぐ再起動します。 最初に重要なものを保存したことを確認してください。</string>
     <!-- Status -->
-    <string name="status_title">SuSFS Status</string>
+    <string name="status_title"/>
     <string name="status_active">アクティブ - カーネルによって非表示が強制されます</string>
     <string name="status_unsupported_version">サポートされていないksu_susfsバージョン</string>
     <string name="status_binary_missing">ksu_susfs のバイナリが見つかりません</string>
     <string name="status_unknown">不明</string>
-    <string name="status_kernel_version">SuSFS %s</string>
+    <string name="status_kernel_version"/>
     <string name="status_feature_count">%s 機能は有効です</string>
     <!-- Summary -->
     <string name="summary_title">設定の概要</string>
@@ -24,7 +24,7 @@
     <string name="global_dev_opt">開発者向けオプションが有効です</string>
     <string name="global_dev_opt_true">開発者向けオプションは既に有効です</string>
     <string name="global_reboot_now">再起動して有効にする</string>
-    <string name="global_reboot">Reboot</string>
+    <string name="global_reboot"/>
     <string name="global_rebooting">再起動中...</string>
     <string name="global_saved">ファイルを %sに保存しました</string>
     <string name="global_save_fail">ファイルの保存に失敗しました</string>
@@ -44,17 +44,17 @@
     <!-- SuSFS config boxes -->
     <string name="susfs_sus_paths_title">Susパス</string>
     <string name="susfs_sus_paths_desc">add_sus_path を使用して読み取り専用/静的パスを非表示にします。 uid が 10000 以上のプロセスである場合のみ有効です。</string>
-    <string name="susfs_sus_paths_loop_title">Sus Paths (Loop)</string>
+    <string name="susfs_sus_paths_loop_title"/>
     <string name="susfs_sus_paths_loop_desc">add_sus_path_loop 経由で頻繁に変更/再作成されたパスを隠し、各zygote スポーン時に再フラグを立てます。</string>
-    <string name="susfs_sus_maps_title">Sus Maps</string>
+    <string name="susfs_sus_maps_title"/>
     <string name="susfs_sus_maps_desc">maped ライブラリ ファイルを add_sus_map を使用して、/proc/self/map と関連インターフェイスから非表示にします。</string>
-    <string name="susfs_kstat_paths_title">Sus Kstat</string>
-    <string name="susfs_kstat_paths_desc">バインドをマウントされるパスの状態情報をSpoofsファイルに保存します。早い段階で遅くコミットします。</string>
+    <string name="susfs_kstat_paths_title"/>
+    <string name="susfs_kstat_paths_desc"/>
     <string name="susfs_open_redirect_title">リダイレクトを開く</string>
     <string name="susfs_open_redirect_desc">開かれたターゲットパスを選択した uid スキームのユーザー定義パスにリダイレクトします。</string>
     <string name="susfs_uname_title">Uname Spotof</string>
     <string name="susfs_uname_desc">すべてのプロセスに報告されたカーネルリリースとバージョンを Spoofs します。</string>
-    <string name="susfs_cmdline_title">Cmdline / Bootconfig</string>
+    <string name="susfs_cmdline_title"/>
     <string name="susfs_cmdline_desc">準備されたファイルから /proc/cmdline または /proc/bootconfig の内容をSpoofsします。</string>
     <!-- Config box actions -->
     <string name="box_edit">編集</string>
@@ -63,7 +63,7 @@
     <string name="box_custom_file">カスタムファイルを読み込む</string>
     <string name="box_entry_count">%d 項目</string>
     <!-- Toggles -->
-    <string name="toggles_title">Toggles</string>
+    <string name="toggles_title"/>
     <string name="toggles_description">hide_sus_mnts_for_non_su_procs、enable_log、enable_avc_log_spoofingを介して適用される単純なカーネルフラグ。</string>
     <string name="toggle_hide_mnts">マウントを隠す</string>
     <string name="toggle_hide_mnts_desc">後fs-dataまたはboot-completedで適用されるマウントは、ユーザープロセス用に決済されました。</string>
@@ -74,26 +74,26 @@
     <string name="toggles_apply">適用</string>
     <!-- UserHub -->
     <string name="userhub_empty">スクリプトはまだありません。 + をタップして作成するか、.sh ファイルをインポートします。</string>
-    <string name="userhub_stage_postfs">post-fs-data</string>
+    <string name="userhub_stage_postfs"/>
     <string name="userhub_stage_bootcompleted">起動完了</string>
     <string name="userhub_cron_label">スケジュール</string>
     <string name="userhub_cron_off">スケジュールなし</string>
     <string name="userhub_cron_every_minutes">X分ごと</string>
     <string name="userhub_cron_every_hours">X時間ごと</string>
     <string name="userhub_cron_daily">毎日</string>
-    <string name="userhub_cron_minutes_placeholder">例: 15</string>
-    <string name="userhub_cron_hours_placeholder">例: 6</string>
+    <string name="userhub_cron_minutes_placeholder"/>
+    <string name="userhub_cron_hours_placeholder"/>
     <string name="userhub_run">実行</string>
     <string name="userhub_delete">削除</string>
     <string name="userhub_new_script">新しいスクリプト</string>
-    <string name="userhub_import_script">Import Script</string>
+    <string name="userhub_import_script"/>
     <string name="userhub_script_name">スクリプト名</string>
-    <string name="userhub_invalid_name">Invalid script name</string>
+    <string name="userhub_invalid_name"/>
     <string name="userhub_already_exists">%s は既に存在します</string>
     <string name="userhub_confirm_delete">%s を削除しますか？ この操作は元に戻せません。</string>
     <string name="userhub_deleted">%s が削除されました</string>
     <string name="userhub_imported">%s がインポートされました</string>
-    <string name="userhub_by_author">作成者： %s</string>
+    <string name="userhub_by_author"/>
     <string name="userhub_sort_title">スクリプトを並べ替える</string>
     <string name="userhub_sort_name_asc">名前 (A to Z)</string>
     <string name="userhub_sort_name_desc">名前 (Z から A)</string>
@@ -106,8 +106,8 @@
     <!-- More -->
     <string name="more_documents">ドキュメント</string>
     <string name="more_usage">使用法</string>
-    <string name="more_hiding">非表示中</string>
-    <string name="more_faq">FAQ</string>
+    <string name="more_hiding"/>
+    <string name="more_faq"/>
     <string name="more_support">サポート</string>
     <string name="more_support_telegram">Telegram サポート グループ</string>
     <string name="backup_restore_telegram_hint">共有設定をお探しですか？ Telegramグループに参加</string>
@@ -122,15 +122,15 @@
     <string name="credits_susfs">SimonpunkによるSuSFS</string>
     <string name="credits_bindhosts">bindhosts上にビルドされたWebUI。</string>
     <!-- About -->
-    <string name="about_title">About</string>
+    <string name="about_title"/>
     <string name="about_open">ReSuSFSについて</string>
     <string name="about_author">作成者</string>
     <string name="about_license">ライセンス</string>
     <string name="about_repo">リポジトリ</string>
     <!-- Footer -->
     <string name="footer_home">ホーム</string>
-    <string name="footer_susfs">SuSFS</string>
-    <string name="footer_userhub">UserHub</string>
+    <string name="footer_susfs"/>
+    <string name="footer_userhub"/>
     <string name="footer_more">もっと見る</string>
     <!-- Backup and Restore -->
     <string name="backup_restore_backup_and_restore"/>
