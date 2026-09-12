@@ -47,6 +47,7 @@ Root hiding made simple, powerful when you need it. A [KernelSU](https://kernels
 ## Requirements
 
 - [KernelSU](https://kernelsu.org)
+- [GKID Kernel](https://github.com/ahmed-alnassif/GKID-Kernels) for SuSFS support (optional)
 
 ## Install
 
