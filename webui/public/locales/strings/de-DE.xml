@@ -129,7 +129,7 @@
     <string name="about_repo"/>
     <!-- Footer -->
     <string name="footer_home">Zuhause</string>
-    <string name="footer_susfs"/>
+    <string name="footer_susfs">Versteckt lesende/statische Pfade über add_sus_path.</string>
     <string name="footer_userhub">BenutzerHub</string>
     <string name="footer_more">Mehr</string>
     <!-- Backup and Restore -->
