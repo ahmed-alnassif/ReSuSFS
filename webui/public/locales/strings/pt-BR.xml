@@ -4,12 +4,12 @@
     <string name="reboot_dialog_title">Reiniciar dispositivo</string>
     <string name="reboot_dialog_message">Seu dispositivo irá reiniciar agora. Certifique-se de ter salvo algo importante primeiro.</string>
     <!-- Status -->
-    <string name="status_title"/>
+    <string name="status_title">Status do SuSFS</string>
     <string name="status_active">Ativo - esconder é imposto pelo kernel</string>
     <string name="status_unsupported_version">Versão ksu_susfs não suportada</string>
     <string name="status_binary_missing">ksu_susfs binário não encontrado</string>
     <string name="status_unknown">Desconhecido</string>
-    <string name="status_kernel_version"/>
+    <string name="status_kernel_version">SuSFS %s</string>
     <string name="status_feature_count">Funcionalidades %s ativadas</string>
     <!-- Summary -->
     <string name="summary_title">Resumo de Configuração</string>
@@ -24,17 +24,17 @@
     <string name="global_dev_opt">Opção de desenvolvedor ativada</string>
     <string name="global_dev_opt_true">Opção de desenvolvedor já está habilitada</string>
     <string name="global_reboot_now">Reiniciar para ter efeito</string>
-    <string name="global_reboot"/>
+    <string name="global_reboot">Reiniciar</string>
     <string name="global_rebooting">Reiniciando...</string>
     <string name="global_saved">Arquivo salvo em %s</string>
     <string name="global_save_fail">Falha ao salvar arquivo</string>
     <string name="global_file_too_large">Edição de arquivo não é suportada em arquivo grande</string>
     <string name="global_file_name_empty">O nome do arquivo não pode estar vazio</string>
     <string name="global_show_all">Mostrar Mais %d</string>
-    <string name="global_close"/>
+    <string name="global_close">Fechar</string>
     <string name="global_cancel">cancelar</string>
     <string name="global_confirm">Confirmar</string>
-    <string name="global_action"/>
+    <string name="global_action">Ação</string>
     <string name="global_unsupported">Não suportado</string>
     <!-- Control Panel -->
     <string name="control_panel_title">Painel de controle</string>
@@ -45,36 +45,36 @@
     <string name="susfs_sus_paths_title">Caminhos de Sus</string>
     <string name="susfs_sus_paths_desc">Oculta caminhos somente leitura/estática via add_sus_path. Só é eficaz para processos acumulados com uid ≥ 10000.</string>
     <string name="susfs_sus_paths_loop_title">Caminhos de Sus (Laço)</string>
-    <string name="susfs_sus_paths_loop_desc">Ocultos freqüentemente modificados/recriados via add_sus_path_loop, re-sinalizado em cada spawn de zygote.</string>
-    <string name="susfs_sus_maps_title"/>
+    <string name="susfs_sus_paths_loop_desc">Ocultos frequentemente modificados/recriados via add_sus_path_loop, re-sinalizado em cada spawn de zygote.</string>
+    <string name="susfs_sus_maps_title">Sus Maps</string>
     <string name="susfs_sus_maps_desc">Esconde arquivos de biblioteca mmapped de /proc/self/maps e interfaces relacionadas via add_sus_map.</string>
-    <string name="susfs_kstat_paths_title"/>
-    <string name="susfs_kstat_paths_desc">Colher informações de estatísticas de arquivos para caminhos que obtêm vinculação montada, staging cedo e comprometido até tarde.</string>
+    <string name="susfs_kstat_paths_title">Sus Kstat</string>
+    <string name="susfs_kstat_paths_desc">Falsifica informações de estatísticas de arquivos para caminhos que obtêm vinculação montada, preparados antecipadamente e confirmados tardiamente.</string>
     <string name="susfs_open_redirect_title">Abrir Redirecionamento</string>
     <string name="susfs_open_redirect_desc">Redireciona um caminho de destino aberto para um caminho definido pelo usuário para um esquema de uid escolhido.</string>
-    <string name="susfs_uname_title">Disfarce de Uname</string>
+    <string name="susfs_uname_title">Falsificar o Uname</string>
     <string name="susfs_uname_desc">Spoofs o lançamento do kernel e a versão reportada para todos os processos.</string>
-    <string name="susfs_cmdline_title"/>
+    <string name="susfs_cmdline_title">Linha de comando / Configuração de inicialização</string>
     <string name="susfs_cmdline_desc">Spoofs o conteúdo de /proc/cmdline ou /proc/bootconfig a partir de um arquivo preparado.</string>
     <!-- Config box actions -->
     <string name="box_edit">Alterar</string>
     <string name="box_apply">Aplicar</string>
-    <string name="box_stage"/>
+    <string name="box_stage">Etapa</string>
     <string name="box_custom_file">Carregar arquivo personalizado</string>
     <string name="box_entry_count">%d entradas</string>
     <!-- Toggles -->
-    <string name="toggles_title"/>
+    <string name="toggles_title">Alternar</string>
     <string name="toggles_description">Sinalizadores de kernel simples aplicados via hide_sus_mnts_for_non_su_procs, enable_log e enable_avc_log_spoofing.</string>
     <string name="toggle_hide_mnts">Ocultar Montarias</string>
     <string name="toggle_hide_mnts_desc">Aplicado em post-fs-data ou inicialização completa, uma vez que as montarias tenham sido fixadas para processos de usuário.</string>
     <string name="toggle_enable_log">Habilitar Log de SuSFS</string>
     <string name="toggle_enable_log_desc">Ativa o registro do kernel próprio dos sensores.</string>
-    <string name="toggle_avc_spoof">Contexto do Spoof AVC 'su'</string>
+    <string name="toggle_avc_spoof">Falsifica o contexto AVC 'su'</string>
     <string name="toggle_avc_spoof_desc">Oculta o domínio su da enumeração de log do AVC.</string>
     <string name="toggles_apply">Aplicar</string>
     <!-- UserHub -->
     <string name="userhub_empty">Nenhum script ainda. Toque em + para criar um ou importar um arquivo.</string>
-    <string name="userhub_stage_postfs"/>
+    <string name="userhub_stage_postfs">post-fs-data</string>
     <string name="userhub_stage_bootcompleted">bota concluída</string>
     <string name="userhub_cron_label">Agendamento</string>
     <string name="userhub_cron_off">Sem programação</string>
@@ -86,15 +86,15 @@
     <string name="userhub_run">Executar</string>
     <string name="userhub_delete">excluir</string>
     <string name="userhub_new_script">Novo script</string>
-    <string name="userhub_import_script"/>
+    <string name="userhub_import_script">Importar script</string>
     <string name="userhub_script_name">Nome do script</string>
-    <string name="userhub_invalid_name"/>
+    <string name="userhub_invalid_name">Nome de script inválido</string>
     <string name="userhub_already_exists">%s já existe</string>
     <string name="userhub_confirm_delete">Excluir %s? Esta ação não pode ser desfeita.</string>
     <string name="userhub_deleted">%s excluído</string>
     <string name="userhub_imported">%s importado</string>
     <string name="userhub_by_author">por %s</string>
-    <string name="userhub_sort_title">Organizar por Scripts</string>
+    <string name="userhub_sort_title">Organizar por scripts</string>
     <string name="userhub_sort_name_asc">Nome (A a Z)</string>
     <string name="userhub_sort_name_desc">Nome (Z a A)</string>
     <string name="userhub_sort_enabled_first">Ativado primeiro</string>
@@ -108,7 +108,7 @@
     <string name="more_usage">Utilização</string>
     <string name="more_hiding">Ocultando</string>
     <string name="more_faq">Perguntas Frequentes</string>
-    <string name="more_support">SUPORTE</string>
+    <string name="more_support">Suporte</string>
     <string name="more_support_telegram">Grupo de Suporte Telegram</string>
     <string name="backup_restore_telegram_hint">Procurando por configurações compartilhadas? Junte-se ao grupo do Telegram</string>
     <string name="more_support_issue">Reportar um problema</string>
@@ -122,20 +122,20 @@
     <string name="credits_susfs">SSFS por simonpunk</string>
     <string name="credits_bindhosts">WebUI construída em hosts bindhosts</string>
     <!-- About -->
-    <string name="about_title">SOBRE</string>
+    <string name="about_title">Sobre</string>
     <string name="about_open">Sobre ReSuSFS</string>
     <string name="about_author">Autor</string>
-    <string name="about_license"/>
+    <string name="about_license">Licença</string>
     <string name="about_repo">Repositório</string>
     <!-- Footer -->
-    <string name="footer_home"/>
-    <string name="footer_susfs"/>
-    <string name="footer_userhub"/>
-    <string name="footer_more">MAIS</string>
+    <string name="footer_home">Início</string>
+    <string name="footer_susfs">SuSFS</string>
+    <string name="footer_userhub">Painel do Usuário</string>
+    <string name="footer_more">Mais</string>
     <!-- Backup and Restore -->
     <string name="backup_restore_backup_and_restore">Fazer backup &amp; Restaurar configuração</string>
     <string name="backup_restore_export">Exportação</string>
-    <string name="backup_restore_restore">RESTAURAR</string>
+    <string name="backup_restore_restore">Restaura</string>
     <string name="backup_restore_exported">Configuração salva em %s</string>
     <string name="backup_restore_export_fail">Falha ao exportar configuração</string>
     <string name="backup_restore_nothing_to_export">Nada para exportar ainda</string>
