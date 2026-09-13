@@ -129,7 +129,7 @@
     <string name="about_repo">Repozytorium</string>
     <!-- Footer -->
     <string name="footer_home">Strona główna</string>
-    <string name="footer_susfs"/>
+    <string name="footer_susfs">O ReSuSFS</string>
     <string name="footer_userhub">Użytkownik Hub</string>
     <string name="footer_more">Więcej</string>
     <!-- Backup and Restore -->
