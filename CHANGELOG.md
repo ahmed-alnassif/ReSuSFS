@@ -1,4 +1,21 @@
 
+## [v2.3.0-edb5e2f] - 2026-09-23
+
+
+### 🧩 Module
+
+- ask for configs backup only when they exist (@ahmed-alnassif)
+
+### 🧹 Chores
+
+- bump version to v2.3.0-edb5e2f (@ahmed-alnassif)
+
+### 🤖 Automated
+
+- webui: new Crowdin translations by GitHub Action (#15)
+- webui(deps): Bump the webui-deps group in /webui with 4 updates (#16)
+- webui(deps): Bump the webui-deps group in /webui with 4 updates (#17)
+
 ## [v2.3.0-d348051] - 2026-09-12
 
 
