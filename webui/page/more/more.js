@@ -18,6 +18,9 @@ function openLanguageMenu() {
     // Open menu
     languageOverlay.show();
 
+    const translateBtn  = document.getElementById('translate-btn');
+    if (translateBtn)  translateBtn.onclick  = (e) => { e.preventDefault(); linkRedirect('https://crowdin.com/project/resusfs'); };
+
     if (!languageMenuListener) {
         languageMenuListener = true;
         const closeBtn = languageOverlay.querySelector('.close-btn');
