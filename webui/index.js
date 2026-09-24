@@ -1,6 +1,7 @@
 import { initializeLogCatcher } from './utils/log_catcher.js';
 import { checkMMRL, setupSlideMenu, reboot } from './utils/util.js';
 import { loadTranslations } from './utils/language.js';
+import { makeDialogBackAware } from './utils/backstack.js';
 import { closeTopManagedLayer, hasManagedHistoryLayer, registerManagedDialog } from './utils/history.js';
 import { router } from './route.js';
 import { exec } from 'kernelsu-alt';
@@ -24,6 +25,7 @@ window.wx = typeof WXEventHandler === 'function' ? new WXEventHandler() : null;
 /**
  * Setup navigation
  */
+document.querySelectorAll('md-dialog').forEach(makeDialogBackAware);
 document.querySelectorAll('.bottom-bar-item').forEach(item => {
     const page = item.getAttribute('page');
     item.addEventListener('click', () => router.navigate(page));

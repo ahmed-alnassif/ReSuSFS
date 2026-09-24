@@ -4,6 +4,7 @@ import { EditorView, highlightActiveLineGutter, keymap, lineNumbers } from '@cod
 import { StreamLanguage, HighlightStyle, syntaxHighlighting } from '@codemirror/language';
 import { shell } from '@codemirror/legacy-modes/mode/shell';
 import { tags as t } from '@lezer/highlight';
+import { pushBackState, consumeBackState } from './backstack.js';
 
 let setupEditor = false;
 let codeEditor;
@@ -137,6 +138,7 @@ export function openEditor(displayName, content, onSave) {
 
     onSaveCallback = onSave;
     const langExtension = languageForFile(displayName);
+    pushBackState(() => closeEditor());
 
     if (!setupEditor) {
         setupEditor = true;
