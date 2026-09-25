@@ -1,4 +1,20 @@
 
+## [v2.3.0-eb224b2] - 2026-09-25
+
+
+### 🌐 WebUI
+
+- add translation link instead of documentation (closes #8) (@ahmed-alnassif)
+- **feat:** make back button/gesture close dialogs, the editor, and terminals instead of exiting the app immediately (closes #18) (@ahmed-alnassif)
+
+### ⚙️ CI/CD
+
+- **fix:** don't upload local translations (@ahmed-alnassif)
+
+### 🧹 Chores
+
+- bump version to v2.3.0-eb224b2 (@ahmed-alnassif)
+
 ## [v2.3.0-edb5e2f] - 2026-09-23
 
 
