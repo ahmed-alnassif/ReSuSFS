@@ -1,2 +1,8 @@
+packages:
+  - .
+
+overrides:
+  '@lezer/common': '1.5.3'
+
 allowBuilds:
   esbuild: true
