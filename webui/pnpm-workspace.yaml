@@ -2,7 +2,7 @@ packages:
   - .
 
 overrides:
-  '@lezer/common': '1.5.3'
+  '@lezer/common': '$@lezer/common'
 
 allowBuilds:
   esbuild: true

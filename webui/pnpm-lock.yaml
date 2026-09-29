@@ -5,7 +5,7 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
-  '@lezer/common': 1.5.3
+  '@lezer/common': ^1.5.3
 
 importers:
 
@@ -26,6 +26,9 @@ importers:
       '@codemirror/view':
         specifier: ^6.43.13
         version: 6.43.13
+      '@lezer/common':
+        specifier: ^1.5.3
+        version: 1.5.3
       '@lezer/highlight':
         specifier: ^1.2.4
         version: 1.2.4
