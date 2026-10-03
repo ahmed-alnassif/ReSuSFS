@@ -213,19 +213,7 @@ async function viewCronLog(name) {
     const result = await exec(`grep -F "${name}" "${cronLogFile}" 2>/dev/null`);
     const lines = result.errno === 0 ? result.stdout.split('\n').filter(Boolean) : [];
 
-    if (lines.length === 0) {
-        const p = document.createElement('p');
-        p.className = 'action-terminal-output';
-        p.textContent = getString('userhub_no_cron_log');
-        terminalContent.appendChild(p);
-    } else {
-        lines.forEach(line => {
-            const p = document.createElement('p');
-            p.className = 'action-terminal-output';
-            p.textContent = line;
-            terminalContent.appendChild(p);
-        });
-    }
+    renderCronLogLines(terminalContent, lines);
 
     terminal.open();
     backButton.onclick = () => terminal.close();
@@ -237,6 +225,48 @@ async function viewCronLog(name) {
             viewCronLog(name);
         };
     }
+}
+
+/**
+ * Render cron.log lines with logcat-style coloring: timestamp dimmed,
+ * START in blue, END in green/red based on exit code.
+ * @param {HTMLElement} container
+ * @param {string[]} lines
+ * @returns {void}
+ */
+function renderCronLogLines(container, lines) {
+    if (lines.length === 0) {
+        const p = document.createElement('p');
+        p.className = 'action-terminal-output';
+        p.textContent = getString('userhub_no_cron_log');
+        container.appendChild(p);
+        return;
+    }
+
+    lines.forEach(line => {
+        const p = document.createElement('p');
+        p.className = 'action-terminal-output';
+
+        const match = line.match(/^\[(.+?)\] (START|END) (\S+)(.*)$/);
+        if (!match) {
+            p.textContent = line;
+            container.appendChild(p);
+            return;
+        }
+
+        const [, time, kind, name, rest] = match;
+        const exitMatch = rest.match(/exit=(-?\d+)/);
+        const isFailed = exitMatch && parseInt(exitMatch[1], 10) !== 0;
+        const kindClass = kind === 'START' ? 'cron-log-start' : (isFailed ? 'cron-log-end-fail' : 'cron-log-end-ok');
+
+        p.innerHTML = `
+            <span class="log-time">[${time}]</span>
+            <span class="${kindClass}">${kind}</span>
+            <span class="cron-log-script-name">${name}</span>
+            <span>${rest}</span>
+        `;
+        container.appendChild(p);
+    });
 }
 
 /**
@@ -253,19 +283,7 @@ async function viewFullCronLog() {
     const result = await exec(`cat "${cronLogFile}" 2>/dev/null`);
     const lines = result.errno === 0 ? result.stdout.split('\n').filter(Boolean) : [];
 
-    if (lines.length === 0) {
-        const p = document.createElement('p');
-        p.className = 'action-terminal-output';
-        p.textContent = getString('userhub_no_cron_log');
-        terminalContent.appendChild(p);
-    } else {
-        lines.forEach(line => {
-            const p = document.createElement('p');
-            p.className = 'action-terminal-output';
-            p.textContent = line;
-            terminalContent.appendChild(p);
-        });
-    }
+    renderCronLogLines(terminalContent, lines);
 
     terminal.open();
     backButton.onclick = () => terminal.close();

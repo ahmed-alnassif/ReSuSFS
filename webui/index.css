@@ -882,3 +882,66 @@
 #edit-content, #logs-terminal {
     z-index: 9999 !important;
 }
+
+.action-terminal-output {
+    font-family: monospace;
+    font-size: 0.82em;
+    line-height: 1.5;
+    padding: 2px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.log-time {
+    color: var(--md-sys-color-outline);
+    margin-right: 8px;
+}
+
+.log-level {
+    font-weight: 700;
+    margin-right: 6px;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 0.85em;
+}
+
+.level-error {
+    color: #ff6b6b;
+    background-color: rgba(255, 107, 107, 0.12);
+}
+
+.level-warn {
+    color: #ffd166;
+    background-color: rgba(255, 209, 102, 0.12);
+}
+
+.level-info {
+    color: #4dabf7;
+    background-color: rgba(77, 171, 247, 0.12);
+}
+
+.level-log,
+.level-debug {
+    color: var(--md-sys-color-on-surface-variant);
+}
+
+.log-detail {
+    color: var(--md-sys-color-outline);
+    font-style: italic;
+}
+
+.cron-log-start {
+    color: #4dabf7;
+}
+
+.cron-log-end-ok {
+    color: #51cf66;
+}
+
+.cron-log-end-fail {
+    color: #ff6b6b;
+}
+
+.cron-log-script-name {
+    color: var(--md-sys-color-on-surface);
+    font-weight: 600;
+}
