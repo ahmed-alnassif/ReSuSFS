@@ -77,6 +77,9 @@
     <string name="userhub_stage_postfs"/>
     <string name="userhub_stage_bootcompleted"/>
     <string name="userhub_cron_label"/>
+    <string name="userhub_last_run"/>
+    <string name="userhub_view_log"/>
+    <string name="userhub_no_cron_log"/>
     <string name="userhub_cron_off"/>
     <string name="userhub_cron_every_minutes"/>
     <string name="userhub_cron_every_hours"/>
@@ -103,6 +106,7 @@
     <string name="userhub_search_placeholder"/>
     <string name="userhub_search_empty"/>
     <string name="userhub_edit_tags"/>
+    <string name="userhub_log_title"/>
     <!-- More -->
     <string name="more_documents"/>
     <string name="more_usage"/>
