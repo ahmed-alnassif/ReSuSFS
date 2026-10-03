@@ -113,7 +113,7 @@ run_script() {
 	[ -r "$script" ] || { echo "[x] script not readable: $script"; exit 1; }
 	echo "[>] running $script"
 	sh "$script"
-	echo "[+] exit code: $?"
+	echo "[*] exit code: $?"
 }
 
 apply_list() {
