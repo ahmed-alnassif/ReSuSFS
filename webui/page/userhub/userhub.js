@@ -1,5 +1,5 @@
 import { exec } from 'kernelsu-alt';
-import { showPrompt, basePath, moduleDirectory, runReSuSFS, updateUIVisibility } from '../../utils/util.js';
+import { showPrompt, basePath, moduleDirectory, runReSuSFS, updateUIVisibility, formatBracketLine } from '../../utils/util.js';
 import { getString } from '../../utils/language.js';
 import { openEditor } from '../../utils/editor.js';
 import { FileSelector } from '../../utils/file_selector.js';
@@ -249,7 +249,7 @@ function renderCronLogLines(container, lines) {
 
         const match = line.match(/^\[(.+?)\] (START|END) (\S+)(.*)$/);
         if (!match) {
-            p.textContent = line;
+            p.innerHTML = formatBracketLine(line);
             container.appendChild(p);
             return;
         }
