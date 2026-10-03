@@ -232,6 +232,38 @@ async function viewCronLog(name) {
 }
 
 /**
+ * Open the shared logs terminal showing the entire cron.log, every
+ * script's runs, unfiltered.
+ * @returns {Promise<void>}
+ */
+async function viewFullCronLog() {
+    const terminal = document.getElementById('logs-terminal');
+    const terminalContent = document.getElementById('logs-terminal-content');
+    const backButton = document.querySelector('.back-button');
+
+    terminalContent.innerHTML = '';
+    const result = await exec(`cat "${cronLogFile}" 2>/dev/null`);
+    const lines = result.errno === 0 ? result.stdout.split('\n').filter(Boolean) : [];
+
+    if (lines.length === 0) {
+        const p = document.createElement('p');
+        p.className = 'action-terminal-output';
+        p.textContent = getString('userhub_no_cron_log');
+        terminalContent.appendChild(p);
+    } else {
+        lines.forEach(line => {
+            const p = document.createElement('p');
+            p.className = 'action-terminal-output';
+            p.textContent = line;
+            terminalContent.appendChild(p);
+        });
+    }
+
+    terminal.open();
+    backButton.onclick = () => terminal.close();
+}
+
+/**
  * Read every script's current cron schedule, if any. Presence in the
  * file means scheduled, absence means not scheduled.
  * @returns {Promise<Record<string, string>>} name -> cron expression
@@ -889,6 +921,9 @@ export function onShow() {
     const forceUpdateButton = document.getElementById('force-update-btn');
     actionBtn.onclick = () => createScript();
     forceUpdateButton.onclick = () => importScript();
+
+    const logFab = document.getElementById('userhub-log-fab');
+    if (logFab) logFab.onclick = () => viewFullCronLog();
 
     if (!scriptsDirty) return;
     scriptsDirty = false;

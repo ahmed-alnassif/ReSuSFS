@@ -732,7 +732,16 @@
     display: flex;
 }
 
-#reboot-terminal-btn {
+.userhub-log-button {
+    display: none;
+    margin-top: 8px;
+}
+
+.userhub-log-button.show {
+    display: flex;
+}
+
+.reboot-terminal-button, .userhub-log-button {
     pointer-events: auto !important;
     z-index: 9999 !important;
     position: relative;
