@@ -1,4 +1,30 @@
 
+## [v2.3.0-99af3c2] - 2026-10-03
+
+
+### 🌐 WebUI
+
+- **fix:** move @lezer/common override to pnpm-workspace.yaml, fixes syntax highlighting broken by a duplicate package version (@ahmed-alnassif)
+- update package.json metadata (version, author, license) (@ahmed-alnassif)
+- **fix:** make @lezer/common fix self-updating instead of a hardcoded version (@ahmed-alnassif)
+- **feat:** show each script's last cron run time and result in UserHub (@ahmed-alnassif)
+- **feat:** add button to view a script's own cron run history (@ahmed-alnassif)
+- **feat:** add schedule logs fab button (@ahmed-alnassif)
+- **fix:** make the rest of the terminal usable after making it visible (@ahmed-alnassif)
+- **fix:** don't show schedule log fab in SuSFS tab (@ahmed-alnassif)
+
+### 🧩 Module
+
+- **feat:** log start/end time and exit code for every cron-run script (@ahmed-alnassif)
+
+### 🧹 Chores
+
+- bump version to v2.3.0-99af3c2 (@ahmed-alnassif)
+
+### 🤖 Automated
+
+- webui(deps): Bump the webui-deps group in /webui with 6 updates (#19)
+
 ## [v2.3.0-eb224b2] - 2026-09-25
 
 
