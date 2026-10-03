@@ -155,7 +155,7 @@ export function runReSuSFS(...args) {
     const appendOutput = (output) => {
         const p = document.createElement('p');
         p.className = 'action-terminal-output';
-        p.textContent = output;
+        p.innerHTML = formatBracketLine(output);
         terminalContent.appendChild(p);
         terminal.scrollTo({ top: terminal.scrollHeight, behavior: 'smooth' });
     };
@@ -177,6 +177,42 @@ export function runReSuSFS(...args) {
         closeBtn.classList.remove('show');
         backButton.onclick = () => closeTerminal();
     }, 50);
+}
+
+/**
+ * Escape text for safe insertion via innerHTML.
+ * @param {string} str
+ * @returns {string}
+ */
+function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+}
+
+const TAG_CLASS_MAP = {
+    'x': 'tag-error',
+    '!': 'tag-warn',
+    '+': 'tag-success',
+    '-': 'tag-retry',
+    '>': 'tag-action',
+    '*': 'tag-info',
+    '%': 'tag-banner',
+};
+
+/**
+ * Color a terminal output line by its leading [symbol] tag, following
+ * the convention used throughout ReSuSFS.sh and every user script.
+ * Lines without a recognized tag render as plain escaped text.
+ * @param {string} line
+ * @returns {string} safe HTML
+ */
+export function formatBracketLine(line) {
+    const match = line.match(/^\[(.)\](.*)$/);
+    if (!match) return escapeHtml(line);
+    const [, symbol, rest] = match;
+    const cls = TAG_CLASS_MAP[symbol] || 'tag-default';
+    return `<span class="terminal-tag ${cls}">[${symbol}]</span>${escapeHtml(rest)}`;
 }
 
 /**

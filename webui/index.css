@@ -945,3 +945,17 @@
     color: var(--md-sys-color-on-surface);
     font-weight: 600;
 }
+
+.terminal-tag {
+    font-weight: 700;
+    margin-right: 4px;
+}
+
+.tag-error { color: #ff6b6b; }
+.tag-warn { color: #ffd166; }
+.tag-success { color: #51cf66; }
+.tag-retry { color: #ff922b; }
+.tag-action { color: #4dabf7; }
+.tag-info { color: #845ef7; }
+.tag-banner { color: var(--md-sys-color-outline); }
+.tag-default { color: inherit; }
