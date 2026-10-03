@@ -16,6 +16,7 @@ let visibleScripts = [];
 let postfsStateCache = {};
 let bootcompletedStateCache = {};
 let cronStateCache = {};
+let cronLastRunCache = {};
 let scriptObserver = null;
 let scriptsDirty = true;
 let searchQuery = '';
@@ -169,6 +170,32 @@ echo "STAGES_END"
 const postfsFile = `${basePath}/scripts_postfs.txt`;
 const bootcompletedFile = `${basePath}/scripts_bootcompleted.txt`;
 const cronFile = `${basePath}/scripts_cron.txt`;
+const cronLogFile = `${basePath}/cron.log`;
+
+/**
+ * Read the most recent END line for every script that has ever run via
+ * cron, giving last-run timestamp and exit code without parsing the
+ * whole log in JS (grep + tail does the heavy lifting in the shell).
+ * @returns {Promise<Record<string, {time: string, exitCode: number}>>}
+ */
+async function getCronLastRuns() {
+    const result = await exec(`
+        [ -f "${cronLogFile}" ] || exit 0
+        awk '/^\\[.*\\] END /{ print }' "${cronLogFile}"
+    `);
+    const lastRuns = {};
+    if (result.errno !== 0 || !result.stdout.trim()) return lastRuns;
+
+    result.stdout.split('\n').forEach(line => {
+        const match = line.match(/^\[(.+?)\] END (.+?) exit=(-?\d+)$/);
+        if (!match) return;
+        const [, time, name, exitCode] = match;
+        // keep the LAST match per name (file is in append order, so later
+        // lines overwrite earlier ones for the same script)
+        lastRuns[name] = { time, exitCode: parseInt(exitCode, 10) };
+    });
+    return lastRuns;
+}
 
 /**
  * Read every script's current cron schedule, if any. Presence in the
@@ -335,7 +362,7 @@ async function applyStageState(switchEl, itemEl, name, stageFile, state) {
  * @param {'on'|'off'|'disabled'} bootcompletedState
  * @returns {HTMLElement}
  */
-function buildScriptBox(script, postfsState, bootcompletedState, cronExpr) {
+function buildScriptBox(script, postfsState, bootcompletedState, cronExpr, lastRun) {
     const { name, title, author, desc, tags } = script;
     const displayTitle = title || name;
 
@@ -379,6 +406,10 @@ function buildScriptBox(script, postfsState, bootcompletedState, cronExpr) {
             <input type="number" class="cron-value-number" min="1" style="display:none;">
             <input type="time" class="cron-value-time" style="display:none;">
         </div>
+        ${lastRun ? `
+        <p class="cron-last-run ${lastRun.exitCode === 0 ? 'cron-last-run-ok' : 'cron-last-run-fail'}">
+            ${getString('userhub_last_run', lastRun.time, String(lastRun.exitCode))}
+        </p>` : ''}
         <div class="box-actions">
             <md-outlined-icon-button class="script-edit-btn" title="${getString('box_edit')}">
                 <md-icon>${pencilIcon}</md-icon>
@@ -471,11 +502,13 @@ async function refreshList() {
     const mode = getSortMode();
     const { scripts, postfsStates, bootcompletedStates } = await listScripts(mode);
     const cronStates = await getCronStates();
+    const cronLastRuns = await getCronLastRuns();
 
     scriptCache = sortScripts(scripts, mode, postfsStates, bootcompletedStates);
     postfsStateCache = postfsStates;
     bootcompletedStateCache = bootcompletedStates;
     cronStateCache = cronStates;
+    cronLastRunCache = cronLastRuns;
 
     scriptObserver?.disconnect();
     scriptObserver = null;
@@ -612,7 +645,8 @@ function mountScriptBoxByName(name) {
     const postfsState = postfsStateCache[name] || 'off';
     const bootcompletedState = bootcompletedStateCache[name] || 'off';
     const cronExpr = cronStateCache[name] || '';
-    const box = buildScriptBox(script, postfsState, bootcompletedState, cronExpr);
+    const lastRun = cronLastRunCache[name] || null;
+    const box = buildScriptBox(script, postfsState, bootcompletedState, cronExpr, lastRun);
     box.dataset.scriptName = name;
     el.replaceWith(box);
     boxElements.set(name, box);

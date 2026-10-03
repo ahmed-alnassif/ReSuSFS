@@ -98,6 +98,20 @@
     flex-wrap: wrap;
 }
 
+.cron-last-run {
+    margin: 0;
+    font-size: 0.78em;
+    padding-top: 4px;
+}
+
+.cron-last-run-ok {
+    color: var(--md-sys-color-tertiary);
+}
+
+.cron-last-run-fail {
+    color: var(--md-sys-color-error);
+}
+
 .cron-row span {
     flex-shrink: 0;
     font-size: 0.85em;
