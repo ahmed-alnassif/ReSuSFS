@@ -879,6 +879,6 @@
     flex-shrink: 0;
 }
 
-#edit-content {
+#edit-content, #logs-terminal {
     z-index: 9999 !important;
 }
