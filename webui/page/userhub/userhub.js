@@ -229,6 +229,14 @@ async function viewCronLog(name) {
 
     terminal.open();
     backButton.onclick = () => terminal.close();
+
+    const clearBtn = document.getElementById('clear-logs-btn');
+    if (clearBtn) {
+        clearBtn.onclick = async () => {
+            await exec(`: > "${cronLogFile}"`);
+            viewCronLog(name);
+        };
+    }
 }
 
 /**
@@ -261,6 +269,14 @@ async function viewFullCronLog() {
 
     terminal.open();
     backButton.onclick = () => terminal.close();
+
+    const clearBtn = document.getElementById('clear-logs-btn');
+    if (clearBtn) {
+        clearBtn.onclick = async () => {
+            await exec(`: > "${cronLogFile}"`);
+            viewFullCronLog();
+        };
+    }
 }
 
 /**

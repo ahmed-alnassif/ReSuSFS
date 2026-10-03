@@ -234,7 +234,7 @@ function restoreFabIcons() {
 
 export function onShow() {
     const logFab = document.getElementById('userhub-log-fab');
-    logFab?.classList.remove('show')
+    logFab?.classList.remove('show');
     updateUIVisibility();
     restoreFabIcons();
     const actionBtn = document.getElementById('action-btn');

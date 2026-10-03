@@ -106,6 +106,7 @@
     <string name="userhub_search_placeholder">Search scripts…</string>
     <string name="userhub_search_empty">No scripts match your search</string>
     <string name="userhub_edit_tags">Edit Tags</string>
+    <string name="userhub_log_title">Run Log</string>
     <!-- More -->
     <string name="more_documents">Documents</string>
     <string name="more_usage">Usage</string>

@@ -3,7 +3,7 @@ import { showPrompt, basePath, linkRedirect, filePaths, updateUIVisibility, modu
 import { getString } from '../../utils/language.js';
 import { FileSelector } from '../../utils/file_selector.js';
 import { addCopyToClipboardListeners, setupDocsMenu } from '../../utils/docs.js';
-import { formatCapturedLogs, capturedLogs } from '../../utils/log_catcher.js';
+import { formatCapturedLogs, capturedLogs, clearCapturedLogs } from '../../utils/log_catcher.js';
 import { exportConfig, restoreConfig } from '../../utils/backup.js';
 
 let languageMenuListener = false;
@@ -69,6 +69,14 @@ function openLogViewer() {
 
     terminal.open();
     saveButton.onclick = () => saveLogsToFile();
+
+    const clearBtn = document.getElementById('clear-logs-btn');
+    if (clearBtn) {
+        clearBtn.onclick = () => {
+            clearCapturedLogs();
+            refreshLogTerminal();
+        };
+    }
 
     const closeLogViewer = () => {
         terminal.close();

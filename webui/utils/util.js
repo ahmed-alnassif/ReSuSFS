@@ -369,6 +369,10 @@ export const PAGE_CONFIG = {
             'edit-content': {
                 buttons: ['#line-wrap-btn', '#save-btn'],
                 title: ''
+            },
+            'logs-terminal': {
+                buttons: ['#clear-logs-btn'],
+                title: 'userhub_log_title'
             }
         },
         title: 'footer_userhub'
@@ -378,7 +382,7 @@ export const PAGE_CONFIG = {
         main: [],
         terminals: {
             'logs-terminal': {
-                buttons: ['#save-btn'],
+                buttons: ['#save-btn', '#clear-logs-btn'],
                 title: 'more_support_view_webui_log'
             }
         },

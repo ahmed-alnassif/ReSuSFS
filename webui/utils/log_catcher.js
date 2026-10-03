@@ -66,4 +66,8 @@ function formatCapturedLogs() {
     }).join('\n');
 }
 
+export function clearCapturedLogs() {
+    capturedLogs.length = 0;
+}
+
 export { initializeLogCatcher, formatCapturedLogs, capturedLogs };
