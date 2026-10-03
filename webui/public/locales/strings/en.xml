@@ -78,6 +78,8 @@
     <string name="userhub_stage_bootcompleted">boot-completed</string>
     <string name="userhub_cron_label">Schedule</string>
     <string name="userhub_last_run">Last run: %s (exit %s)</string>
+    <string name="userhub_view_log">View run log</string>
+    <string name="userhub_no_cron_log">No scheduled runs yet.</string>
     <string name="userhub_cron_off">No schedule</string>
     <string name="userhub_cron_every_minutes">Every X minutes</string>
     <string name="userhub_cron_every_hours">Every X hours</string>

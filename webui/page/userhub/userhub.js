@@ -10,6 +10,7 @@ const pencilIcon = `<svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBo
 const playIcon = `<svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px"><path d="M320-200v-560l440 280-440 280Z"/></svg>`;
 const trashIcon = `<svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px"><path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/></svg>`;
 const tagIcon = `<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="20px"><path d="M480-160v-80h120l180-240-180-240H160v200H80v-200q0-33 23.5-56.5T160-800h440q19 0 36 8.5t28 23.5l216 288-216 288q-11 15-28 23.5t-36 8.5H480Zm-10-320ZM200-120v-120H80v-80h120v-120h80v120h120v80H280v120h-80Z"/></svg>`
+const logIcon = `<svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px"><path d="M280-280h280v-80H280v80Zm0-160h400v-80H280v80Zm0-160h400v-80H280v80Zm-80 480q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm0-560v560-560Z"/></svg>`;
 
 let scriptCache = [];
 let visibleScripts = [];
@@ -195,6 +196,39 @@ async function getCronLastRuns() {
         lastRuns[name] = { time, exitCode: parseInt(exitCode, 10) };
     });
     return lastRuns;
+}
+
+/**
+ * Open the shared logs terminal, filtered to just this script's
+ * START/END cron entries.
+ * @param {string} name
+ * @returns {Promise<void>}
+ */
+async function viewCronLog(name) {
+    const terminal = document.getElementById('logs-terminal');
+    const terminalContent = document.getElementById('logs-terminal-content');
+    const backButton = document.querySelector('.back-button');
+
+    terminalContent.innerHTML = '';
+    const result = await exec(`grep -F "${name}" "${cronLogFile}" 2>/dev/null`);
+    const lines = result.errno === 0 ? result.stdout.split('\n').filter(Boolean) : [];
+
+    if (lines.length === 0) {
+        const p = document.createElement('p');
+        p.className = 'action-terminal-output';
+        p.textContent = getString('userhub_no_cron_log');
+        terminalContent.appendChild(p);
+    } else {
+        lines.forEach(line => {
+            const p = document.createElement('p');
+            p.className = 'action-terminal-output';
+            p.textContent = line;
+            terminalContent.appendChild(p);
+        });
+    }
+
+    terminal.open();
+    backButton.onclick = () => terminal.close();
 }
 
 /**
@@ -414,6 +448,9 @@ function buildScriptBox(script, postfsState, bootcompletedState, cronExpr, lastR
             <md-outlined-icon-button class="script-edit-btn" title="${getString('box_edit')}">
                 <md-icon>${pencilIcon}</md-icon>
             </md-outlined-icon-button>
+            <md-outlined-icon-button class="script-log-btn" title="${getString('userhub_view_log')}">
+                <md-icon>${logIcon}</md-icon>
+            </md-outlined-icon-button>
             <md-outlined-icon-button class="script-tags-btn" title="${getString('userhub_edit_tags')}">
                 <md-icon>${tagIcon}</md-icon>
             </md-outlined-icon-button>
@@ -428,6 +465,7 @@ function buildScriptBox(script, postfsState, bootcompletedState, cronExpr, lastR
     `;
 
     el.querySelector('.script-edit-btn').onclick = () => openScriptEditor(name);
+    el.querySelector('.script-log-btn').onclick = () => viewCronLog(name);
     el.querySelector('.script-tags-btn').onclick = () => openTagEditor(script);
     el.querySelector('.script-run-btn').onclick = () => runReSuSFS('--run-script', `${scriptsDir}/${name}`);
     el.querySelector('.script-delete-btn').onclick = () => deleteScript(name);
