@@ -19,7 +19,7 @@ function openLanguageMenu() {
     languageOverlay.show();
 
     const translateBtn  = document.getElementById('translate-btn');
-    if (translateBtn)  translateBtn.onclick  = (e) => { e.preventDefault(); linkRedirect('https://crowdin.com/project/resusfs'); };
+    if (translateBtn)  translateBtn.onclick  = (e) => { e.preventDefault(); linkRedirect('https://hosted.weblate.org/engage/ReSuSFS/'); };
 
     if (!languageMenuListener) {
         languageMenuListener = true;
