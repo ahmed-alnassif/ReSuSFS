@@ -1,4 +1,15 @@
 
+## [v2.3.0-f55930f] - 2026-10-05
+
+
+### 🧩 Module
+
+- **fix:** remove hot install since ReSuSFS requires a full reboot after installing or updating (@ahmed-alnassif)
+
+### 🧹 Chores
+
+- bump version to v2.3.0-f55930f (@ahmed-alnassif)
+
 ## [v2.3.0-1e6fb20] - 2026-10-05
 
 
