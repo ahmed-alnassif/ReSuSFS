@@ -210,7 +210,14 @@ async function viewCronLog(name) {
     const backButton = document.querySelector('.back-button');
 
     terminalContent.innerHTML = '';
-    const result = await exec(`grep -F "${name}" "${cronLogFile}" 2>/dev/null`);
+    const escaped = escapeForRegex(name);
+    const result = await exec(`
+        awk -v name="${escaped}" '
+            $0 ~ ("\\\\] START " name "$") { printing=1 }
+            printing { print }
+            $0 ~ ("\\\\] END " name " exit=") { printing=0 }
+        ' "${cronLogFile}" 2>/dev/null
+    `);
     const lines = result.errno === 0 ? result.stdout.split('\n').filter(Boolean) : [];
 
     renderCronLogLines(terminalContent, lines);
