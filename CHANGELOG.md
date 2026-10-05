@@ -1,4 +1,37 @@
 
+## [v2.3.0-1e6fb20] - 2026-10-05
+
+
+### 🌐 WebUI
+
+- **feat:** add clear button to log viewers (@ahmed-alnassif)
+- **feat:** add color highlighting to log viewers (@ahmed-alnassif)
+- **feat:** add color highlighting to terminal output by [symbol] tags (@ahmed-alnassif)
+- **feat:** color a script's own output lines inside the cron log viewer, not just the start/end lines (@ahmed-alnassif)
+- add Arabic translation setting and correct ar-SA (@ahmed-alnassif)
+- migrate from crowdin to weblate (@ahmed-alnassif)
+- **fix:** show a script's full output in its cron log, not just the start/end lines (@ahmed-alnassif)
+
+### 🧩 Module
+
+- **fix:** use status symbol instead success for script exit (@ahmed-alnassif)
+
+### 📚 Documentation
+
+- migrate from crowdin to weblate (@ahmed-alnassif)
+
+### ⚙️ CI/CD
+
+- migrate from crowdin to weblate (@ahmed-alnassif)
+
+### 🧹 Chores
+
+- bump version to v2.3.0-1e6fb20 (@ahmed-alnassif)
+
+### 🤖 Automated
+
+- webui(deps): Bump the webui-deps group in /webui with 3 updates (#22)
+
 ## [v2.3.0-99af3c2] - 2026-10-03
 
 
