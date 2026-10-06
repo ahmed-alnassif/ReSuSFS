@@ -129,4 +129,5 @@
     <string name="backup_restore_nothing_to_export">Belum ada yang bisa diekspor</string>
     <string name="backup_restore_restored">Konfigurasi telah dipulihkan dengan sukses</string>
     <string name="backup_restore_restore_fail">Gagal memulihkan konfigurasi</string>
+    <string name="userhub_stage_postfs">data-fs-post</string>
 </resources>
