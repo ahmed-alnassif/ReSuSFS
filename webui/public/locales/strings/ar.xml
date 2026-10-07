@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="system_default">اللغة الافتراضية للنظام</string>
+    <string name="reboot_dialog_title">اعادة تشغيل</string>
+    <string name="reboot_dialog_message">سيتم إعادة تشغيل جهازك الآن. تأكد من حفظ أي شيء مهم أولاً.</string>
+    <string name="status_title">حالة SuSFS</string>
+    <string name="status_active">مفعل - يتم فرض الإخفاء النشط بواسطة النواة</string>
+    <string name="status_unsupported_version">إصدار ksu_susfs غير مدعوم</string>
+    <string name="status_binary_missing">لم يتم العثور على الملف الثنائي ksu_susfs</string>
+    <string name="status_unknown">غير معروف</string>
+    <string name="status_feature_count">%s الميزات المُفعّلة</string>
+    <string name="summary_title">ملخص التكوين</string>
+    <string name="summary_hint">انقر على المربع للانتقال إلى صفحة SuSFS وتعديلها.</string>
+    <string name="summary_enabled_scripts">البرامج النصية المُفعّلة</string>
+    <string name="features_title">الميزات المُفعّلة</string>
+    <string name="features_version">إصدار النواة</string>
+    <string name="features_variant">نوع</string>
+    <string name="features_none">لم يتم الإبلاغ عن أي ميزات.</string>
+    <string name="global_dev_opt">تم تفعيل خيار المطور</string>
+    <string name="global_dev_opt_true">تم تفعيل خيار المطور بالفعل</string>
+</resources>
