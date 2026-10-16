@@ -208,30 +208,32 @@ load_susfs_lkm() {
 		return 1
 	fi
 
-	$BB rmmod $module_name
-	echo "[*] Loading ${kmi}..."
+	$BB rmmod "$module_name" 2>/dev/null
 
+	echo "[*] Loading ${kmi}..."
 	loaded=0
 
 	if command -v ksud >/dev/null 2>&1; then
-		if ksud insmod "$lkm_file" 2>/dev/null && \
-		   $BB lsmod 2>/dev/null | $BB grep -q $module_name; then
+		if ksud insmod "$lkm_file"; then
 			echo "[+] LKM loaded successfully (ksud)"
 			loaded=1
+		else
+			echo "[-] ksud insmod failed"
 		fi
 	fi
 
 	if [ "$loaded" -eq 0 ] && [ -x "$insmod_bin" ]; then
 		echo "[*] Trying susfs_insmod fallback..."
-		if "$insmod_bin" "$lkm_file" && \
-		   $BB lsmod 2>/dev/null | $BB grep -q $module_name; then
+		if "$insmod_bin" "$lkm_file"; then
 			echo "[+] LKM loaded successfully (susfs_insmod)"
 			loaded=1
+		else
+			echo "[-] susfs_insmod failed"
 		fi
 	fi
 
 	if [ "$loaded" -eq 0 ]; then
-		echo "[!] Failed to load LKM (no working loader or module not visible)"
+		echo "[!] Failed to load LKM"
 		return 1
 	fi
 
