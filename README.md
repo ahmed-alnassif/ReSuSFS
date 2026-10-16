@@ -15,7 +15,7 @@
 [![BakaSU](https://img.shields.io/badge/BakaSU-E91E63?&logo=github&logoColor=white)](https://github.com/Baka-SU/BakaSU)
 [![Translation status](https://img.shields.io/weblate/progress/resusfs)](https://hosted.weblate.org/engage/ReSuSFS/)
 
-Root hiding made simple, powerful when you need it. A [KernelSU](https://kernelsu.org) module and WebUI that turns SuSFS into clean config files and toggle switches for everyday use, with **strong hiding applied out of the box** via built-in spoofing and hiding scripts for one-tap protection, plus a script manager for power users who want more, all without leaving the WebUI.
+Root hiding made simple, powerful when you need it. A [KernelSU](https://kernelsu.org) module and WebUI that turns SuSFS into clean config files and toggle switches for everyday use, with **strong hiding applied out of the box** via built-in spoofing and hiding scripts for one-tap protection, plus a script manager with scheduling for power users who want more, all without leaving the WebUI.
 
 > [!Important]
 > **KernelSU Next is not recommended.**
@@ -48,15 +48,22 @@ Root hiding made simple, powerful when you need it. A [KernelSU](https://kernels
 ## Requirements
 
 - [KernelSU](https://kernelsu.org)
-- [GKID Kernel](https://github.com/ahmed-alnassif/GKID-Kernels) for SuSFS support (optional)
+- SuSFS support is optional, pick one:
+  - [GKID Kernel](https://github.com/ahmed-alnassif/GKID-Kernels) with SuSFS built in
+  - A supported GKI kernel, ReSuSFS loads the SuSFS LKM for you (see [SuSFS LKM](#susfs-lkm))
 
 ## Install
 
 1. Download the [latest release](https://github.com/ahmed-alnassif/ReSuSFS/releases/latest)
 2. Flash the zip in KernelSU Manager
-3. Reboot
+3. Reboot (a full reboot is required after installing or updating, hot install is not supported)
 4. Strong hiding is applied automatically, no setup needed
 5. Optional: edit config files, or use the WebUI to fine-tune
+
+When updating, ReSuSFS asks before touching your existing configs, and only asks for a backup if configs exist.
+
+> [!Note]
+> v26.10.16 removed `hidden_api_policy` so ReSuSFS no longer enables hidden API access. If you edited your configuration before, review it after updating.
 
 ## Config files
 
@@ -75,6 +82,21 @@ All optional, all live under `/data/adb/ReSuSFS/`. Missing or empty files mean "
 | `scripts/` | built-in scripts for spoofing and hiding |
 | `scripts_postfs.txt` | scripts to run at post-fs-data stage |
 | `scripts_bootcompleted.txt` | scripts to run at boot-completed stage |
+| `scripts_cron.txt` | scheduled scripts and their cron expressions |
+| `cron.log` | start time, end time, and exit code of every scheduled run |
+
+## SuSFS LKM
+
+Kernels without built-in SuSFS (`CONFIG_KSU_SUSFS=y`) can still use it through the SuSFS guard LKM from [susfs4ksu-lkm](https://github.com/inforcqb/susfs4ksu-lkm).
+
+- Detected automatically from your kernel, nothing to configure
+- Downloaded when you flash the module or run Action
+- Loaded on every boot at post-fs-data
+- Skipped when your kernel already has SuSFS built in
+
+Supported KMIs: `android12-5.10`, `android13-5.10`, `android13-5.15`, `android14-5.15`, `android14-6.1`, `android15-6.6`, `android16-6.12`, `android17-6.18`. Custom kernels with a different KMI are not supported.
+
+Files are stored in `/data/adb/ReSuSFS_LKM/`. If the download fails, ReSuSFS keeps the version you already have.
 
 ## Built-in Scripts
 
@@ -107,8 +129,12 @@ Strong hiding is applied out of the box with no configuration needed. Power user
 - **Toggle switches**, flip kernel flags (mount hiding, logging, avc spoofing) without touching raw text
 - **Built-in scripts manager**, view, enable, or disable pre-made spoofing and hiding scripts from the WebUI
 - **UserHub**, create, edit, run, and delete your own shell scripts, with per-script toggles to run automatically at post-fs-data and/or boot-completed
+- **Scheduling**, run any script every few minutes, every few hours, or daily, no cron syntax needed
+- **Script tags, search, and sort**, find scripts fast and filter by tag
+- **Run logs**, see when each scheduled script last ran and what it returned, with colored output
 - **Backup and restore**, export your whole config (and any UserHub scripts) into one archive, restore it on any device
 - **Reboot button**, with confirmation, right in the header
+- **Back gesture support**, back closes dialogs, the editor, and terminals before leaving the app, and asks before discarding unsaved changes
 - **Multi-language support**
 
 ## UserHub
@@ -119,8 +145,23 @@ A tab for managing your own shell scripts without a terminal:
 - Edit any script in the same full-screen code editor used for config files
 - Run a script on demand, output streams live in the WebUI
 - Toggle a script to run automatically at `post-fs-data` and/or `boot-completed`
+- Schedule a script: every N minutes, every N hours, or daily at a set time
+- Add tags to scripts, filter by tag, search by name, title, author, or description
+- Sort by name, enabled first, or last modified
+- See each script's last scheduled run and its exit code, open its full log, or open the combined schedule log from the log button
 
-Scripts live under `/data/adb/ReSuSFS/scripts/`. Which scripts run at which stage is tracked in `scripts_postfs.txt` and `scripts_bootcompleted.txt` under the same directory.
+Scripts live under `/data/adb/ReSuSFS/scripts/`. Which scripts run at which stage is tracked in `scripts_postfs.txt` and `scripts_bootcompleted.txt` under the same directory. Schedules are stored in `scripts_cron.txt` and run through BusyBox `crond`. Every scheduled run writes START and END lines with the exit code to `cron.log`.
+
+Script output follows the bracket tag style, and the WebUI colors it:
+
+| Tag | Meaning |
+|---|---|
+| `[+]` | success |
+| `[-]` | error |
+| `[!]` | warning |
+| `[>]` | action |
+| `[*]` | info |
+| `[%]` | banner |
 
 ## CLI
 
@@ -202,6 +243,7 @@ Want to see ReSuSFS in your language? Head over to [Weblate](https://hosted.webl
 ## Credits
 
 - [SuSFS](https://gitlab.com/simonpunk/susfs4ksu) by simonpunk
+- [susfs4ksu-lkm](https://github.com/inforcqb/susfs4ksu-lkm) by inforcqb
 - WebUI built on top of [bindhosts](https://github.com/bindhosts/bindhosts) by the bindhosts team
 
 ## Author
