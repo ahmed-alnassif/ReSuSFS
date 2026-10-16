@@ -23,17 +23,34 @@ get_all_files() {
 }
 
 download_file() {
-	local BB url="$1" out="$2" attempt=1
+	local BB url="$1" out="$2" attempt=1 max=5 timeout=30 delay=3
+
 	BB=$(command -v busybox) || { echo "[!] No BusyBox found!"; return 1; }
-	while [ $attempt -le 3 ]; do
-		echo "[*] Download attempt $attempt/3..."
-		rm -f "$out"
-		$BB wget -q --no-check-certificate "$url" -O "$out" && [ -s "$out" ] && { echo "[+] Download successful"; return 0; }
-		rm -f "$out"
-		echo "[-] Download failed"
-		[ $attempt -lt 3 ] && $BB sleep 3
+
+	while [ "$attempt" -le "$max" ]; do
+		echo "[*] Download attempt $attempt/$max..."
+
+		$BB wget -q --no-check-certificate \
+			--timeout="$timeout" \
+			--tries=1 \
+			--continue \
+			"$url" -O "$out" && [ -s "$out" ] && {
+			echo "[+] Download successful"
+			return 0
+		}
+
+		[ -f "$out" ] && [ ! -s "$out" ] && rm -f "$out"
+
+		echo "[-] Download failed (attempt $attempt)"
+		[ "$attempt" -lt "$max" ] && {
+			echo "[*] Retrying in ${delay}s..."
+			$BB sleep "$delay"
+			delay=$((delay * 2))
+		}
 		attempt=$((attempt + 1))
 	done
+
+	rm -f "$out"
 	echo "[!] All download attempts failed"
 	return 1
 }
