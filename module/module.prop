@@ -1,7 +1,7 @@
 id=ReSuSFS
 name=ReSuSFS
-version=v26.10.13
-versionCode=19
+version=v26.10.16
+versionCode=20
 author=ahmed-alnassif
 updateJson=https://raw.githubusercontent.com/ahmed-alnassif/ReSuSFS/master/update.json
 description=The easiest way to use SuSFS on KernelSU. Strong hiding by default with built-in spoofing and hiding scripts, config files and toggle switches for everyday use, a built-in script manager for power users.
