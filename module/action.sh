@@ -8,6 +8,7 @@ PERSISTENT_DIR="/data/adb/ReSuSFS"
 
 banner
 
+download_susfs_guard_lkm
 update_susfs || exit 1
 
 export NO_BANNER=1

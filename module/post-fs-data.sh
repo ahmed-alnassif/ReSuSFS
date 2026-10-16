@@ -3,6 +3,10 @@ PATH=/data/adb/ksu/bin:$PATH
 MODDIR="/data/adb/modules/ReSuSFS"
 PERSISTENT_DIR="/data/adb/ReSuSFS"
 
+. "$MODDIR/utils.sh"
+
+load_susfs_lkm
+
 # apply early-stage susfs config now that mounts have settled
 sh $MODDIR/ReSuSFS.sh --stage-early
 

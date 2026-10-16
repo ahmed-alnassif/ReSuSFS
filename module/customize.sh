@@ -96,6 +96,7 @@ fi
 
 rm -rf "$CONFIG_DIR"
 
+download_susfs_guard_lkm
 update_susfs || exit 1
 
 chmod 755 "$MODPATH/ReSuSFS.sh"
