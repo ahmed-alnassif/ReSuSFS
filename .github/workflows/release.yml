@@ -89,7 +89,7 @@ jobs:
     - name: Zip module for release
       run: |
         cd ${{ env.MODULE_NAME }}
-        zip -r ../${{ env.ZIP_NAME }}.zip .
+        zip -9 -r ../${{ env.ZIP_NAME }}.zip .
         cd ..
 
     - name: Upload to Telegram
