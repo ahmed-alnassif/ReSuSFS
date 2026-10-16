@@ -1,4 +1,19 @@
 
+## [v26.10.16] - 2026-10-16
+
+
+### 🧩 Module
+
+- **feat:** prompt before updating configs (@ahmed-alnassif)
+- **fix:** remove hidden_api_policy to avoid enabling hidden API access, note: update your configuration in this update (close: #25) (@ahmed-alnassif)
+- **feat:** full SuSFS LKM support with auto-download and load on boot (@ahmed-alnassif)
+- **fix:** make download_file resilient to slow and unstable networks (@ahmed-alnassif)
+- **fix:** verify LKM load via loader exit code instead of lsmod (@ahmed-alnassif)
+
+### 🧹 Chores
+
+- bump version to v26.10.16 (@ahmed-alnassif)
+
 ## [v26.10.13] - 2026-10-13
 
 
