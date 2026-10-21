@@ -1,6 +1,6 @@
 {
-  "version": "v26.10.16",
-  "versionCode": 20,
+  "version": "v26.10.21",
+  "versionCode": 21,
   "zipUrl": "https://github.com/ahmed-alnassif/ReSuSFS/releases/latest/download/ReSuSFS.zip",
   "changelog": "https://raw.githubusercontent.com/ahmed-alnassif/ReSuSFS/dev/CHANGELOG.md"
 }
