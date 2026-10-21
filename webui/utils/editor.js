@@ -124,7 +124,7 @@ function forceCloseEditor() {
 
     document.body.classList.remove('editor-active');
     if (activePage) activePage.style.overflowY = 'auto';
-    codeEditor?.scrollTo(0, 0);
+    codeEditor?.scrollDOM.scrollTo(0, 0);
     onSaveCallback = null;
 
     const fileNameInput = document.getElementById('file-name-input');
