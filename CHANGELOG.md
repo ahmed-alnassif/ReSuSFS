@@ -1,4 +1,37 @@
 
+## [v26.10.21] - 2026-10-21
+
+
+### 🌐 WebUI
+
+- **fix:** fix the editor throwing an error when it closes (@ahmed-alnassif)
+
+### 🧩 Module
+
+- **refactor:** skip config prompts on fresh installs with no configs (@ahmed-alnassif)
+- **fix:** default CONFIGURE to true so ReSuSFS dir isn't left empty (@ahmed-alnassif)
+
+### ✨ Features
+
+- update the module icon (@ahmed-alnassif)
+
+### 📚 Documentation
+
+- update README for LKM support, scheduling and UserHub (@ahmed-alnassif)
+- update ReSuSFS description (@ahmed-alnassif)
+
+### ⚙️ CI/CD
+
+- use -9 max compression for smaller release zip to speed up user downloads (@ahmed-alnassif)
+
+### 🧹 Chores
+
+- bump version to v26.10.21 (@ahmed-alnassif)
+
+### 🤖 Automated
+
+- webui(deps): Bump marked in /webui in the webui-deps group (#26)
+
 ## [v26.10.16] - 2026-10-16
 
 
