@@ -28,9 +28,8 @@ detect_key_press() {
 	fi
 }
 
-CONFIGURE=false
+CONFIGURE=true
 if [ -d "$PERSISTENT_DIR" ]; then
-	CONFIGURE=true
 	ui_print "[*] Will select NO in 6s if no volume buttons pressed"
 	ui_print "[*] Do you want to update the configs?"
 	ui_print "[*] VOLUME UP for NO, DOWN for YES"
