@@ -28,20 +28,23 @@ detect_key_press() {
 	fi
 }
 
-CONFIGURE=true
-ui_print "[*] Will select NO in 6s if no volume buttons pressed"
-ui_print "[*] Do you want to update the configs?"
-ui_print "[*] VOLUME UP for NO, DOWN for YES"
-if detect_key_press; then
-	CONFIGURE=false
-fi
+CONFIGURE=false
+if [ -d "$PERSISTENT_DIR" ]; then
+	CONFIGURE=true
+	ui_print "[*] Will select NO in 6s if no volume buttons pressed"
+	ui_print "[*] Do you want to update the configs?"
+	ui_print "[*] VOLUME UP for NO, DOWN for YES"
+	if detect_key_press; then
+		CONFIGURE=false
+	fi
 
-if [ -d "$PERSISTENT_DIR" ] && $CONFIGURE; then
-	ui_print "[*] Have you backed up your configuration?"
-	ui_print "[*] VOLUME UP for YES, DOWN for NO"
-	if ! detect_key_press; then
-		ui_print "[!] Please back up your configuration first"
-		exit 1
+	if $CONFIGURE; then
+		ui_print "[*] Have you backed up your configuration?"
+		ui_print "[*] VOLUME UP for YES, DOWN for NO"
+		if ! detect_key_press; then
+			ui_print "[!] Please back up your configuration first"
+			exit 1
+		fi
 	fi
 fi
 
