@@ -1,3 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    </resources>
+    <string name="system_default">Mặc định Hệ thống</string>
+    <string name="reboot_dialog_title">Khởi động lại Thiết bị</string>
+    <string name="reboot_dialog_message">Thiết bị của bạn sẽ khởi động lại bây giờ. Hãy đảm bảo bạn đã lưu lại bất kỳ thứ nào quan trọng.</string>
+    <string name="status_title">Trạng thái SuSFS</string>
+    <string name="status_active">Đang hoạt động - ẩn được thực thi bởi kernel</string>
+    <string name="status_unsupported_version">Phiên bản ksu_susfs không được hỗ trợ</string>
+</resources>
