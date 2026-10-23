@@ -1,7 +1,7 @@
 id=ReSuSFS
 name=ReSuSFS
-version=v26.10.21
-versionCode=21
+version=v26.10.23
+versionCode=22
 author=ahmed-alnassif
 updateJson=https://raw.githubusercontent.com/ahmed-alnassif/ReSuSFS/master/update.json
 description=SuSFS for KernelSU (Built-in & LKM Supported) | Strong Hiding by Default | Powerful UserHub Script Manager with Scheduling | Clean Configs & Toggles
