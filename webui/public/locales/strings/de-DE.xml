@@ -54,8 +54,8 @@
     <string name="toggles_description">Einfache Kernel-Flags werden mittels hide_sus_mnts_for_non_su_procs, enable_log und enable_avc_log_spoofing angewendet.</string>
     <string name="toggle_hide_mnts_desc">Wird in Post-fs-data oder boot-fertig angewendet, sobald sich Mounts auf Benutzerprozesse einlassen.</string>
     <string name="toggle_enable_log">SuSFS Log aktivieren</string>
-    <string name="toggle_enable_log_desc">Schaltet Sushs' eigenes Kernel-Logging ein.</string>
-    <string name="toggle_avc_spoof">Spoof AVC 'su' Kontext</string>
+    <string name="toggle_enable_log_desc">Schaltet Sushs\' eigenes Kernel-Logging ein.</string>
+    <string name="toggle_avc_spoof">Spoof AVC \'su\' Kontext</string>
     <string name="toggle_avc_spoof_desc">Versteckt die su-Domain vor der AVC-Log-Aufzählung.</string>
     <string name="toggles_apply">Anwenden</string>
     <!-- UserHub -->
@@ -120,4 +120,25 @@
     <string name="backup_restore_nothing_to_export">Noch nichts zu exportieren</string>
     <string name="backup_restore_restored">Konfiguration erfolgreich wiederhergestellt</string>
     <string name="backup_restore_restore_fail">Fehler beim Wiederherstellen der Konfiguration</string>
+    <string name="credits_title"></string>
+    <string name="userhub_log_title"></string>
+    <string name="toggles_title"></string>
+    <string name="userhub_no_cron_log"></string>
+    <string name="more_usage"></string>
+    <string name="box_stage"></string>
+    <string name="more_faq"></string>
+    <string name="userhub_import_script"></string>
+    <string name="susfs_cmdline_title"></string>
+    <string name="status_kernel_version"></string>
+    <string name="susfs_sus_maps_title"></string>
+    <string name="about_repo"></string>
+    <string name="userhub_view_log"></string>
+    <string name="userhub_last_run"></string>
+    <string name="susfs_sus_paths_title"></string>
+    <string name="susfs_kstat_paths_title"></string>
+    <string name="global_reboot"></string>
+    <string name="status_title"></string>
+    <string name="userhub_invalid_name"></string>
+    <string name="toggle_hide_mnts"></string>
+    <string name="susfs_sus_paths_loop_title"></string>
 </resources>
