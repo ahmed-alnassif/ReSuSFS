@@ -56,7 +56,7 @@
     <string name="toggles_description">Простые флаги ядра, применяемые через hide_sus_mnts_for_non_su_procs, enable_log и enable_avc_log_spoofing.</string>
     <string name="toggle_hide_mnts_desc">Применяется в пост-ф-данных или загрузочных выполненных после монтирования для пользовательских процессов.</string>
     <string name="toggle_enable_log">Включить журнал SuSFS</string>
-    <string name="toggle_avc_spoof">Spoof AVC 'su' контекст</string>
+    <string name="toggle_avc_spoof">Spoof AVC \'su\' контекст</string>
     <string name="toggle_avc_spoof_desc">Скрывает домен su из перечисления AVC log.</string>
     <string name="toggles_apply">Применить</string>
     <!-- UserHub -->
@@ -123,4 +123,24 @@
     <string name="backup_restore_nothing_to_export">Ещё нечего экспортировать</string>
     <string name="backup_restore_restored">Конфигурация успешно восстановлена</string>
     <string name="backup_restore_restore_fail">Не удалось восстановить настройки</string>
+    <string name="userhub_log_title"></string>
+    <string name="toggles_title"></string>
+    <string name="userhub_no_cron_log"></string>
+    <string name="more_faq"></string>
+    <string name="footer_susfs"></string>
+    <string name="userhub_import_script"></string>
+    <string name="susfs_cmdline_title"></string>
+    <string name="status_kernel_version"></string>
+    <string name="susfs_sus_maps_title"></string>
+    <string name="footer_userhub"></string>
+    <string name="userhub_view_log"></string>
+    <string name="userhub_last_run"></string>
+    <string name="susfs_kstat_paths_title"></string>
+    <string name="global_reboot"></string>
+    <string name="toggle_enable_log_desc"></string>
+    <string name="susfs_uname_title"></string>
+    <string name="status_title"></string>
+    <string name="userhub_invalid_name"></string>
+    <string name="features_none"></string>
+    <string name="toggle_hide_mnts"></string>
 </resources>
