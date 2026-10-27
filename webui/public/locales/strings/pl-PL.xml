@@ -54,7 +54,7 @@
     <string name="toggle_hide_mnts_desc">Zastosowane w wersjach po-fs-data lub starcie, gdy montaż zakończy się dla procesów użytkownika.</string>
     <string name="toggle_enable_log">Włącz dziennik SuSFS</string>
     <string name="toggle_enable_log_desc">Włącza rejestrowanie jądrów susfs.</string>
-    <string name="toggle_avc_spoof">Kontekst AVC 'su'</string>
+    <string name="toggle_avc_spoof">Kontekst AVC \'su\'</string>
     <string name="toggle_avc_spoof_desc">Ukrywa domenę su z wyliczenia dziennika AVC.</string>
     <string name="toggles_apply">Zastosuj</string>
     <!-- UserHub -->
@@ -117,4 +117,28 @@
     <string name="backup_restore_nothing_to_export">Nie ma jeszcze nic do eksportu</string>
     <string name="backup_restore_restored">Konfiguracja przywrócona pomyślnie</string>
     <string name="backup_restore_restore_fail">Nie udało się przywrócić konfiguracji</string>
+    <string name="userhub_log_title"></string>
+    <string name="toggles_title"></string>
+    <string name="userhub_no_cron_log"></string>
+    <string name="box_stage"></string>
+    <string name="userhub_import_script"></string>
+    <string name="userhub_already_exists"></string>
+    <string name="susfs_cmdline_title"></string>
+    <string name="more_hiding"></string>
+    <string name="status_kernel_version"></string>
+    <string name="susfs_sus_maps_title"></string>
+    <string name="donate_title"></string>
+    <string name="userhub_view_log"></string>
+    <string name="global_show_all"></string>
+    <string name="userhub_last_run"></string>
+    <string name="susfs_kstat_paths_title"></string>
+    <string name="global_reboot"></string>
+    <string name="susfs_uname_title"></string>
+    <string name="features_variant"></string>
+    <string name="status_title"></string>
+    <string name="userhub_invalid_name"></string>
+    <string name="features_version"></string>
+    <string name="userhub_deleted"></string>
+    <string name="about_title"></string>
+    <string name="control_panel_language"></string>
 </resources>
