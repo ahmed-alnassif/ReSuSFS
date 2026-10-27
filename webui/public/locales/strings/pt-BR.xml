@@ -69,7 +69,7 @@
     <string name="toggle_hide_mnts_desc">Aplicado em post-fs-data ou inicialização completa, uma vez que as montarias tenham sido fixadas para processos de usuário.</string>
     <string name="toggle_enable_log">Habilitar Log de SuSFS</string>
     <string name="toggle_enable_log_desc">Ativa o registro do kernel próprio dos sensores.</string>
-    <string name="toggle_avc_spoof">Falsifica o contexto AVC 'su'</string>
+    <string name="toggle_avc_spoof">Falsifica o contexto AVC \'su\'</string>
     <string name="toggle_avc_spoof_desc">Oculta o domínio su da enumeração de log do AVC.</string>
     <string name="toggles_apply">Aplicar</string>
     <!-- UserHub -->
@@ -141,4 +141,8 @@
     <string name="backup_restore_nothing_to_export">Nada para exportar ainda</string>
     <string name="backup_restore_restored">Configuração restaurada com sucesso</string>
     <string name="backup_restore_restore_fail">Falha ao restaurar as configurações</string>
+    <string name="userhub_log_title"></string>
+    <string name="userhub_no_cron_log"></string>
+    <string name="userhub_view_log"></string>
+    <string name="userhub_last_run"></string>
 </resources>
