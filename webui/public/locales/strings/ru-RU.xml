@@ -123,24 +123,4 @@
     <string name="backup_restore_nothing_to_export">Ещё нечего экспортировать</string>
     <string name="backup_restore_restored">Конфигурация успешно восстановлена</string>
     <string name="backup_restore_restore_fail">Не удалось восстановить настройки</string>
-    <string name="userhub_log_title"></string>
-    <string name="toggles_title"></string>
-    <string name="userhub_no_cron_log"></string>
-    <string name="more_faq"></string>
-    <string name="footer_susfs"></string>
-    <string name="userhub_import_script"></string>
-    <string name="susfs_cmdline_title"></string>
-    <string name="status_kernel_version"></string>
-    <string name="susfs_sus_maps_title"></string>
-    <string name="footer_userhub"></string>
-    <string name="userhub_view_log"></string>
-    <string name="userhub_last_run"></string>
-    <string name="susfs_kstat_paths_title"></string>
-    <string name="global_reboot"></string>
-    <string name="toggle_enable_log_desc"></string>
-    <string name="susfs_uname_title"></string>
-    <string name="status_title"></string>
-    <string name="userhub_invalid_name"></string>
-    <string name="features_none"></string>
-    <string name="toggle_hide_mnts"></string>
 </resources>

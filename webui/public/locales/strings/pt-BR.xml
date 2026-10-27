@@ -141,8 +141,4 @@
     <string name="backup_restore_nothing_to_export">Nada para exportar ainda</string>
     <string name="backup_restore_restored">Configuração restaurada com sucesso</string>
     <string name="backup_restore_restore_fail">Falha ao restaurar as configurações</string>
-    <string name="userhub_log_title"></string>
-    <string name="userhub_no_cron_log"></string>
-    <string name="userhub_view_log"></string>
-    <string name="userhub_last_run"></string>
 </resources>

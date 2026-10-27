@@ -124,23 +124,4 @@
     <string name="backup_restore_nothing_to_export">لا شيء للتصدير بعد</string>
     <string name="backup_restore_restored">تمت استعادة التكوين بنجاح</string>
     <string name="backup_restore_restore_fail">فشل في استعادة الإعدادات</string>
-    <string name="userhub_log_title"></string>
-    <string name="toggles_title"></string>
-    <string name="userhub_no_cron_log"></string>
-    <string name="footer_susfs"></string>
-    <string name="userhub_import_script"></string>
-    <string name="susfs_cmdline_title"></string>
-    <string name="userhub_new_script"></string>
-    <string name="status_kernel_version"></string>
-    <string name="susfs_sus_maps_title"></string>
-    <string name="userhub_view_log"></string>
-    <string name="susfs_uname_desc"></string>
-    <string name="userhub_last_run"></string>
-    <string name="susfs_kstat_paths_title"></string>
-    <string name="toggle_enable_log_desc"></string>
-    <string name="susfs_uname_title"></string>
-    <string name="status_title"></string>
-    <string name="userhub_invalid_name"></string>
-    <string name="features_version"></string>
-    <string name="userhub_stage_bootcompleted"></string>
 </resources>
