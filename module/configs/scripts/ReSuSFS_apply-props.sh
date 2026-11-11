@@ -25,6 +25,7 @@ done
 set_prop_if_present ro.secure 1
 set_prop_if_present ro.debuggable 0
 set_prop_if_present ro.adb.secure 1
+set_prop_if_present ro.boot.vbmeta.device_state locked
 set_prop_if_present ro.boot.verifiedbootstate green
 set_prop_if_present ro.boot.flash.locked 1
 set_prop_if_present ro.boot.veritymode enforcing
